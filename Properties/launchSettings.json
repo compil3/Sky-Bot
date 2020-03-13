@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Sky Bot": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "token": "NTUyOTA4NDYxMjU2NjA1NzE5.XmmbHg.eTKvcQ1m5X7QcxABNpDYXkXN9QY"
+      }
+    }
+  }
+}
