@@ -28,20 +28,20 @@ namespace Sky_Bot.Schedule
                     for (int i = int.Parse(previousSeason); i < int.Parse(currentSeason); i++)
                     {
                         Player.GetPlayer("psn", "playerstats", i, "reg", "uh");
-                        Log.Fatal($"PSN Players regular season statistics updated for Season: {i}.");
+                        Log.Warning($"PSN Players regular season statistics updated for Season: {i}.");
 
                         Goalie.GetGoalie("psn", "goaliestats", i, "reg", "uh");
-                        Log.Fatal($"PSN Goalie regular season statistics updated for Season: {i}.");
+                        Log.Warning($"PSN Goalie regular season statistics updated for Season: {i}.");
 
-                    //Team.GetTeam("psn","teamstats",i,"reg","uh");
-                    Log.Fatal($"PSN Team regular season statistics updated for Season: {i}.");
+                        //Team.GetTeam("psn","teamstats",i,"reg","uh");
+                        //Log.Warning($"PSN Team regular season statistics updated for Season: {i}.");
                         savePrevious = i.ToString();
                     }
-                    Log.Fatal(!GetUrl.SavePrevious("psn", savePrevious) ? "Failed to updated PSN Previous Season setting." : "Successfully updated PSN Previous Season setting.");
+                    Log.Fatal(!SavePreviousSeason.SavePrevious("psn", savePrevious) ? "Failed to updated PSN Previous Season setting." : "Successfully updated PSN Previous Season setting.");
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"Fatal error running historical stats update.\n{ex}");
+                    Log.Error($"Fatal error running historical stats update.\n{e}");
                 }
             });
             this.Schedule(updates).ToRunNow().AndEvery(1).Months().OnTheSecond(DayOfWeek.Friday);
