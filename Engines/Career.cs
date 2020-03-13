@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using HtmlAgilityPack;
+using LiteDB;
 using Serilog;
 using Sky_Bot.Essentials.Writer;
+using Sky_Bot.Properties;
 
 namespace Sky_Bot.Engines
 {
@@ -234,6 +236,23 @@ namespace Sky_Bot.Engines
                 Log.Fatal(ex,$"Saving {playerName} to database failed.");
                 return false;
             }
+        }
+
+        private static string PlayerUrl(string lookup)
+        {
+            using (var playerUrl = new LiteDatabase(@"LGFA.db"))
+            {
+                var player = playerUrl.GetCollection<PlayerProperties.PlayerInfo>("PlayerURLs");
+                var result = player.Find(x => x.playerName.StartsWith(lookup));
+                foreach (var url in result)
+                {
+                    var playerId = url.Id;
+                    var name = url.playerName;
+                    var webUrl = url.playerUrl;
+                    return webUrl;
+                }
+            }
+            return null;
         }
     }
 }
