@@ -43,7 +43,7 @@ namespace Sky_Bot.Services
             await _commands.ExecuteAsync(context, argPos, _services);
         }
 
-        private async Task CommandExcutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
+        private async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
         {
             if (!command.IsSpecified) return;
             if (result.IsSuccess) return;
