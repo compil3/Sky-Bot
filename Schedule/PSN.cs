@@ -5,6 +5,7 @@ using FluentScheduler;
 using Serilog;
 using Sky_Bot.Engines;
 using Sky_Bot.Essentials;
+using Sky_Bot.Extras.Spinner;
 
 namespace Sky_Bot.Schedule
 {
@@ -27,11 +28,18 @@ namespace Sky_Bot.Schedule
 
                     for (int i = int.Parse(previousSeason); i < int.Parse(currentSeason); i++)
                     {
-                        Player.GetPlayer("psn", "playerstats", i, "reg", "uh");
-                        Log.Warning($"PSN Players regular season statistics updated for Season: {i}.");
+                        Log.Information("Starting database update.");
+                        Console.WriteLine();
+                        Spinner.Start();
+                        Player.GetPlayer("psn", "LG","playerstats", i, "reg", "uh");
+                        Spinner.Stop();
+                        
 
-                        Goalie.GetGoalie("psn", "goaliestats", i, "reg", "uh");
-                        Log.Warning($"PSN Goalie regular season statistics updated for Season: {i}.");
+                        //Player.GetPlayer("psn", "LG","playerstats", i, "reg", "uh");
+                        //Log.Warning($"PSN Players regular season statistics updated for Season: {i}.");
+
+                        //Goalie.GetGoalie("psn", "goaliestats", i, "reg", "uh");
+                        //Log.Warning($"PSN Goalie regular season statistics updated for Season: {i}.");
 
                         //Team.GetTeam("psn","teamstats",i,"reg","uh");
                         //Log.Warning($"PSN Team regular season statistics updated for Season: {i}.");

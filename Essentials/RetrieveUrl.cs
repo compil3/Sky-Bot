@@ -91,6 +91,35 @@ namespace Sky_Bot.Essentials
             return null;
         }
 
+        public static string GetNewsUrl()
+        {
+            var JSON = "";
+            var sFile = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var configLocation = "@Configs\\Urls\news.json";
+            var configFile = Path.Combine(sFile, configLocation);
+
+            if (!File.Exists(configFile)) Log.Error($"{configFile} does not exist.");
+            try
+            {
+                using (var stream = new FileStream(configFile, FileMode.Open, FileAccess.Read))
+                using (var readSetting = new StreamReader(stream))
+                {
+                    JSON = readSetting.ReadToEnd();
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Log.Logger.Error(ex, $"Error reading websettings.json ({configFile})");
+                throw;
+            }
+
+            UrlSettings settings = JsonConvert.DeserializeObject<UrlSettings>(JSON);
+            var url = "";
+            Web.NewsUrl = settings.newsUrl;
+            url = Web.NewsUrl;
+            return url;
+        }
+
     }
 
 }

@@ -1,6 +1,6 @@
 ﻿namespace Sky_Bot.Properties
 {
-    class PlayerProperties
+    public class PlayerProperties
     {
         public class StatProperties
         {
@@ -8,15 +8,15 @@
             public int Id { get; set; }
             public string SeasonTypeId { get; set; }
 
-            public string PlayerSystem { get; set; }
-            public string Position { get; set; }
+            public string LeagueType { get; set; }
+            public string LeagueDivision { get; set; }
             public string PlayerName { get; set; }
+            public string UserSystem { get; set; }
+            public string Position { get; set; }
             public string GamesPlayed { get; set; }
-            public string Record { get; set; }
-            public string AvgMatchRating { get; set; }
+
             public string Goals { get; set; }
             public string Assists { get; set; }
-            public string CleanSheets { get; set; }
             public string ShotsOnGoal { get; set; }
             public string ShotsOnTarget { get; set; }
             public string ShotPercentage { get; set; }
@@ -29,7 +29,19 @@
             public string Blocks { get; set; }
             public string YellowCards { get; set; }
             public string RedCards { get; set; }
+
+            public string LgRank { get; set; }
+            public string GoalsAgainst { get; set; }
+            public string ShotsAgainst { get; set; }
+            public string Saves { get; set; }
+            public string SavePercentage { get; set; }
+            public string GoalsAgainstAvg { get; set; }
+            
+            public string Record { get; set; }
+            public string AvgMatchRating { get; set; }
             public string ManOfTheMatch { get; set; }
+            public string CleanSheets { get; set; }
+
             public string PlayerUrl { get; set; }
             public string TeamIcon { get; set; }
         }

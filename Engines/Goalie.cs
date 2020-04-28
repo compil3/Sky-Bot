@@ -13,7 +13,7 @@ namespace Sky_Bot.Engines
 {
     class Goalie
     {
-        public static bool GetGoalie(string league, string trigger, int histSeasonID, string seasonTypeID,
+        public static bool GetGoalieLG(string league, string trigger, int histSeasonID, string seasonTypeID,
             string command)
         {
             var st = new StackTrace();
@@ -52,6 +52,7 @@ namespace Sky_Bot.Engines
                         var saves = "";
                         var savePercentage = "";
                         var goalsAgainstAvg = "";
+                        var passingPercentage = "";
                         var cleanSheets = "";
                         var manOfTheMatch = "";
                         var avgMatchRating = "";
@@ -103,7 +104,7 @@ namespace Sky_Bot.Engines
                         SavePlayerInfo.SavePlayerUrl(playerID, playerName, playerURL);
 
                         Career.GetCareer(playerID, playerName, league);
-                        GoalieWriter.SaveGoalie(playerID, league, playerName,
+                        LGWriter.SaveGoalie(playerID, league, playerName,
                             gamesPlayed, record, goalsAgainst, shotsAgainst, saves, savePercentage, goalsAgainstAvg,
                             cleanSheets, manOfTheMatch, avgMatchRating, playerURL, iconURL, command, histSeasonID,
                             seasonTypeID);
