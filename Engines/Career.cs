@@ -242,7 +242,7 @@ namespace Sky_Bot.Engines
         {
             using (var playerUrl = new LiteDatabase(@"LGFA.db"))
             {
-                var player = playerUrl.GetCollection<PlayerProperties.PlayerInfo>("PlayerURLs");
+                var player = playerUrl.GetCollection<PlayerProperties.PlayerInfo>("URLS");
                 var result = player.Find(x => x.playerName.StartsWith(lookup));
                 foreach (var url in result)
                 {

@@ -19,6 +19,7 @@ namespace Sky_Bot.Modules.News
         {
             var web = new HtmlWeb();
             var url = RetrieveUrl.GetNewsUrl();
+            HtmlNodeCollection nodes;
             HtmlDocument feed = null;
 
             var feedString = "//*[@id='newsfeed_page']/ol/li[1]";
@@ -29,12 +30,14 @@ namespace Sky_Bot.Modules.News
            if (system == "xbox")
             {
                 feed = web.Load(url + xbox);
-                var nodes = feed.DocumentNode.SelectNodes(feedString);
+                nodes = feed.DocumentNode.SelectNodes(feedString);
                 await RunTask(nodes, channel, system, "trade");
             }
             else if (system == "psn")
             {
                 feed = web.Load(url + psn);
+                nodes = feed.DocumentNode.SelectNodes(feedString);
+                await RunTask(nodes, channel, system, "trade");
             }
         }
 

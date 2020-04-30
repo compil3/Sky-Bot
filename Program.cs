@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -12,52 +13,62 @@ using FluentScheduler;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using Sky_Bot.Modules;
 using Sky_Bot.Schedule;
 using Sky_Bot.Services;
 
 namespace Sky_Bot
 {
-    internal static class Program
+    internal class Program
     {
-        private static DiscordSocketClient _client;
         //static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
         private static void Main()
         {
             MainAsync().GetAwaiter().GetResult();
             Thread.Sleep(-1);
         }
+        private static DiscordSocketClient client;
+
         public static async Task MainAsync()
         {
             using (var services = ConfigureServices())
             {
-                var client = services.GetRequiredService<DiscordSocketClient>();
-                JobManager.Initialize(new PSN());
-
+                client = services.GetRequiredService<DiscordSocketClient>();
 
                 client.Log += LogAsync;
-                //client.Ready += ClientReady;
 
                 services.GetRequiredService<CommandService>().Log += LogAsync;
+
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("Sky Sports Bot v1.0");
                 Console.ResetColor();
 
                 Console.WriteLine($"Environment Variable: {Environment.GetEnvironmentVariable("token")}");
+
                 await client.LoginAsync(TokenType.Bot, 
                     Environment.GetEnvironmentVariable("token"));
+
                 await client.StartAsync();
 
                 await services.GetRequiredService<CommandHandlingService>().InitializeAsync();
-                Log.Warning("Command Modules loaded.");
+                client.Ready += Client_Ready;
+                
                 await client.SetGameAsync("Watching LGFA");
-                await Task.Delay(-1);
+
+
+                await Task.Delay(Timeout.Infinite);
             }
         }
 
-        private static async Task ClientReady()
+        public static Task Client_Ready()
         {
-            var chnl = _client.GetGuild(689119429375819951).GetTextChannel(704183525863063642) as ISocketMessageChannel;
-            //JobManager.Initialize(new)
+            //DiscordSocketClient _client = new DiscordSocketClient();
+            ulong id = Convert.ToUInt64(Environment.GetEnvironmentVariable("update_log_channel"));
+            var chnl = client.GetChannel(id) as IMessageChannel;
+
+            Manager.Manage(chnl);
+            Log.Logger.Warning("Schedules Initialized.");
+            return Task.CompletedTask;
         }
 
         public static Task LogAsync(LogMessage log)
@@ -71,6 +82,7 @@ namespace Sky_Bot
 
         private static ServiceProvider ConfigureServices()
         {
+            Log.Warning("Modules loaded.");
             return new ServiceCollection()
                 .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()

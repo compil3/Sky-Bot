@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Configs\Season\psn.json" />
+    <None Remove="Configs\Season\xbox.json" />
+    <None Remove="Configs\Urls\news.json" />
+    <None Remove="Configs\Urls\pcn.json" />
+    <None Remove="Configs\Urls\psn.json" />
+    <None Remove="Configs\Urls\xbox.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Essentials\News\" />
     <Folder Include="Essentials\Writer\PCN\" />
     <Folder Include="Extras\Ticker\" />
@@ -23,6 +32,28 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Serilog" Version="2.9.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="ShellProgressBar" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Configs\Season\psn.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configs\Season\xbox.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configs\Urls\news.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configs\Urls\pcn.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configs\Urls\psn.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configs\Urls\xbox.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

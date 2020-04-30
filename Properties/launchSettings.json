@@ -3,6 +3,8 @@
     "Sky Bot": {
       "commandName": "Project",
       "environmentVariables": {
+        "update_log_channel": "705197391984197683",
+        "guild_id": "689119429375819951",
         "token": "NTUyOTA4NDYxMjU2NjA1NzE5.Xm70SA.WbYjqSASFhG1_XKCscMchs14SYE"
       }
     }

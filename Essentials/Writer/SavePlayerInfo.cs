@@ -16,7 +16,7 @@ namespace Sky_Bot.Essentials.Writer
             var currentMethod = sf.GetMethod();
             using (var database = new LiteDatabase(@"LGFA.db"))
             {
-                var playerCollection = database.GetCollection<PlayerProperties.PlayerInfo>("Players");
+                var playerCollection = database.GetCollection<PlayerProperties.PlayerInfo>("URLS");
                 playerCollection.EnsureIndex(x => x.Id);
                 var playerInfo = new PlayerProperties.PlayerInfo
                 {

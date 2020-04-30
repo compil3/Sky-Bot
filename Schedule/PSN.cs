@@ -30,10 +30,8 @@ namespace Sky_Bot.Schedule
                     {
                         Log.Information("Starting database update.");
                         Console.WriteLine();
-                        Spinner.Start();
                         Player.GetPlayer("psn", "LG","playerstats", i, "reg", "uh");
-                        Spinner.Stop();
-                        
+
 
                         //Player.GetPlayer("psn", "LG","playerstats", i, "reg", "uh");
                         //Log.Warning($"PSN Players regular season statistics updated for Season: {i}.");

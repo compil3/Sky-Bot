@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
+using System.Threading;
+using System.Timers;
 
 namespace Sky_Bot.Extras.Spinner
 {
@@ -22,6 +25,11 @@ namespace Sky_Bot.Extras.Spinner
         {
             BackgroundWorker obj = new BackgroundWorker();
             obj.WorkerSupportsCancellation = true;
+
+
+            var stopwatch = new Stopwatch();
+
+
             obj.DoWork += delegate
             {
                 spinnerPosition = Console.CursorLeft;
@@ -37,6 +45,11 @@ namespace Sky_Bot.Extras.Spinner
                 }
             };
             return obj;
+        }
+
+        private static void OnTimeEvent(object source, ElapsedEventArgs e)
+        {
+            Console.WriteLine($"Elapsed Time: {e}");
         }
 
         public static void Start(int spinWait)

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Web;
 using HtmlAgilityPack;
 using Serilog;
+using ShellProgressBar;
 using Sky_Bot.Essentials;
 using Sky_Bot.Essentials.Writer;
 
@@ -21,7 +23,7 @@ namespace Sky_Bot.Engines
                 var st = new StackTrace();
                 var sf = st.GetFrame(0);
                 var currentMethod = sf.GetMethod();
-                var thisFile = new System.Diagnostics.StackTrace(true).GetFrame(0).GetFileName();
+                var thisFile = new System.Diagnostics.StackTrace(true).GetFrame(0)?.GetFileName();
 
                 var web = new HtmlWeb();
                 var doc = web.Load(RetrieveUrl.GetUrl(league, trigger, histSeasonID, seasonTypeID));
@@ -30,97 +32,129 @@ namespace Sky_Bot.Engines
                 if (countPlayers == null) return false;
 
                 var playerCount = countPlayers.Count;
+                var options = new ProgressBarOptions()
+                {
+                    ForegroundColor = ConsoleColor.Yellow,
+                    ForegroundColorDone = ConsoleColor.DarkGreen,
+                    BackgroundColor = ConsoleColor.DarkGray,
+                    BackgroundCharacter = '\u2593',
+                    ShowEstimatedDuration = true
+                };
 
+                //var childOptions = new ProgressBarOptions()
+                //{
+                //    ForegroundColor = ConsoleColor.Green,
+                //    BackgroundColor = ConsoleColor.DarkGray,
+                //    ProgressCharacter = '-'
+                //};
                 try
                 {
-                    for (int i = 1; i < playerCount; i++)
+                    using (var pbar = new ProgressBar(playerCount, $"Updating {league} Player Stats", options))
                     {
-                        var findPlayerNodes =
-                            doc.DocumentNode.SelectNodes($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]");
-                        if (findPlayerNodes == null) break;
+                        pbar.EstimatedDuration = TimeSpan.FromMilliseconds(playerCount * 500);
 
-                        #region Nodes
-
-                        foreach (var player in findPlayerNodes)
+                        for (int i = 1; i < playerCount; i++)
                         {
-                            var teamIconTemp = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/img")
-                                .Attributes["src"].Value);
-                            var position = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/span")
-                                .InnerText);
-                            var playerName = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a").InnerText);
-                            var gamesPlayed = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[4]").InnerText);
-                            var record = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[5]").InnerText);
-                            var avgMatchRating = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[6]").InnerText);
-                            var goals = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[7]").InnerText);
-                            var assists = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[8]").InnerText);
-                            var cleanSheets = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[9]").InnerText);
-                            var shotsOnGoal = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[10]").InnerText);
-                            var shotsOnTarget = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[11]").InnerText);
-                            var shotPercentage = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[12]").InnerText);
-                            var tackles = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[13]").InnerText);
-                            var tackleAttempts = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[14]").InnerText);
-                            var tacklePercentage = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[15]").InnerText);
-                            var passingPercentage = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[16]").InnerText);
-                            var keyPasses = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[17]").InnerText);
-                            var interceptions = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[18]").InnerText);
-                            var blocks = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[19]").InnerText);
-                            var yellowCards = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[20]").InnerText);
-                            var redCards = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[21]").InnerText);
-                            var manOfTheMatch = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[22]").InnerText);
-                            var playerShortURL = WebUtility.HtmlDecode(player
-                                .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a")
-                                .Attributes["href"].Value);
+                            var findPlayerNodes =
+                                doc.DocumentNode.SelectNodes($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]");
+                            if (findPlayerNodes == null) break;
 
-                            #endregion
+                            #region Nodes
 
-                            var playerUrl = string.Join(string.Empty,
-                                "https://leaguegaming.com/forums/" + playerShortURL);
-                            var iconEnlarge = teamIconTemp.Replace("p16", "p100");
-                            var iconURL = string.Join(string.Empty, "https://leaguegaming.com" + iconEnlarge);
-                            var temp = HttpUtility.ParseQueryString(new Uri(playerUrl).Query);
-                            int playerId = int.Parse(temp.Get("userid"));
+                            foreach (var player in findPlayerNodes)
+                            {
+                                var teamIconTemp = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/img")
+                                    .Attributes["src"].Value);
+                                var position = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/span")
+                                    .InnerText);
+                                var playerName = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a").InnerText);
+                                var gamesPlayed = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[4]").InnerText);
+                                var record = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[5]").InnerText);
+                                var avgMatchRating = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[6]").InnerText);
+                                var goals = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[7]").InnerText);
+                                var assists = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[8]").InnerText);
+                                var cleanSheets = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[9]").InnerText);
+                                var shotsOnGoal = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[10]").InnerText);
+                                var shotsOnTarget = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[11]").InnerText);
+                                var shotPercentage = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[12]").InnerText);
+                                var tackles = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[13]").InnerText);
+                                var tackleAttempts = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[14]").InnerText);
+                                var tacklePercentage = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[15]").InnerText);
+                                var passingPercentage = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[16]").InnerText);
+                                var keyPasses = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[17]").InnerText);
+                                var interceptions = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[18]").InnerText);
+                                var blocks = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[19]").InnerText);
+                                var yellowCards = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[20]").InnerText);
+                                var redCards = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[21]").InnerText);
+                                var manOfTheMatch = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[22]").InnerText);
+                                var playerShortURL = WebUtility.HtmlDecode(player
+                                    .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a")
+                                    .Attributes["href"].Value);
 
-                            if (shotPercentage == string.Empty) shotPercentage = "0";
-                            else if (tacklePercentage == string.Empty) tacklePercentage = "0";
-                            else if (passingPercentage == string.Empty) passingPercentage = "0";
+                                #endregion
 
-                            if (seasonTypeID == "pre") seasonTypeID = "pre-season";
-                            else if (seasonTypeID == "reg") seasonTypeID = "regular";
+                                var playerUrl = string.Join(string.Empty,
+                                    "https://www.leaguegaming.com/forums/" + playerShortURL);
+                                var iconEnlarge = teamIconTemp.Replace("p16", "p100");
+                                var iconURL = string.Join(string.Empty, "https://leaguegaming.com" + iconEnlarge);
+                                var temp = HttpUtility.ParseQueryString(new Uri(playerUrl).Query);
+                                int playerId = int.Parse(temp.Get("userid"));
 
-                            SavePlayerInfo.SavePlayerUrl(playerId, playerName, playerUrl);
-                            Career.GetCareer(playerId, playerName, league);
+                                if (shotPercentage == string.Empty) shotPercentage = "0";
+                                else if (tacklePercentage == string.Empty) tacklePercentage = "0";
+                                else if (passingPercentage == string.Empty) passingPercentage = "0";
 
-                            LGWriter.SavePlayer(playerId, histSeasonID, seasonTypeID, position,
-                                playerName, gamesPlayed, record, avgMatchRating, goals, assists, cleanSheets,
-                                shotsOnGoal,
-                                shotsOnTarget, shotPercentage, tackles, tackleAttempts, tacklePercentage,
-                                passingPercentage,
-                                keyPasses,
-                                interceptions, blocks, yellowCards, redCards, manOfTheMatch, playerUrl, league, iconURL,
-                                command, position, PcnOrLg);
+                                if (seasonTypeID == "pre") seasonTypeID = "pre-season";
+                                else if (seasonTypeID == "reg") seasonTypeID = "regular";
+
+                                SavePlayerInfo.SavePlayerUrl(playerId, playerName, playerUrl);
+                                Career.GetCareer(playerId, playerName, league);
+
+                                LGWriter.SavePlayer(playerId, histSeasonID, seasonTypeID, position,
+                                    playerName, gamesPlayed, record, avgMatchRating, goals, assists, cleanSheets,
+                                    shotsOnGoal,
+                                    shotsOnTarget, shotPercentage, tackles, tackleAttempts, tacklePercentage,
+                                    passingPercentage,
+                                    keyPasses,
+                                    interceptions, blocks, yellowCards, redCards, manOfTheMatch, playerUrl, league, iconURL,
+                                    command, position, PcnOrLg);
+
+                                pbar.Message = $"Starting Update: {playerName} ({i + 1}/{playerCount})";
+                                Thread.Sleep(500);
+
+                                var estimatedDuration = TimeSpan.FromMilliseconds(500 * playerCount) +
+                                                        TimeSpan.FromMilliseconds(300 * i);
+
+                                pbar.Tick(estimatedDuration, $"Completed Update of: {playerName} ({i+1}/{playerCount})");
+                                //pbar.Tick();
+                                //pbar.Tick($"Last updated: {playerName}");
+
+
+                            }
                             GC.Collect();
+
                         }
                     }
                 }
