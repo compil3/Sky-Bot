@@ -38,7 +38,8 @@ namespace Sky_Bot.Engines
                     ForegroundColorDone = ConsoleColor.DarkGreen,
                     BackgroundColor = ConsoleColor.DarkGray,
                     BackgroundCharacter = '\u2593',
-                    ShowEstimatedDuration = true
+                    ShowEstimatedDuration = true,
+                    DisplayTimeInRealTime = true
                 };
 
                 //var childOptions = new ProgressBarOptions()
@@ -142,10 +143,10 @@ namespace Sky_Bot.Engines
                                     command, position, PcnOrLg);
 
                                 pbar.Message = $"Starting Update: {playerName} ({i + 1}/{playerCount})";
-                                Thread.Sleep(500);
+                                Thread.Sleep(100);
 
-                                var estimatedDuration = TimeSpan.FromMilliseconds(500 * playerCount) +
-                                                        TimeSpan.FromMilliseconds(300 * i);
+                                var estimatedDuration = TimeSpan.FromSeconds(100 * playerCount) +
+                                                        TimeSpan.FromMilliseconds(100 * i);
 
                                 pbar.Tick(estimatedDuration, $"Completed Update of: {playerName} ({i+1}/{playerCount})");
                                 //pbar.Tick();

@@ -25,13 +25,32 @@ namespace Sky_Bot.Schedule
          
 
                 await channel.SendMessageAsync("Starting Weekly Updates.");
-
                 //var chnl = _client.GetGuild(689119429375819951).GetTextChannel(705197391984197683) as ISocketMessageChannel;
                 //await chnl.SendMessageAsync("Starting Weekly Stats Update for PSN and XBOX leagues").ConfigureAwait(false);
 
-                var currentSeason = "";
+                
                 var savePrevious = "";
+                var seasonCount = new List<ConsoleInformation>();
+                var numberOf = new List<SeasonDiff>();
                 var system = new string[] {"xbox", "psn"};
+                var previousSeason = new List<PreviousSeason>();
+                var currentSeason = new List<CurrentSeason>();
+
+                foreach (var season in system)
+                {
+                    seasonCount.Add(new ConsoleInformation
+                    {
+                        System = season,
+                        CurrentSeason = int.Parse(GetCurrentSeason.GetSeason(season)),
+                        PreviousSeasons = int.Parse(GetPreviousSeason.GetPrevious(season)),
+                        NumberOfSeason = Math.Abs(int.Parse(GetCurrentSeason.GetSeason(season)) - int.Parse(GetPreviousSeason.GetPrevious(season)) + 1)
+                    });
+                }
+                //foreach (var output in seasonCount)
+                //{
+                //    Console.WriteLine($"System: {output.System}\n Current Season: {output.CurrentSeason}\n Previous Season:{output.PreviousSeasons}\n Season Count: {output.NumberOfSeason}");
+                //}
+
 
                 
                 var options = new ProgressBarOptions()
@@ -41,15 +60,13 @@ namespace Sky_Bot.Schedule
                     BackgroundColor = ConsoleColor.DarkGray,
                     BackgroundCharacter = '\u2593'
                 };
-                foreach (var t in system)
+                foreach (var t in seasonCount)
                 {
                     try
                     {
-                        var previousSeason = GetPreviousSeason.GetPrevious(t);
-                        currentSeason = GetCurrentSeason.GetSeason(t);
-                        for (int j = int.Parse(previousSeason); j < int.Parse(currentSeason); j++)
+                        for (int j = t.PreviousSeasons; j < t.NumberOfSeason; j++)
                         {
-                            Player.GetPlayer(t, "LG", "playerstats", j, "reg", "uh");
+                             Player.GetPlayer(t.System, "LG", "playerstats", j, "reg", "uh");
                             //using (var pbar = new ProgressBar(j,"Update in progress.",options))
                             //{
                             //    pbar.Tick();
@@ -59,6 +76,8 @@ namespace Sky_Bot.Schedule
                         }
                         Log.Logger.Information($"{t} Updated.");
                     }
+
+
                     catch (Exception e)
                     {
                         Console.WriteLine(e);
@@ -72,5 +91,30 @@ namespace Sky_Bot.Schedule
             this.Schedule(update).ToRunNow().AndEvery(5).Days();
         }
 
+    }
+
+    internal class PreviousSeason
+    {
+        public int Previous { get; set; }
+        public string System { get; set; }
+    }
+
+    internal class CurrentSeason
+    {
+        public int Current { get; set; }
+        public string System { get; set; }
+    }
+
+    internal class ConsoleInformation
+    {
+        public string System { get; set; }
+        public int PreviousSeasons { get; set; }
+        public int CurrentSeason { get; set; }
+        public int NumberOfSeason { get; set; }
+
+    }
+
+    internal class SeasonDiff
+    {
     }
 }
