@@ -10,13 +10,15 @@ using Serilog;
 using ShellProgressBar;
 using Sky_Bot.Essentials;
 using Sky_Bot.Essentials.Writer;
+using Sky_Bot.Schedule;
+using static Sky_Bot.Extras.Tick.TickComplete;
 
 namespace Sky_Bot.Engines
 {
     class Player
     {
         public static bool GetPlayer(string league, string PcnOrLg, string trigger, int histSeasonID, string seasonTypeID,
-            string command)
+            string command, ProgressBar pbar)
         {
             if (PcnOrLg == "LG")
             {
@@ -32,27 +34,20 @@ namespace Sky_Bot.Engines
                 if (countPlayers == null) return false;
 
                 var playerCount = countPlayers.Count;
-                var options = new ProgressBarOptions()
+                var childOptions = new ProgressBarOptions()
                 {
-                    ForegroundColor = ConsoleColor.Yellow,
-                    ForegroundColorDone = ConsoleColor.DarkGreen,
-                    BackgroundColor = ConsoleColor.DarkGray,
-                    BackgroundCharacter = '\u2593',
-                    ShowEstimatedDuration = true,
-                    DisplayTimeInRealTime = true
+                    ForegroundColor = ConsoleColor.Green,
+                    BackgroundColor = ConsoleColor.DarkGreen,
+                    ProgressCharacter = '\u2593',
+                    CollapseWhenFinished = false,
+                    DisplayTimeInRealTime = false
                 };
 
-                //var childOptions = new ProgressBarOptions()
-                //{
-                //    ForegroundColor = ConsoleColor.Green,
-                //    BackgroundColor = ConsoleColor.DarkGray,
-                //    ProgressCharacter = '-'
-                //};
                 try
                 {
-                    using (var pbar = new ProgressBar(playerCount, $"Updating {league} Player Stats", options))
+                    using (var child = pbar.Spawn(playerCount, $"Updating {league} Player Stats", childOptions))
                     {
-                        pbar.EstimatedDuration = TimeSpan.FromMilliseconds(playerCount * 500);
+                        //pbar.EstimatedDuration = TimeSpan.FromMilliseconds(playerCount * 500);  //if playerCount = 253 Estimated Duration should = 15,180 mins
 
                         for (int i = 1; i < playerCount; i++)
                         {
@@ -115,7 +110,7 @@ namespace Sky_Bot.Engines
                                     .Attributes["href"].Value);
 
                                 #endregion
-
+                                #region Saving to DB
                                 var playerUrl = string.Join(string.Empty,
                                     "https://www.leaguegaming.com/forums/" + playerShortURL);
                                 var iconEnlarge = teamIconTemp.Replace("p16", "p100");
@@ -141,17 +136,14 @@ namespace Sky_Bot.Engines
                                     keyPasses,
                                     interceptions, blocks, yellowCards, redCards, manOfTheMatch, playerUrl, league, iconURL,
                                     command, position, PcnOrLg);
+                                #endregion
 
-                                pbar.Message = $"Starting Update: {playerName} ({i + 1}/{playerCount})";
-                                Thread.Sleep(100);
+                                Thread.Sleep(500);
+                                var estimatedDuration = TimeSpan.FromMilliseconds(500 * playerCount) +
+                                                        TimeSpan.FromMilliseconds(300 * i);
+                                child.Tick(estimatedDuration, $"Updated {playerName}: {i+1} of {playerCount}");
 
-                                var estimatedDuration = TimeSpan.FromSeconds(100 * playerCount) +
-                                                        TimeSpan.FromMilliseconds(100 * i);
-
-                                pbar.Tick(estimatedDuration, $"Completed Update of: {playerName} ({i+1}/{playerCount})");
-                                //pbar.Tick();
-                                //pbar.Tick($"Last updated: {playerName}");
-
+                                //TickToCompletion(child,i,sleep:500, playerName, playerCount);
 
                             }
                             GC.Collect();

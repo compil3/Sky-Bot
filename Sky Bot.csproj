@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Engine\**" />
+    <EmbeddedResource Remove="Engine\**" />
+    <None Remove="Engine\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Configs\Season\psn.json" />
     <None Remove="Configs\Season\xbox.json" />
     <None Remove="Configs\Urls\news.json" />

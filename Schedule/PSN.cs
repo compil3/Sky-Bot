@@ -30,7 +30,7 @@ namespace Sky_Bot.Schedule
                     {
                         Log.Information("Starting database update.");
                         Console.WriteLine();
-                        Player.GetPlayer("psn", "LG","playerstats", i, "reg", "uh");
+                        //Player.GetPlayer("psn", "LG","playerstats", i, "reg", "uh");
 
 
                         //Player.GetPlayer("psn", "LG","playerstats", i, "reg", "uh");

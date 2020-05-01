@@ -43,7 +43,7 @@ namespace Sky_Bot
                 Console.WriteLine("Sky Sports Bot v1.0");
                 Console.ResetColor();
 
-                Console.WriteLine($"Environment Variable: {Environment.GetEnvironmentVariable("token")}");
+                //Console.WriteLine($"Environment Variable: {Environment.GetEnvironmentVariable("token")}");
 
                 await client.LoginAsync(TokenType.Bot, 
                     Environment.GetEnvironmentVariable("token"));
