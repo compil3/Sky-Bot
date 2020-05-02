@@ -9,7 +9,7 @@ using HtmlAgilityPack;
 using Serilog;
 using ShellProgressBar;
 using RetrieveUrl = Engine.Essentials.Helpers.RetrieveUrl;
-
+using PlayerWriter = Engine.Essentials.Write.PlayWriter;
 namespace Engine.Essentials.Generators
 {
     class Player
@@ -47,7 +47,7 @@ namespace Engine.Essentials.Generators
             try
             {
                 using var child = pbar.Spawn(totalPlayers, $"Updating {system} Player Stats", childOptions);
-                for (int i = 1; i < totalPlayers; i++)
+                for (var i = 1; i < totalPlayers; i++)
                 {
                     var findPlayerNodes =
                         doc.DocumentNode.SelectNodes($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]");
@@ -107,6 +107,7 @@ namespace Engine.Essentials.Generators
                             .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a")
                             .Attributes["href"].Value);
                         #endregion
+
                         #region Saves to Database
                         var playerUrl = string.Join(string.Empty,
                             "https://www.leaguegaming.com/forums/" + playerShortURL);
@@ -119,19 +120,19 @@ namespace Engine.Essentials.Generators
                         else if (tacklePercentage == string.Empty) tacklePercentage = "0";
                         else if (passingPercentage == string.Empty) passingPercentage = "0";
 
-                        if (seasonTypeID == "pre") seasonTypeID = "pre-season";
-                        else if (seasonTypeID == "reg") seasonTypeID = "regular";
+                        if (seasonType == "pre") seasonType = "pre-season";
+                        else if (seasonType == "reg") seasonType = "regular";
 
-                        SavePlayerInfo.SavePlayerUrl(playerId, playerName, playerUrl);
-                        Career.GetCareer(playerId, playerName, league);
+                        PlayerWriter.SaveUrl(playerId, playerName, playerUrl);
+                        Essentials.Generators.Career.GetStatistics(playerId, playerName, system);
 
-                        LGWriter.SavePlayer(playerId, histSeasonID, seasonTypeID, position,
+                        SavePlayer(playerId, seasonNumber, seasonType, position,
                             playerName, gamesPlayed, record, avgMatchRating, goals, assists, cleanSheets,
                             shotsOnGoal,
                             shotsOnTarget, shotPercentage, tackles, tackleAttempts, tacklePercentage,
                             passingPercentage,
                             keyPasses,
-                            interceptions, blocks, yellowCards, redCards, manOfTheMatch, playerUrl, league, iconURL,
+                            interceptions, blocks, yellowCards, redCards, manOfTheMatch, playerUrl, system, iconURL,
                             command, position);
                         #endregion
 
@@ -140,6 +141,7 @@ namespace Engine.Essentials.Generators
                                                 TimeSpan.FromMilliseconds(300 * i);
                         child.Tick(estimatedDuration, $"Updated {playerName}: {i}/{totalPlayers}");
                     }
+                    GC.Collect();
                 }
             }
             catch (Exception e)

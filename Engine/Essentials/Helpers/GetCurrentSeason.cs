@@ -40,7 +40,7 @@ namespace Engine.Essentials.Helpers
             }
 
             var seasonId = JsonConvert.DeserializeObject<Season>(JSON) ?? throw new ArgumentNullException($"GetCurrentSeason.cs JsonConvert.DeserializeObject<Season>(JSON)");
-            return seasonId.currentSeason;
+            return seasonId.CurrentSeason;
         }
     }
 }
