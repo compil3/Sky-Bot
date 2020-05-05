@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[PlayerStatistics]
+(
+	[Id] INT NOT NULL PRIMARY KEY, 
+    [Record] NCHAR(10) NOT NULL, 
+    [GamesPlayed] NCHAR(10) NOT NULL, 
+    [AMR] NCHAR(10) NOT NULL, 
+    [Goals] NCHAR(10) NOT NULL, 
+    [Assists] NCHAR(10) NOT NULL, 
+    [ShotAttempts] NCHAR(10) NOT NULL, 
+    [SOT] NCHAR(10) NOT NULL, 
+    [ShotPercentage] NCHAR(10) NOT NULL, 
+    [PassCompleted] NCHAR(10) NOT NULL, 
+    [PassesAttempted] NCHAR(10) NOT NULL, 
+    [PassPercentage] NCHAR(10) NOT NULL, 
+    [KeyPasses] NCHAR(10) NOT NULL, 
+    [KeyPassesPerPass] NCHAR(10) NULL, 
+    [Tackles] NCHAR(10) NOT NULL, 
+    [TackleAttempts] NCHAR(10) NOT NULL, 
+    [TacklePercentage] NCHAR(10) NOT NULL, 
+    [Interceptions] NCHAR(10) NOT NULL, 
+    [Blocks] NCHAR(10) NOT NULL, 
+    [YellowCards] NCHAR(10) NOT NULL, 
+    [RedCards] NCHAR(10) NOT NULL, 
+    CONSTRAINT [FK_PlayerStatistics_ToTable] FOREIGN KEY (Id) REFERENCES PlayerCareer(Id)
+)
