@@ -100,6 +100,41 @@ namespace Engine.Essentials.Write
             }
         }
 
+        internal static bool SaveInformation(int playerId, string playerName, string playerUrl,string system)
+        {
+            using var database = new LiteDatabase(@"LGFA.db");
+            var playerCollection = database.GetCollection<PlayerProperties.URL>("Players");
+            playerCollection.EnsureIndex(x => x.Id);
+
+            var playerInfo = new PlayerProperties.URL()
+            {
+                Id = playerId,
+                System = system,
+                PlayerName = playerName,
+                PlayerUrl = playerUrl
+            };
+
+            try
+            {
+                var playerFound = playerCollection.FindById(playerId);
+                if (playerFound != null)
+                {
+                    playerCollection.Update(playerInfo);
+                    return true;
+                }
+                else
+                {
+                    playerCollection.Insert(playerInfo);
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Fatal(e,$"Error processing player information");
+                return false;
+            }
+        }
+
         public static bool SavePlayer(int ID, int SeasonId, string SeasonTypeId, string Position, string PlayerName,
             string GamesPlayed, string Record, string AvgMatchRating, string Goals, string Assists, string CleanSheets,
             string ShotsOnGoal,
@@ -118,7 +153,7 @@ namespace Engine.Essentials.Write
                     var currentSeasonId = int.Parse(Helpers.GetCurrentSeason.GetSeason(System));
                     if (currentSeasonId == SeasonId)
                     {
-                        if (SeasonTypeId == "regular") tableName = ""
+                        if (SeasonTypeId == "regular") tableName = "Current";
                     }
                 }
             }

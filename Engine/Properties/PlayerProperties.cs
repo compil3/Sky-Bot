@@ -4,13 +4,14 @@ using System.Text;
 
 namespace Engine.Properties
 {
-    internal class PlayerProperties
+    public class PlayerProperties
     {
         internal class URL
         {
             public int Id { get; set; }
             public string PlayerName { get; set; }
             public string PlayerUrl { get; set; }
+            public string System { get; set; }
         }
 
         internal class Career
@@ -42,6 +43,23 @@ namespace Engine.Properties
             public string Blocks { get; set; }
             public string YellowCards { get; set; }
             public string RedCards { get; set; }
+        }
+
+        public class UrlSettings
+        {
+            public string XboxSeasonId { get; set; }
+            public string XboxStandingsUrl { get; set; }
+            public string XboxPlayerStatsUrl { get; set; }
+            public string XboxDraftListUrl { get; set; }
+            public string XboxPrevious { get; set; }
+            public string PsnSeasonId { get; set; }
+            public string PsnStandingsUrl { get; set; }
+            public string PsnPlayerStatsUrl { get; set; }
+            public string PsnDraftListUrl { get; set; }
+            public string PsnPrevious { get; set; }
+            public string CurrentSeason { get; set; }
+            public string PreviousSeason { get; set; }
+            public string NewsUrl { get; set; }
         }
     }
 }

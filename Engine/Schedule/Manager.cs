@@ -10,9 +10,9 @@ namespace Engine.Schedule
 {
     class Manager
     {
-        public static Task Manage(IMessageChannel chnl)
+        public static Task Manage()
         {
-            JobManager.Initialize(new WeekUpdate(chnl));
+            JobManager.Initialize(new WeekUpdate());
             return Task.CompletedTask;
         }
     }

@@ -15,13 +15,13 @@ namespace Engine.Schedule
 {
     class WeekUpdate : Registry
     {
-        public WeekUpdate(IMessageChannel channel)
+        public WeekUpdate()
         {
             Action update = new Action(async () =>
             {
                 var system = new string[] { "xbox", "psn" };
 
-                var seasonCount = system.Select(s => new ConsoleInformation {System = s, CurrentSeason = int.Parse(GetCurrentSeason.GetSeason(s)), PreviousSeason = int.Parse(GetPreviousSeason.GetPrevious(s)), NumberOfSeasons = Math.Abs(int.Parse(GetCurrentSeason.GetSeason(s)) - int.Parse(GetPreviousSeason.GetPrevious(s)) + 1)}).ToList();
+                var seasonCount = system.Select(s => new ConsoleInformation { System = s, CurrentSeason = int.Parse(GetCurrentSeason.GetSeason(s)), PreviousSeason = int.Parse(GetPreviousSeason.GetPrevious(s)), NumberOfSeasons = Math.Abs(int.Parse(GetCurrentSeason.GetSeason(s)) - int.Parse(GetPreviousSeason.GetPrevious(s)) + 1) }).ToList();
 
                 var options = new ProgressBarOptions()
                 {
@@ -30,11 +30,20 @@ namespace Engine.Schedule
                     BackgroundColor = ConsoleColor.Gray,
                     BackgroundCharacter = '\u2593',
                     ShowEstimatedDuration = true,
-                    DisplayTimeInRealTime = true
+                    DisplayTimeInRealTime = false,
+                    CollapseWhenFinished = false
+                };
+                var childOptions = new ProgressBarOptions()
+                {
+                    ForegroundColor = ConsoleColor.Green,
+                    BackgroundColor = ConsoleColor.DarkGreen,
+                    ProgressCharacter = '\u2593',
+                    CollapseWhenFinished = false,
+                    DisplayTimeInRealTime = false
                 };
 
                 Log.Logger.Warning("Running Weekly Update.");
-                await channel.SendMessageAsync("Starting weekly updates.").ConfigureAwait(false);
+                //await channel.SendMessageAsync("Starting weekly updates.").ConfigureAwait(false);
 
                 try
                 {
@@ -42,29 +51,36 @@ namespace Engine.Schedule
                     {
                         using var pbar = new ProgressBar(t.NumberOfSeasons,
                             $"Running Database Update {t.System.ToString()}", options);
+
+
                         for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
                         {
+                            pbar.EstimatedDuration = TimeSpan.FromMilliseconds(t.NumberOfSeasons * 5000);
+
                             pbar.Tick(
                                 $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
-                            Player.GetInformation(t.System, "player", j, "regular", "career", pbar);
-                            Thread.Sleep(500);
+                            //Player.GetInformation(t.System, "player", j, "regular", "career", pbar);
+                            Get.GetPlayerIds(t.System, "player", j, pbar);
+                            Thread.Sleep(250);
 
-                            var estimatedDuration = TimeSpan.FromMinutes(500 * seasonCount.Count) +
-                                                    TimeSpan.FromMilliseconds(300 * j);
-                            pbar.Tick(estimatedDuration, $"Completed {t.System} updated");
+
                         }
+                        var estimatedDuration = TimeSpan.FromSeconds(60 * seasonCount.Count) +
+                                                TimeSpan.FromSeconds(30 * t.NumberOfSeasons);
+                        pbar.Tick(estimatedDuration, $"Completed {t.System} updated");
+
                     }
                 }
                 catch (Exception e)
                 {
-                    await channel.SendMessageAsync($"Error with **WeekUpdate** schedule.\n Error: {e}");
+                    //await channel.SendMessageAsync($"Error with **WeekUpdate** schedule.\n Error: {e}");
                     Console.WriteLine(e);
                     throw;
                 }
 
-                await channel.SendMessageAsync("Week update completed").ConfigureAwait(false);
+                //await channel.SendMessageAsync("Week update completed").ConfigureAwait(false);
             });
-            this.Schedule(update).ToRunNow().AndEvery(5).Days();
+            this.Schedule(update).ToRunNow().AndEvery(5).Minutes();
 
         }
     }

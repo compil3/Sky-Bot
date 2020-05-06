@@ -74,6 +74,7 @@
             public int Id { get; set; }
             public string playerName { get; set; }
             public string playerUrl { get; set; }
+            public string System { get; set; }
         }
 
         public class Career

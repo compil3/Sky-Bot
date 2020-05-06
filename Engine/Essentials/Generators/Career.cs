@@ -42,11 +42,11 @@ namespace Engine.Essentials.Generators
                     #region Document Nodes
                     foreach (var careerStats in careerPage)
                     {
-                        var 1q = WebUtility.HtmlDecode(careerStats
+                        var careerRecord = WebUtility.HtmlDecode(careerStats
                              .SelectSingleNode(
                                  $"//*[@id='lg_team_user_leagues-{leagueId}']/div[{divNum}]/table/tbody/tr[1]/td[2]")
                              .InnerText);
-                        string[] splitRecord = 1q.Split('-');
+                        string[] splitRecord = careerRecord.Split('-');
                         int wins = int.Parse(splitRecord[0]);
                         int draws = int.Parse(splitRecord[1]);
                         int loses = int.Parse(splitRecord[2]);
@@ -123,7 +123,9 @@ namespace Engine.Essentials.Generators
                                 $"//*[@id='lg_team_user_leagues-{leagueId}']/div[{divNum}]/table/tbody/tr[1]/td[16]")
                             .InnerText);
 
-                            goals, assists, shotOnTarget, shotAttempts, shotPercentage, passesCompleted, passAttempts,
+                        SaveCareer(id, playerName, careerRecord, officalGames, amr,
+                            goals,
+                            assists, shotOnTarget, shotAttempts, shotPercentage, passesCompleted, passAttempts,
                             passPercentage, keyPasses, interceptions, tackles, tackleAttempts, tacklePercentage, blocks,
                             redCards, yellowCards);
                         GC.Collect();

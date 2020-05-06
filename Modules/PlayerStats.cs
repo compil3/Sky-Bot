@@ -7,6 +7,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using LiteDB;
 using Serilog;
+using Sky_Bot.Engines;
 using Sky_Bot.Properties;
 
 namespace Sky_Bot.Modules
@@ -18,7 +19,7 @@ namespace Sky_Bot.Modules
             ".ps Web-Site-UserName SeasonNumber (optional)\n Eg: .ps SpillShot 7\n If the website name has spaces try wrapping the name (.ps \"Name tag\" ")]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(ChannelPermission.SendMessages)]
-        public async Task GetPlayerStatsLG(string playerLookup, string seasonID = null)
+        public async Task GetPlayerStatsLG(string playerLookup, string seasonID = null, string seasonType = null)
         {
             var tableName = "";
             var dbName = "";
@@ -27,11 +28,10 @@ namespace Sky_Bot.Modules
 
             if (guildID == 174342051318464512)
             {
-                if (seasonID == null) dbName = "LGFA.db";
-                else if (seasonID != null) dbName = "HistLG.db";
 
+               
                 Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-                await Context.Channel.SendMessageAsync(null, embed: DisplayBuilder.EmbedMessage(playerLookup, dbName, seasonID, guildID)).ConfigureAwait(false);
+                await Context.Channel.SendMessageAsync(null, embed: Player.GetPlayer(playerLookup, seasonType, seasonType)).ConfigureAwait(false);
                 GC.Collect();
             }
             else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
