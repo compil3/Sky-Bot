@@ -28,8 +28,6 @@ namespace Sky_Bot.Modules
 
             if (guildID == 174342051318464512)
             {
-
-               
                 Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
                 await Context.Channel.SendMessageAsync(null, embed: Player.GetPlayer(playerLookup, seasonType, seasonType)).ConfigureAwait(false);
                 GC.Collect();
