@@ -13,7 +13,7 @@ namespace Sky_Bot.Schedule
     {
         public static Task Manage(IMessageChannel chnl)
         {
-            JobManager.Initialize(new Weekly(chnl));
+            //JobManager.Initialize(new Weekly(chnl));
             return Task.CompletedTask;
         }
     }

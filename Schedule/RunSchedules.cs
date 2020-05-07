@@ -72,7 +72,7 @@ namespace Sky_Bot.Schedule
                             for (int j = t.PreviousSeasons; j < t.NumberOfSeason; j++)
                             {
                                 pbar.Tick($"Running Season {j} Update for {t.System.ToUpper()}. Remaining: {j}/{t.NumberOfSeason}");
-                                Player.GetPlayer(t.System, "LG", "playerstats", j, "reg", "uh", pbar);
+                                //Player.GetPlayer(t.System, "LG", "playerstats", j, "reg", "uh", pbar);
                                 Thread.Sleep(500);
 
                                 var estimatedDurationSeason =
