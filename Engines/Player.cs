@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -29,175 +30,279 @@ namespace Sky_Bot.Engines
             Embed message = null;
             var systemIcon = "";
 
-            if (seasonType == null || seasonId == null)
+            try
             {
-                try
+                using (var playerDatabase = new LiteDatabase(@"Database\LGFA.db"))
                 {
-                    using (var playerDatabase = new LiteDatabase(@"LGFA.db"))
+                    var player = playerDatabase.GetCollection<PlayerProperties.PlayerInfo>("Players");
+
+                    //var result = player.Find(x =>
+                    //    x.playerName.StartsWith(lookUpName) || x.playerName.ToLower().StartsWith(lookUpName));
+                    player.EnsureIndex(x => x.playerName);
+                    var result = player.Query()
+                        .Where(x => x.playerName.StartsWith(lookUpName))
+                        .ToList();
+
+                    foreach (var found in result)
                     {
-                        var player = playerDatabase.GetCollection<PlayerProperties.PlayerInfo>("Players");
-                        var result = player.Find(x =>
-                            x.playerName.StartsWith(lookUpName) || x.playerName.ToLower().StartsWith(lookUpName));
+                        var playerHtml = found.playerUrl;
+                        var playerSystem = found.System;
+                        var system = 0;
+                        var type = 0;
+                        var seasonNumber = "";
+                        var web = new HtmlWeb();
 
-                        foreach (var found in result)
+                        if (seasonType == "pre") type = 1;
+                        else if (seasonType == "reg") type = 2;
+                        else if (seasonType == "qual") type = 3;
+
+                        if (playerSystem == "xbox")
                         {
-                            var playerHtml = found.playerUrl;
-                            var playerSystem = found.System;
-                            var system = 0;
-                            var type = 0;
-                            var web = new HtmlWeb();
+                            system = 53;
+                        }
+                        else if (playerSystem == "psn") system = 73;
 
-                            if (seasonType == "pre") type = 1;
-                            else if (seasonType == "reg") type = 2;
-                            else if (seasonType == "qual") type = 3;
+                        if (found.System == "psn")
+                        {
+                            systemIcon =
+                                "https://www.leaguegaming.com/images/league/icon/l73.png";
+                        }
+                        else if (found.System == "xbox")
+                        {
+                            systemIcon =
+                                "https://www.leaguegaming.com/images/league/icon/l53.png";
+                        }
 
-                            if (playerSystem == "xbox")
+                        var playerDoc = web.Load(playerHtml);
+                        //var playerStatsRows =
+                        //    playerDoc.DocumentNode.SelectNodes(
+                        //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr");
+
+
+                        //var countRows = playerStatsRows.Count;
+                        //playerDoc.DocumentNode.SelectNodes($"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr");
+
+                        //var record = WebUtility.HtmlDecode(playerStat.SelectSingleNode($"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[2]").InnerText)
+                        var currentTableHeadinng =
+                            playerDoc.DocumentNode.SelectNodes($"//*[@id='lg_team_user_leagues-{system}']/h3[1]");
+                        foreach (var heading in currentTableHeadinng)
+                        {
+                            var lgfa = WebUtility.HtmlDecode(heading
+                                .SelectSingleNode($"//*[@id='lg_team_user_leagues-{system}']/h3[1]").InnerText);
+                            if (lgfa.Contains("Last") || lgfa.Contains("Season Stats") || lgfa.Contains("Career")) return Helpers.NotFound(lookUpName, systemIcon, playerHtml);
+                            if (lgfa.Contains("LGFA - Season") || lgfa.Contains("LGFA PSN - Season"))
                             {
-                                system = 53;
+                                seasonNumber = Helpers.Splitter(lgfa);
+                                seasonId = seasonNumber.Replace(" ", "");
                             }
-                            else if (playerSystem == "psn") system = 73;
-
-                            if (found.System == "psn")
+                        }
+                        try
+                        {
+                            /*
+                             *if qual == null && reg != null then tr[2]
+                             * else if preason ! null 
+                             *
+                             */
+                            HtmlNodeCollection findStatRow = null;
+                            //find all the season types in the table.
+                            if (seasonType == null)
                             {
-                                systemIcon =
-                                    "https://media.playstation.com/is/image/SCEA/navigation_home_ps-logo-us?$Icon$";
+                                #region logic
+                                //if (playerDoc.DocumentNode.SelectNodes(
+                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]") !=
+                                //    null || playerDoc.DocumentNode.SelectNodes(
+                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]") !=
+                                //    null || playerDoc.DocumentNode.SelectNodes(
+                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]") !=
+                                //    null)
+                                //{
+                                //    findStatRow = playerDoc.DocumentNode.SelectNodes(
+                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]");
+                                //}
+                                //else if (playerDoc.DocumentNode.SelectNodes(
+                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]") !=
+                                //    null || playerDoc.DocumentNode.SelectNodes(
+                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]") !=
+                                //    null)
+                                //{
+                                //    findStatRow = playerDoc.DocumentNode.SelectNodes(
+                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]");
+                                //}
+                                //else if (playerDoc.DocumentNode.SelectNodes(
+                                //      $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]") !=
+                                //  null || playerDoc.DocumentNode.SelectNodes(
+                                //      $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]") !=
+                                //  null)
+                                //{
+                                //    findStatRow = playerDoc.DocumentNode.SelectNodes(
+                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]");
+                                //}
+                                #endregion
+
+                                if (playerDoc.DocumentNode.SelectNodes(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]") != null &&
+                                    playerDoc.DocumentNode.SelectNodes(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]") == null &&
+                                    playerDoc.DocumentNode.SelectNodes(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]") == null)
+                                {
+                                    findStatRow = playerDoc.DocumentNode.SelectNodes(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]");
+                                    type = 1;
+                                }
+                                else if (playerDoc.DocumentNode.SelectNodes(
+                                             $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]") !=
+                                         null &&
+                                         playerDoc.DocumentNode.SelectNodes(
+                                             $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]") !=
+                                         null &&
+                                         playerDoc.DocumentNode.SelectNodes(
+                                             $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]") ==
+                                         null)
+                                {
+                                    findStatRow = playerDoc.DocumentNode.SelectNodes(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]");
+                                    type = 2;
+                                }
+                                else if (playerDoc.DocumentNode.SelectNodes(
+                                             $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]") !=
+                                         null &&
+                                         playerDoc.DocumentNode.SelectNodes(
+                                             $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]") !=
+                                         null &&
+                                         playerDoc.DocumentNode.SelectNodes(
+                                             $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]") ==
+                                         null)
+                                {
+                                    findStatRow = playerDoc.DocumentNode.SelectNodes(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]");
+                                    type = 3;
+                                }
                             }
-                            else if (found.System == "xbox")
+                            else
                             {
-                                systemIcon =
-                                    "http://www.logospng.com/images/171/black-xbox-icon-171624.png";
-                            }
-
-                            var playerDoc = web.Load(playerHtml);
-                            var playerStatsRows =
-                                playerDoc.DocumentNode.SelectNodes(
-                                    $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr");
-
-
-                            var countRows = playerStatsRows.Count;
-
-                            try
-                            {
-                                var findStatRow = playerDoc.DocumentNode.SelectNodes(
+                                findStatRow = playerDoc.DocumentNode.SelectNodes(
                                     $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]");
-                                if (findStatRow == null)
-                                {
-                                    return message = Helpers.NotFound(found.playerName, found.System, found.playerUrl);
-                                }
-
-                                ;
-                                foreach (var playerStat in findStatRow)
-                                {
-                                    #region Nodes
-
-                                    HtmlNodeCollection lastFiveGames;
-                                    var position = "";
-                                    lastFiveGames =
-                                        playerDoc.DocumentNode.SelectNodes(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr");
-                                    foreach (var recent in lastFiveGames)
-                                    {
-                                        position = WebUtility.HtmlDecode(recent
-                                            .SelectSingleNode(
-                                                $"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr[1]/td[2]")
-                                            .InnerText);
-                                    }
-
-                                    var playerName = found.playerName;
-                                    var teamIcon = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[1]/img")
-                                        .Attributes["src"].Value);
-                                    var record = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[2]")
-                                        .InnerText);
-                                    var amr = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[3]")
-                                        .InnerText);
-                                    var goals = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[4]")
-                                        .InnerText);
-                                    var assists = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[5]")
-                                        .InnerText);
-                                    var sot = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[6]")
-                                        .InnerText);
-                                    var shots = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[7]")
-                                        .InnerText);
-                                    var passC = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[8]")
-                                        .InnerText);
-                                    var passA = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[9]")
-                                        .InnerText);
-                                    var key = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[10]")
-                                        .InnerText);
-                                    var interceptions = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[11]")
-                                        .InnerText);
-                                    var tac = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[12]")
-                                        .InnerText);
-                                    var tacA = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[13]")
-                                        .InnerText);
-                                    var blks = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[14]")
-                                        .InnerText);
-                                    var rc = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[15]")
-                                        .InnerText);
-                                    var yc = WebUtility.HtmlDecode(playerStat
-                                        .SelectSingleNode(
-                                            $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[16]")
-                                        .InnerText);
-                                    GC.Collect();
-
-                                    #endregion
-
-
-                                    return Helpers.BuildEmbed(found.System, playerSystem, systemIcon, record, amr,
-                                        goals, assists,
-                                        sot, shots, passC, passA, key, interceptions, tac, tacA,
-                                        blks, rc, yc, seasonId, found.playerUrl, teamIcon, position);
-                                }
                             }
-                            catch (Exception e)
+                            //findStatRow = playerDoc.DocumentNode.SelectNodes(
+                            //    $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]");
+                            if (findStatRow == null)
                             {
-                                Console.WriteLine($"Error processing stats. {e}");
-                                return null;
+                                return message = Helpers.NotFound(found.playerName, systemIcon, found.playerUrl);
                             }
+
+                            ;
+                            foreach (var playerStat in findStatRow)
+                            {
+                                #region Nodes
+
+                                HtmlNodeCollection lastFiveGames;
+                                var position = "";
+                                lastFiveGames =
+                                    playerDoc.DocumentNode.SelectNodes(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr");
+                                foreach (var recent in lastFiveGames)
+                                {
+                                    position = WebUtility.HtmlDecode(recent
+                                        .SelectSingleNode(
+                                            $"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr[1]/td[2]")
+                                        .InnerText);
+                                    break;
+                                }
+
+                                var playerName = found.playerName;
+                                var tempTeamIcon = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='content']/div/div/div[3]/div[1]/div/table/thead/tr/th/div/a/img")
+                                    .Attributes["src"].Value); //https://www.leaguegaming.com/images/team/p100/team1236.png
+                                var record = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[2]")
+                                    .InnerText);
+                                var amr = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[3]")
+                                    .InnerText);
+                                var goals = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[4]")
+                                    .InnerText);
+                                var assists = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[5]")
+                                    .InnerText);
+                                var sot = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[6]")
+                                    .InnerText);
+                                var shots = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[7]")
+                                    .InnerText);
+                                var passC = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[8]")
+                                    .InnerText);
+                                var passA = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[9]")
+                                    .InnerText);
+                                var key = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[10]")
+                                    .InnerText);
+                                var interceptions = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[11]")
+                                    .InnerText);
+                                var tac = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[12]")
+                                    .InnerText);
+                                var tacA = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[13]")
+                                    .InnerText);
+                                var blks = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[14]")
+                                    .InnerText);
+                                var rc = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[15]")
+                                    .InnerText);
+                                var yc = WebUtility.HtmlDecode(playerStat
+                                    .SelectSingleNode(
+                                        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[16]")
+                                    .InnerText);
+                                GC.Collect();
+
+                                var teamIcon = string.Join(String.Empty, "https://www.leaguegaming.com" + tempTeamIcon);
+
+                                #endregion
+
+
+                                return Helpers.BuildEmbed(found.playerName, playerSystem, systemIcon, record, amr,
+                                    goals, assists,
+                                    sot, shots, passC, passA, key, interceptions, tac, tacA,
+                                    blks, rc, yc, seasonId, found.playerUrl, teamIcon, position);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine($"Error processing stats. {e}");
+                            return null;
                         }
                     }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
             }
-            else if (seasonType != null)
+            catch (Exception e)
             {
-
+                Console.WriteLine(e);
+                throw;
             }
-            
+
+
             #region Old functionality
             //if (PcnOrLg == "LG")
             //{
