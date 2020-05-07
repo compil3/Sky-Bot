@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using Engine.Essentials.Generators;
 using LiteDB;
@@ -102,7 +104,11 @@ namespace Engine.Essentials.Write
 
         internal static bool SaveInformation(int playerId, string playerName, string playerUrl,string system)
         {
-            using var database = new LiteDatabase(@"LGFA.db");
+            var databaseName = @"LGFA.db";
+            var rootDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\.."))  + @"\Database";
+            var db = Path.Combine(rootDir, databaseName);
+
+            using var database = new LiteDatabase(db);
             var playerCollection = database.GetCollection<PlayerProperties.URL>("Players");
             playerCollection.EnsureIndex(x => x.Id);
 
