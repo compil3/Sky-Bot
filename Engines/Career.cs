@@ -2,20 +2,63 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using Discord;
 using HtmlAgilityPack;
 using LiteDB;
 using Serilog;
 using Sky_Bot.Essentials.Writer;
+using Sky_Bot.Modules;
 using Sky_Bot.Properties;
 
 namespace Sky_Bot.Engines
 {
     class Career
     {
-        public static bool GetCareer(int id, string playerName, string system)
+        public static Embed GetCareer(string lookUpPlayer)
         {
+            Embed message = null;
+            var system = 0;
             var web = new HtmlWeb();
-            var doc = web.Load(PlayerUrl(playerName));
+            try
+            {
+                using (var playerDatabase = new LiteDatabase(@"Database\LGFA.db"))
+                {
+                    var player = playerDatabase.GetCollection<PlayerProperties.PlayerInfo>("Players");
+
+                    player.EnsureIndex(x => x.playerName);
+
+                    var result = player.Query()
+                        .Where(x => x.playerName.Contains(lookUpPlayer))
+                        .ToList();
+
+                    foreach (var found in result)
+                    {
+                        if (found.System == "psn") system = 73;
+                        else if (found.System == "xbox") system = 53;
+
+                        var playerDoc = web.Load(found.playerUrl);
+
+                        var careerNode = $"//*[@id='lg_team_user_leagues-{system}']/div[5]/table/tbody/tr[1]";
+                        if (careerNode == null)
+                        {
+                            careerNode = $"//*[@id='lg_team_user_leagues-{system}']/div[4]/table/tbody/tr[1]";
+                        }
+                        else return EmbedHelpers.NotFound(found.playerName, found.playerUrl);
+                    }
+                    careerStatRow = player
+                    foreach (var VARIABLE in COLLECTION)
+                    {
+                        
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            var web = new HtmlWeb();
+            var doc = web.Load(PlayerUrl(lookUpPlayer));
             var leagueID = "";
             double matchRating;
             double shotPercentage;
@@ -122,7 +165,7 @@ namespace Sky_Bot.Engines
                                 $"//*[@id='lg_team_user_leagues-{leagueID}']/div[{divNum}]/table/tbody/tr[1]/td[16]")
                             .InnerText);
 
-                        SavePlayerInfo.SaveCareer(id, playerName, careerRecord, officalGames, amr,
+                        SavePlayerInfo.SaveCareer(id, lookUpPlayer, careerRecord, officalGames, amr,
                             goals, assists, shotOnTarget, shotAttempts, shotPercentage, passesCompleted, passAttempts,
                             passPercentage, keyPasses, interceptions, tackles, tackleAttempts, tacklePercentage, blocks,
                             redCards, yellowCards);
@@ -220,7 +263,7 @@ namespace Sky_Bot.Engines
                                 $"//*[@id='lg_team_user_leagues-{leagueID}']/div[{divNum}]/table/tbody/tr[1]/td[16]")
                             .InnerText);
 
-                        SavePlayerInfo.SaveCareer(id, playerName, careerRecord, officalGames, amr,
+                        SavePlayerInfo.SaveCareer(id, lookUpPlayer, careerRecord, officalGames, amr,
                             goals,
                             assists, shotOnTarget, shotAttempts, shotPercentage, passesCompleted, passAttempts,
                             passPercentage, keyPasses, interceptions, tackles, tackleAttempts, tacklePercentage, blocks,
@@ -233,7 +276,7 @@ namespace Sky_Bot.Engines
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex,$"Saving {playerName} to database failed.");
+                Log.Fatal(ex,$"Saving {lookUpPlayer} to database failed.");
                 return false;
             }
         }

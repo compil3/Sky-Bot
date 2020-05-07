@@ -7,16 +7,16 @@ using Discord;
 
 namespace Sky_Bot.Modules
 {
-    public class Helpers
+    public class EmbedHelpers
     {
         public static Embed BuildEmbed(string playerName, string userSystem, string systemIcon, string record, string amr, string goals, string assists, string sot, string shots, string passC, string passA,
             string key, string interceptions, string tac, string tacA, string blks, string rc, string yc, string seasonId, string playerUrl, string teamIcon, string position)
         {
-            
+
             EmbedBuilder builder = null;
 
             #region stat compression
-            
+
             string[] scoring = new string[3];
             scoring[0] = goals;
             scoring[1] = assists;
@@ -29,11 +29,20 @@ namespace Sky_Bot.Modules
             var draws = int.Parse(recordStrip[1]);
             var loses = int.Parse(recordStrip[2]);
             var gamesPlayed = wins + draws + loses;
-            
+
+            decimal shotPercentage = 0;
             string[] shooting = new string[3];
             shooting[0] = shots;
             shooting[1] = sot;
-            decimal shotPercentage = Convert.ToDecimal(sot) / Convert.ToDecimal(shots);
+            if (shots == "0" & sot == "0")
+            {
+                shotPercentage = 0;
+            }
+            else
+            {
+                shotPercentage = Convert.ToDecimal(sot) / Convert.ToDecimal(shots);
+            }
+
             shooting[2] = shotPercentage.ToString("P", CultureInfo.InvariantCulture);
             var shootingRecord = string.Join(" - ", shooting);
 
@@ -64,7 +73,7 @@ namespace Sky_Bot.Modules
             #endregion
 
             builder = new EmbedBuilder()
-                .WithTitle($"Statistics for ***{playerName}*** ({position})")
+                .WithTitle($"Statistics for ***{playerName}*** ({position.Trim()})")
                 .WithUrl(playerUrl)
                 .WithColor(new Color(0x26A20B))
                 .WithCurrentTimestamp()
@@ -74,11 +83,11 @@ namespace Sky_Bot.Modules
                         .WithText("leaguegaming.com")
                         .WithIconUrl("https://www.leaguegaming.com/images/logo/logonew.png");
                 })
-                .WithThumbnailUrl("https://media.discordapp.net/attachments/706547015651164222/707802358977134723/test.jpg")
+                .WithThumbnailUrl(teamIcon)
                 .WithAuthor(author =>
                 {
                     author
-                        .WithName($"{userSystem.ToUpper()} Season {seasonId} Stats provided by Sky Sports.")
+                        .WithName($"{userSystem.ToUpper()} Season {seasonId} Stats.") // provided by Sky Sports.")
                         .WithIconUrl(systemIcon);
                 })
                 .AddField("GP", gamesPlayed, true)
@@ -93,41 +102,12 @@ namespace Sky_Bot.Modules
             var embed = builder.Build();
             return embed;
         }
-
-        //public static Embed GoalieEmebd()
-        //{
-        //    EmbedBuilder builder = null;
-        //    builder = new EmbedBuilder()
-        //        .WithAuthor(author => author
-        //            .WithName($"{userSystem.ToUpper()} Season {seasonId} Stats provided by Sky Sports.")
-        //            .WithIconUrl(systemIcon))
-        //        .WithTitle($"Statistics for ***{playerName}*** {position}")
-        //        .WithUrl(playerUrl)
-        //        .WithColor(new Color(0x26A20B))
-        //        .WithCurrentTimestamp()
-        //        .WithFooter(footer =>
-        //        {
-        //            footer
-        //                .WithText("leaguegaming.com")
-        //                .WithIconUrl("https://www.leaguegaming.com/images/league/icon/l53.png");
-        //        })
-        //        .WithThumbnailUrl(teamIcon)
-        //        .AddField("Record", record, true)
-        //        .AddField("AMR", amr, true)
-        //        .AddField("SH-SAV-S%", shootingRecord, true)
-        //        .AddField("GA-GAA", goalRecord, true)
-        //        .AddField("CS-MOTM", cleanMan, true);
-
-        //    var embed = builder.Build();
-        //    return embed;
-
-        //}
         public static Embed NotFound(string playerName, string playerSystem, string playerUrl)
         {
             var systemIcon = "";
             if (playerSystem == "psn") systemIcon = "73";
             else if (playerSystem == "xbox") systemIcon = "53";
-                EmbedBuilder builder;
+            EmbedBuilder builder;
             builder = new EmbedBuilder()
                 .WithAuthor(author => author
                     .WithName($"No statistics found for {playerName}")
@@ -143,7 +123,26 @@ namespace Sky_Bot.Modules
                 });
             return builder.Build();
         }
-
+        public static Embed NotFound(string playerName, string playerUrl)
+        {
+            EmbedBuilder builder;
+            builder = new EmbedBuilder()
+                .WithAuthor(author =>
+                {
+                    author
+                        .WithName($"No career statistics found for ***{playerName}***");
+                })
+                .WithUrl(playerUrl)
+                .WithColor(new Color(0x26A20B))
+                .WithCurrentTimestamp()
+                .WithFooter(footer =>
+                {
+                    footer
+                        .WithText("leaguegaming.com")
+                        .WithIconUrl("https://www.leaguegaming.com/images/logo/logonew.png");
+                });
+            return builder.Build();
+        }
 
         public static string Splitter(string lgfa)
         {
@@ -156,6 +155,10 @@ namespace Sky_Bot.Modules
             if (lgfa.Contains("LGFA - Season"))
             {
                 return lgfa.Replace("LGFA - Season", "");
+            }
+            else if (lgfa.Contains("LGFA PSN - Season"))
+            {
+                return lgfa.Replace("LGFA PSN - Season", "");
             }
             return lgfa;
         }

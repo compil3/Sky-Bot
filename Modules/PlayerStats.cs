@@ -19,22 +19,24 @@ namespace Sky_Bot.Modules
             ".ps Web-Site-UserName SeasonNumber (optional)\n Eg: .ps SpillShot 7\n If the website name has spaces try wrapping the name (.ps \"Name tag\" ")]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(ChannelPermission.SendMessages)]
-        public async Task GetPlayerStatsLG(string playerLookup, string seasonID = null, string seasonType = null)
+        public async Task GetPlayerStatsLG(string playerLookup, string seasonType = null, string seasonId = null)
         {
             var tableName = "";
             var dbName = "";
             var outPutSeason = "";
             var guildID = Context.Guild.Id;
-
+            
             if (guildID == 689119429375819951)
             {
                 Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-                await Context.Channel.SendMessageAsync(null, embed: Player.GetPlayer(playerLookup, seasonType, seasonType)).ConfigureAwait(false);
+                await Context.Channel.SendMessageAsync("```Stats Provided by\nSky Sports```", embed: Player.GetPlayer(playerLookup, seasonType, seasonId)).ConfigureAwait(false);
                 GC.Collect();
             }
             else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
             GC.Collect();
         }
+
+        
 
     }
 
@@ -103,7 +105,7 @@ namespace Sky_Bot.Modules
     //                                "http://www.logospng.com/images/171/black-xbox-icon-171624.png";
     //                        }
 
-    //                        message = Helpers.BuilderLG(found.UserSystem, shotRecord, goalRecord, cleanMan, systemIcon,
+    //                        message = EmbedHelpers.BuilderLG(found.UserSystem, shotRecord, goalRecord, cleanMan, systemIcon,
     //                            found.SeasonId, found.PlayerName, found.Position, found.PlayerUrl, found.TeamIcon,
     //                            found.Record, found.AvgMatchRating, guild, division);
     //                    }
@@ -131,7 +133,7 @@ namespace Sky_Bot.Modules
     //                        goalieCleanMan[0] = found.CleanSheets;
     //                        goalieCleanMan[1] = found.ManOfTheMatch;
     //                        cleanMan = string.Join("-", goalieCleanMan);
-    //                        message = Helpers.BuilderPCN(found.UserSystem, shotRecord, goalRecord, cleanMan, systemIcon,
+    //                        message = EmbedHelpers.BuilderPCN(found.UserSystem, shotRecord, goalRecord, cleanMan, systemIcon,
     //                            found.SeasonId, found.PlayerName, found.Position, found.PlayerUrl, found.TeamIcon,
     //                            found.Record, found.AvgMatchRating, guild, division);
 

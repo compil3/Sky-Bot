@@ -29,7 +29,9 @@ namespace Sky_Bot.Engines
         {
             Embed message = null;
             var systemIcon = "";
+            var stopWatch = new Stopwatch();
 
+            stopWatch.Start();
             try
             {
                 using (var playerDatabase = new LiteDatabase(@"Database\LGFA.db"))
@@ -40,7 +42,7 @@ namespace Sky_Bot.Engines
                     //    x.playerName.StartsWith(lookUpName) || x.playerName.ToLower().StartsWith(lookUpName));
                     player.EnsureIndex(x => x.playerName);
                     var result = player.Query()
-                        .Where(x => x.playerName.StartsWith(lookUpName))
+                        .Where(x => x.playerName.Contains(lookUpName))
                         .ToList();
 
                     foreach (var found in result)
@@ -89,10 +91,10 @@ namespace Sky_Bot.Engines
                         {
                             var lgfa = WebUtility.HtmlDecode(heading
                                 .SelectSingleNode($"//*[@id='lg_team_user_leagues-{system}']/h3[1]").InnerText);
-                            if (lgfa.Contains("Last") || lgfa.Contains("Season Stats") || lgfa.Contains("Career")) return Helpers.NotFound(lookUpName, systemIcon, playerHtml);
+                            if (lgfa.Contains("Last") || lgfa.Contains("Season Stats") || lgfa.Contains("Career")) return EmbedHelpers.NotFound(lookUpName, systemIcon, playerHtml);
                             if (lgfa.Contains("LGFA - Season") || lgfa.Contains("LGFA PSN - Season"))
                             {
-                                seasonNumber = Helpers.Splitter(lgfa);
+                                seasonNumber = EmbedHelpers.Splitter(lgfa);
                                 seasonId = seasonNumber.Replace(" ", "");
                             }
                         }
@@ -149,6 +151,7 @@ namespace Sky_Bot.Engines
                                     findStatRow = playerDoc.DocumentNode.SelectNodes(
                                         $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]");
                                     type = 1;
+                                    seasonId = $"{seasonId} Pre-Season";
                                 }
                                 else if (playerDoc.DocumentNode.SelectNodes(
                                              $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]") !=
@@ -163,6 +166,7 @@ namespace Sky_Bot.Engines
                                     findStatRow = playerDoc.DocumentNode.SelectNodes(
                                         $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]");
                                     type = 2;
+                                    seasonId = $"{seasonId} Regular Season";
                                 }
                                 else if (playerDoc.DocumentNode.SelectNodes(
                                              $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]") !=
@@ -171,12 +175,13 @@ namespace Sky_Bot.Engines
                                              $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]") !=
                                          null &&
                                          playerDoc.DocumentNode.SelectNodes(
-                                             $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]") ==
+                                             $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]") !=
                                          null)
                                 {
                                     findStatRow = playerDoc.DocumentNode.SelectNodes(
                                         $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]");
                                     type = 3;
+                                    seasonId = $"{seasonId} Qualifier";
                                 }
                             }
                             else
@@ -188,10 +193,9 @@ namespace Sky_Bot.Engines
                             //    $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]");
                             if (findStatRow == null)
                             {
-                                return message = Helpers.NotFound(found.playerName, systemIcon, found.playerUrl);
+                                return message = EmbedHelpers.NotFound(found.playerName, systemIcon, found.playerUrl);
                             }
 
-                            ;
                             foreach (var playerStat in findStatRow)
                             {
                                 #region Nodes
@@ -277,12 +281,13 @@ namespace Sky_Bot.Engines
                                     .InnerText);
                                 GC.Collect();
 
-                                var teamIcon = string.Join(String.Empty, "https://www.leaguegaming.com" + tempTeamIcon);
+                                var teamIcon = string.Join(String.Empty, "http://www.leaguegaming.com" + tempTeamIcon);
 
                                 #endregion
 
-
-                                return Helpers.BuildEmbed(found.playerName, playerSystem, systemIcon, record, amr,
+                                stopWatch.Stop();
+                                Log.Logger.Warning($"Time taken: {stopWatch.Elapsed}");
+                                return EmbedHelpers.BuildEmbed(found.playerName, playerSystem, systemIcon, record, amr,
                                     goals, assists,
                                     sot, shots, passC, passA, key, interceptions, tac, tacA,
                                     blks, rc, yc, seasonId, found.playerUrl, teamIcon, position);
