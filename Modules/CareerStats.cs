@@ -9,11 +9,11 @@ using Sky_Bot.Engines;
 
 namespace Sky_Bot.Modules
 {
-    class CareerStats : ModuleBase
+    public class CareerStats : ModuleBase
     {
-        [Command("ps")]
+        [Command("cs")]
         [Summary(
-            ".ps Web-Site-UserName SeasonNumber (optional)\n Eg: .ps SpillShot 7\n If the website name has spaces try wrapping the name (.ps \"Name tag\" ")]
+            ".cs Web-Site-UserName SeasonNumber (optional)\n Eg: .ps SpillShot 7\n If the website name has spaces try wrapping the name (.ps \"Name tag\" ")]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(ChannelPermission.SendMessages)]
         public async Task GetPlayerStatsLG(string playerLookup)

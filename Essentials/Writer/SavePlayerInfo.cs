@@ -46,7 +46,7 @@ namespace Sky_Bot.Essentials.Writer
             }
         }
 
-        public static bool SaveCareer(int id, string playerName, string careerRecord, double gamesPlayed, double amr,
+        public static bool SaveCareer(int id, string playerName, string careerRecord, int gamesPlayed, double amr,
             double goals, string assists, string SOT, double shotAttempts, double shotPercentage, double passesC, double passesA,double passPercentage,
             string keypass, string interceptions, double tackles, double tackleAttempts, double tacklePercentage, string blocks, string red, string yellow)
         {

@@ -83,7 +83,7 @@
             public string PlayerName { get; set; }
 
             public string Record { get; set; }
-            public double GamesPlayed { get; set; }
+            public int GamesPlayed { get; set; }
             public double AvgMatchRating { get; set; }
 
             public double Goals { get; set; }

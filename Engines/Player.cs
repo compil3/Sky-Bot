@@ -100,47 +100,11 @@ namespace Sky_Bot.Engines
                         }
                         try
                         {
-                            /*
-                             *if qual == null && reg != null then tr[2]
-                             * else if preason ! null 
-                             *
-                             */
+                            
                             HtmlNodeCollection findStatRow = null;
                             //find all the season types in the table.
                             if (seasonType == null)
                             {
-                                #region logic
-                                //if (playerDoc.DocumentNode.SelectNodes(
-                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]") !=
-                                //    null || playerDoc.DocumentNode.SelectNodes(
-                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]") !=
-                                //    null || playerDoc.DocumentNode.SelectNodes(
-                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]") !=
-                                //    null)
-                                //{
-                                //    findStatRow = playerDoc.DocumentNode.SelectNodes(
-                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]");
-                                //}
-                                //else if (playerDoc.DocumentNode.SelectNodes(
-                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]") !=
-                                //    null || playerDoc.DocumentNode.SelectNodes(
-                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]") !=
-                                //    null)
-                                //{
-                                //    findStatRow = playerDoc.DocumentNode.SelectNodes(
-                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]");
-                                //}
-                                //else if (playerDoc.DocumentNode.SelectNodes(
-                                //      $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[2]") !=
-                                //  null || playerDoc.DocumentNode.SelectNodes(
-                                //      $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[3]") !=
-                                //  null)
-                                //{
-                                //    findStatRow = playerDoc.DocumentNode.SelectNodes(
-                                //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]");
-                                //}
-                                #endregion
-
                                 if (playerDoc.DocumentNode.SelectNodes(
                                         $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[1]") != null &&
                                     playerDoc.DocumentNode.SelectNodes(
@@ -189,8 +153,6 @@ namespace Sky_Bot.Engines
                                 findStatRow = playerDoc.DocumentNode.SelectNodes(
                                     $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]");
                             }
-                            //findStatRow = playerDoc.DocumentNode.SelectNodes(
-                            //    $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]");
                             if (findStatRow == null)
                             {
                                 return message = EmbedHelpers.NotFound(found.playerName, systemIcon, found.playerUrl);
@@ -200,11 +162,9 @@ namespace Sky_Bot.Engines
                             {
                                 #region Nodes
 
-                                HtmlNodeCollection lastFiveGames;
                                 var position = "";
-                                lastFiveGames =
-                                    playerDoc.DocumentNode.SelectNodes(
-                                        $"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr");
+                                var lastFiveGames = playerDoc.DocumentNode.SelectNodes(
+                                    $"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr");
                                 foreach (var recent in lastFiveGames)
                                 {
                                     position = WebUtility.HtmlDecode(recent
@@ -287,7 +247,7 @@ namespace Sky_Bot.Engines
 
                                 stopWatch.Stop();
                                 Log.Logger.Warning($"Time taken: {stopWatch.Elapsed}");
-                                return EmbedHelpers.BuildEmbed(found.playerName, playerSystem, systemIcon, record, amr,
+                                return EmbedHelpers.SeasonEmbed(found.playerName, playerSystem, systemIcon, record, amr,
                                     goals, assists,
                                     sot, shots, passC, passA, key, interceptions, tac, tacA,
                                     blks, rc, yc, seasonId, found.playerUrl, teamIcon, position);
