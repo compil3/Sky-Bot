@@ -40,21 +40,7 @@ namespace Sky_Bot.Properties
         public string Assists { get; set; }
         public string KeyPasses { get; set; }
 
-        private string scoring;
-        public string Scoring
-        {
-            get => scoring;
-            set
-            {
-                scoring = value;
-                string[] offense = new string[3];
-                offense[0] = Convert.ToString(Goals, CultureInfo.InvariantCulture);
-                offense[1] = Assists;
-                offense[2] = KeyPasses;
-                scoring = string.Join(" - ", offense);
-            }
-        }
-
+       
         public double ShotAttempts { get; set; }
         public string ShotsOnTarget { get; set; }
         public double ShotPercentage { get; set; }

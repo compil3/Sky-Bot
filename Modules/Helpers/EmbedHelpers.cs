@@ -112,7 +112,12 @@ namespace Sky_Bot.Modules
             cStat.Goals = Convert.ToDouble(goals);
             cStat.Assists = assists;
             cStat.KeyPasses = key;
-            cStat.Scoring = goals
+            
+            string[] scoring = new string[3];
+            scoring[0] = cStat.Goals.ToString(CultureInfo.InvariantCulture);
+            scoring[1] = cStat.Assists;
+            scoring[2] = cStat.KeyPasses;
+            offense = string.Join(" - ", scoring);
 
             //foreach (var stat in stats)
             //{
@@ -130,7 +135,7 @@ namespace Sky_Bot.Modules
                  .AddField("GP", cStat.GamesPlayed, true)
                  .AddField("Record (W-D-L)", record, true)
                  .AddField("AMR", cStat.AvgMatchRating, true)
-                 .AddField("G-A-Key)", offense, true);
+                 .AddField("G-A-Key", offense, true);
              embed = builder.Build();
             //}
 
