@@ -34,7 +34,7 @@ namespace Sky_Bot.Engines
             stopWatch.Start();
             try
             {
-                using (var playerDatabase = new LiteDatabase(@"Database\LGFA.db"))
+                using (var playerDatabase = new LiteDatabase(@"Database/LGFA.db"))
                 {
                     var player = playerDatabase.GetCollection<PlayerProperties.PlayerInfo>("Players");
 

@@ -66,7 +66,7 @@ namespace Sky_Bot
             ulong id = Convert.ToUInt64(Environment.GetEnvironmentVariable("update_log_channel"));
             var chnl = client.GetChannel(id) as IMessageChannel;
 
-            Manager.Manage(chnl);
+            //Manager.Manage(chnl);
             Log.Logger.Warning("Schedules Initialized.");
             return Task.CompletedTask;
         }

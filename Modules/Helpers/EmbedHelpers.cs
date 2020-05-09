@@ -106,18 +106,34 @@ namespace Sky_Bot.Modules
             Embed embed = null;
             var offense = "";
             //var stats = Compressor(record, amr, goals, assists, sot, shots, passC, passA, key, intercept, tac, tacA, blk, rc, yc);
-            CareerProperties cStat = new CareerProperties();
-            cStat.GamesPlayed = record;
-            cStat.AvgMatchRating = Convert.ToDouble(amr);
-            cStat.Goals = Convert.ToDouble(goals);
-            cStat.Assists = assists;
-            cStat.KeyPasses = key;
-            
+            CareerProperties cStat = new CareerProperties
+            {
+                GamesPlayed = record,
+                AvgMatchRating = Convert.ToDouble(amr),
+                Goals = Convert.ToDouble(goals),
+                Assists = assists,
+                KeyPasses = key,
+                ShotAttempts = shots,
+                ShotsOnTarget = sot,
+                Blocks = blk,
+                TackleAttempts = tacA,
+                Tackles = tac,
+                PassesAttempted = passA,
+                PassesCompleted = passC,
+                YellowCards = yc,
+                RedCards = rc
+            };
+
             string[] scoring = new string[3];
             scoring[0] = cStat.Goals.ToString(CultureInfo.InvariantCulture);
             scoring[1] = cStat.Assists;
             scoring[2] = cStat.KeyPasses;
-            offense = string.Join(" - ", scoring);
+            offense = string.Join("-", scoring);
+
+            string[] shooting = new string[3];
+            shooting[0] = cStat.ShotAttempts;
+            shooting[1] = cStat.ShotsOnTarget;
+
 
             //foreach (var stat in stats)
             //{
@@ -135,77 +151,18 @@ namespace Sky_Bot.Modules
                  .AddField("GP", cStat.GamesPlayed, true)
                  .AddField("Record (W-D-L)", record, true)
                  .AddField("AMR", cStat.AvgMatchRating, true)
-                 .AddField("G-A-Key", offense, true);
+                 .AddField("G-A-Key", offense, true)
+                 .AddField("S-SOT-SH%", cStat.ShotPercentage,true);
+                 //.AddField("Passing (PC-PA-P%)", passing, true)
+                 //.AddField("Defensive (Int-Blk)", defensive, true)
+                 //.AddField("Discipline (YC-RC)",discipline, true);
              embed = builder.Build();
             //}
 
             return embed;
         }
 
-        private static List<string> Compressor(string record, string amr, string goals, string assists, string sot, string shots, string passC, string passA, string key, string intercept, string tac, string tacA, string blk, string rc, string yc)
-        {
-            List<string> stats = new List<string>();
-            CareerProperties cStat = new CareerProperties();
-            //games played
-            var splitRecord = record.Split('-');
-            int wins = int.Parse(splitRecord[0]);
-            int draws = int.Parse(splitRecord[1]);
-            int loses = int.Parse(splitRecord[2]);
-            int gamesPlayed = wins + draws + loses;
-            //cStat.GamesPlayed = gamesPlayed;
-
-            //Average Match Rating Calculation
-            var tempAmr = Convert.ToDecimal(amr);
-            var rating = tempAmr / gamesPlayed;
-            var matchRating = rating.ToString("P", CultureInfo.InvariantCulture);
-
-            string[] scoring = new string[3];
-            scoring[0] = goals;
-            scoring[1] = assists;
-            scoring[2] = key;
-            var scoringRecord = string.Join(" - ", scoring);
-            stats.Add(scoringRecord);
-
-            decimal shotPercentage = 0;
-            string[] shooting = new string[3];
-            shooting[0] = shots;
-            shooting[1] = sot;
-            if (shots == "0" & sot == "0") shotPercentage = 0;
-            else shotPercentage = Convert.ToDecimal(sot) / Convert.ToDecimal(shots);
-            shooting[2] = shotPercentage.ToString("P", CultureInfo.InvariantCulture);
-            var shootingRecord = string.Join(" - ", shooting);
-            stats.Add(shootingRecord);
-
-            string[] tackling = new string[3];
-            tackling[0] = tac;
-            tackling[1] = tacA;
-            var tempTacPerc = Convert.ToDecimal(tac) / Convert.ToDecimal(tacA);
-            tackling[2] = tempTacPerc.ToString("P", CultureInfo.InvariantCulture);
-            var tackleRecord = string.Join(" - ", tackling);
-            stats.Add(tackleRecord);
-
-            string[] passing = new string[3];
-            passing[0] = passC;
-            passing[1] = passA;
-            var tempPassPerc = Convert.ToDecimal(passC) / Convert.ToDecimal(passA);
-            passing[2] = tempPassPerc.ToString("P", CultureInfo.InvariantCulture);
-            var passingRecord = string.Join(" - ", passing);
-            stats.Add(passingRecord);
-
-            var defensive = new string[2];
-            defensive[0] = intercept;
-            defensive[1] = blk;
-            var defensiveRecord = string.Join(" - ", defensive);
-            stats.Add(defensiveRecord);
-
-            var discipline = new string[2];
-            discipline[0] = yc;
-            discipline[1] = rc;
-            var disciplineRecord = string.Join(" - ", discipline);
-            stats.Add(disciplineRecord);
-
-            return stats;
-        }
+        
 
 
         public static Embed NotFound(string playerName, string playerSystem, string playerUrl)
@@ -215,17 +172,21 @@ namespace Sky_Bot.Modules
             else if (playerSystem == "xbox") systemIcon = "53";
             EmbedBuilder builder;
             builder = new EmbedBuilder()
-                .WithAuthor(author => author
-                    .WithName($"No statistics found for {playerName}")
-                    .WithIconUrl(playerSystem))
+                .WithTitle(playerName)
                 .WithUrl(playerUrl)
                 .WithColor(new Color(0x26A20B))
+                .WithAuthor(author =>
+                {
+                    author
+                        .WithName("There doesn't seem to be any statistics for this season.")
+                        .WithIconUrl(playerSystem);
+                })
                 .WithCurrentTimestamp()
                 .WithFooter(footer =>
                 {
                     footer
                         .WithText("leaguegaming.com")
-                        .WithIconUrl($"https://www.leaguegaming.com/images/league/icon/l{systemIcon}.png");
+                        .WithIconUrl("https://www.leaguegaming.com/images/logo/logonew.png");
                 });
             return builder.Build();
         }

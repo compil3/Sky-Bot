@@ -43,7 +43,6 @@ namespace Engine.Schedule
                 };
 
                 Log.Logger.Warning("Running Weekly Update.");
-                //await channel.SendMessageAsync("Starting weekly updates.").ConfigureAwait(false);
 
                 try
                 {
@@ -59,7 +58,6 @@ namespace Engine.Schedule
 
                             pbar.Tick(
                                 $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
-                            //Player.GetInformation(t.System, "player", j, "regular", "career", pbar);
                             Get.GetPlayerIds(t.System, "player", j, pbar);
                             Thread.Sleep(250);
 
@@ -73,14 +71,12 @@ namespace Engine.Schedule
                 }
                 catch (Exception e)
                 {
-                    //await channel.SendMessageAsync($"Error with **WeekUpdate** schedule.\n Error: {e}");
+                    
                     Console.WriteLine(e);
                     throw;
                 }
-
-                //await channel.SendMessageAsync("Week update completed").ConfigureAwait(false);
             });
-            this.Schedule(update).ToRunNow().AndEvery(5).Minutes();
+            this.Schedule(update).ToRunNow().AndEvery(1).Weeks().On(DayOfWeek.Sunday).At(1,0);
 
         }
     }

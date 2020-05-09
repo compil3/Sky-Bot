@@ -29,7 +29,7 @@ namespace Sky_Bot.Modules
             if (guildID == 689119429375819951)
             {
                 Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-                await Context.Channel.SendMessageAsync("```Stats Provided by\nSky Sports```", embed: Player.GetPlayer(playerLookup, seasonType, seasonId)).ConfigureAwait(false);
+                await Context.Channel.SendMessageAsync("```asciidoc [Stats Provided by LGFA]```", embed: Player.GetPlayer(playerLookup, seasonType, seasonId)).ConfigureAwait(false);
                 GC.Collect();
             }
             else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");

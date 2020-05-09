@@ -16,8 +16,8 @@ namespace Engine.Essentials.Helpers
         {
             var configLocation = system switch
             {
-                "psn" => @"Configuration\Season\psn.json",
-                "xbox" => @"Configuration\Season\xbox.json",
+                "psn" => @"Configuration/Season/psn.json",
+                "xbox" => @"Configuration/Season/xbox.json",
                 _ => ""
             };
 

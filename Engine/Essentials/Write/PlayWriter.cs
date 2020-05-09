@@ -105,7 +105,7 @@ namespace Engine.Essentials.Write
         internal static bool SaveInformation(int playerId, string playerName, string playerUrl,string system)
         {
             var databaseName = @"LGFA.db";
-            var rootDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\.."))  + @"\Database";
+            var rootDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..//..//..//.."))  + @"/Database";
             var db = Path.Combine(rootDir, databaseName);
 
             using var database = new LiteDatabase(db);

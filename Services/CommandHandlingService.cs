@@ -34,8 +34,6 @@ namespace Sky_Bot.Services
         private async Task HandleCommand(SocketMessage rawMessage)
         {
             var message = rawMessage as SocketUserMessage;
-            //if (!(rawMessage is SocketUserMessage message)) return;
-            //if (message.Source != MessageSource.User) return;
             if (message == null) return;
 
             if (message.Source != MessageSource.User) return;
@@ -45,14 +43,6 @@ namespace Sky_Bot.Services
 
             if (!(message.HasCharPrefix(prefix, ref argPos) || message.HasMentionPrefix(_discord.CurrentUser,ref argPos))) return;
 
-            //var context = new SocketCommandContext(_discord,message);
-            //var result = await _commands.ExecuteAsync(context, argPos, _services);
-            //if (!result.IsSuccess)
-            //{
-            //    Log.Logger.Fatal($"{context.Message.Content} Error: {result.ErrorReason}");
-            //    await context.Channel.SendMessageAsync($"{context.Message.Content} Error: {result.ErrorReason}");
-            //}
-            //if (result.IsSuccess) Log.Warning($"{context.Message.Content} command accepted");
             var result = await _commands.ExecuteAsync(context, argPos, _services);
             if (!result.IsSuccess)
             {
@@ -64,7 +54,7 @@ namespace Sky_Bot.Services
         }
         
 
-        private async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
+        private static async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
         {
             if (!command.IsSpecified) return;
             if (result.IsSuccess) return;

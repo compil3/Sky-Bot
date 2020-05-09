@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Sky_Bot.Schedule
         {
             Action update = new Action(async () =>
             {
+                //Process.Start("Engine");
                 Log.Logger.Warning("Running Weekly Update.");
 
 

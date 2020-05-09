@@ -40,7 +40,7 @@ namespace Engine.Essentials.Generators
                 CollapseWhenFinished = false,
                 DisplayTimeInRealTime = false,
                 ShowEstimatedDuration = true,
-                EnableTaskBarProgress = true,
+                EnableTaskBarProgress = false
             };
 
 
