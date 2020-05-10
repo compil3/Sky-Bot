@@ -16,14 +16,14 @@ namespace Sky_Bot.Modules
             ".cs Web-Site-UserName SeasonNumber (optional)\n Eg: .ps SpillShot 7\n If the website name has spaces try wrapping the name (.ps \"Name tag\" ")]
         [RequireContext(ContextType.Guild)]
         [RequireUserPermission(ChannelPermission.SendMessages)]
-        public async Task GetPlayerCareer(string playerLookup)
+        public async Task GetPlayerCareer(string playerLookup, string seasonId = null)
         {
            var guildId = Context.Guild.Id;
             
             if (guildId == 689119429375819951)
             {
                 Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-                await Context.Channel.SendMessageAsync("```asciidoc\n[Stats Provided by LGFA] ```", embed: Career.GetCareer(playerLookup)).ConfigureAwait(false);
+                await Context.Channel.SendMessageAsync("```asciidoc\n[Stats Provided by LGFA] ```", embed: Career.GetCareer(playerLookup, seasonId)).ConfigureAwait(false);
                 GC.Collect();
             }
             else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");

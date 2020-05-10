@@ -15,6 +15,7 @@ using ShellProgressBar;
 using Sky_Bot.Essentials;
 using Sky_Bot.Essentials.Writer;
 using Sky_Bot.Modules;
+using Sky_Bot.Modules.Helpers;
 using Sky_Bot.Properties;
 using Sky_Bot.Schedule;
 using static Sky_Bot.Extras.Tick.TickComplete;
@@ -75,18 +76,10 @@ namespace Sky_Bot.Engines
                                 "https://www.leaguegaming.com/images/league/icon/l53.png";
                         }
 
+
                         var playerDoc = web.Load(playerHtml);
-                        //var playerStatsRows =
-                        //    playerDoc.DocumentNode.SelectNodes(
-                        //        $"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr");
-
-
-                        //var countRows = playerStatsRows.Count;
-                        //playerDoc.DocumentNode.SelectNodes($"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr");
-
-                        //var record = WebUtility.HtmlDecode(playerStat.SelectSingleNode($"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody/tr[{type}]/td[2]").InnerText)
                         var currentTableHeadinng =
-                            playerDoc.DocumentNode.SelectNodes($"//*[@id='lg_team_user_leagues-{system}']/h3[1]");
+                             playerDoc.DocumentNode.SelectNodes($"//*[@id='lg_team_user_leagues-{system}']/h3[1]");
                         foreach (var heading in currentTableHeadinng)
                         {
                             var lgfa = WebUtility.HtmlDecode(heading
@@ -100,7 +93,7 @@ namespace Sky_Bot.Engines
                         }
                         try
                         {
-                            
+
                             HtmlNodeCollection findStatRow = null;
                             //find all the season types in the table.
                             if (seasonType == null)
@@ -247,7 +240,7 @@ namespace Sky_Bot.Engines
 
                                 stopWatch.Stop();
                                 Log.Logger.Warning($"Time taken: {stopWatch.Elapsed}");
-                                return EmbedHelpers.SeasonEmbed(found.playerName, playerSystem, systemIcon, record, amr,
+                                return SeasonHelper.SeasonEmbed(found.playerName, playerSystem, systemIcon, record, amr,
                                     goals, assists,
                                     sot, shots, passC, passA, key, interceptions, tac, tacA,
                                     blks, rc, yc, seasonId, found.playerUrl, teamIcon, position);

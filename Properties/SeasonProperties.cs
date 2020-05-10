@@ -1,13 +1,12 @@
-﻿
-using System;
-using System.Globalization;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Sky_Bot.Properties
 {
-    public class CareerProperties
+    public class SeasonProperties
     {
-        #region Record
+           #region Record
         private string gamesPlayed;
 
         public string GamesPlayed
@@ -27,17 +26,7 @@ namespace Sky_Bot.Properties
 
         public string Record { get; set; }
 
-        private double _matchRating;
-        public double AvgMatchRating { 
-            get => _matchRating;
-            set
-            {
-                _matchRating = value;
-                var tempAmr = Convert.ToDouble(_matchRating);
-                var rating = tempAmr / Convert.ToDouble(GamesPlayed);
-                _matchRating = Math.Round(rating,2);
-            }
-        }
+        public string AvgMatchRating { get; set; }
         #endregion
         
 
