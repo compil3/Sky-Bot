@@ -52,18 +52,22 @@ namespace Sky_Bot.Engines
 
 
                     //this works to collect all the rows, but it's multidimensional.
-                    //need to add Season = "S16", Type = "Reg", GP = "20" etc to the list to make accessing data faster than using foreach loop.
+                    //need to add Season = "S16", Type = "Reg", GP = "20" etc
                     List<List<string>> table = playerDoc.DocumentNode
                         .SelectSingleNode($"//*[@id='lg_team_user_leagues-{leagueId}']/div[4]/table/tbody")
                         .Descendants("tr")
                         .Skip(1)
-                        .Where(tr => tr.Elements("td").Count() > 1)
-                        .Select(tr => tr.Elements("td").Select(td => td.InnerText.Trim()).ToList())
+                        //.Where(tr => tr.Elements("td").Count() > 1)
+                        .Select(tr => tr.Elements("td")
+                            .Select(td => td.InnerText.Trim()).ToList())
                         .ToList();
 
-                   
 
-                    var count = findCareerNode.Count;
+                    var tableResult = Enumerable.Range(0, table.Count)
+                        .Where(i => table[i].Contains(seasonId) && table[i].Contains("Reg"))
+                        .ToString();
+
+              var count = findCareerNode.Count;
                     foreach (var careerStats in findCareerNode)
                     {
                         if (WebUtility.HtmlDecode(careerStats
