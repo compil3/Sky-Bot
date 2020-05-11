@@ -98,11 +98,11 @@ namespace Engine.Essentials.Helpers
 
             if (system == "psn")
             {
-                configLocation = @"Configuration\Urls\psn.json";
+                configLocation = @"Configuration/Urls/psn.json";
             }
             else if (system == "xbox")
             {
-                configLocation = @"Configuration\Urls\xbox.json";
+                configLocation = @"Configuration/Urls/xbox.json";
             }
 
             string JSON = "";

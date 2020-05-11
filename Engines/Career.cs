@@ -22,7 +22,7 @@ namespace Sky_Bot.Engines
             var web = new HtmlWeb();
             try
             {
-                using (var playerDatabase = new LiteDatabase(@"Database/LGFA.db"))
+                using (var playerDatabase = new LiteDatabase(@"Filename=Database/LGFA.db;connection=shared"))
                 {
                     var player = playerDatabase.GetCollection<PlayerProperties.PlayerInfo>("Players");
                     var div = 1;
@@ -40,6 +40,9 @@ namespace Sky_Bot.Engines
                         try
                         {
                             var playerDoc = web.Load(found.playerUrl);
+                            //var testNode =
+                            //    playerDoc.DocumentNode.SelectNodes("//*[@id='lg_team_user_leagues-53']/div[3]/table/tbody");
+                            //var sCount = testNode.Count;
 
                             #region Parsing Nodes
 
@@ -49,7 +52,8 @@ namespace Sky_Bot.Engines
                                 //find the career table on the players profile.
                                 findCareerNode =
                                     playerDoc.DocumentNode.SelectNodes(
-                                        $"//*[@id='lg_team_user_leagues-{leagueId}']/div[5]/table/tbody/tr[1]");
+                                        $"//*[@id='lg_team_user_leagues-{leagueId}']/div[5]/table/tbody");
+                                var count = findCareerNode.Count;
 
                                 if (findCareerNode == null
                                 ) //if the table isn't found above due to a season in progress (table will show), set /div to 4
@@ -132,8 +136,8 @@ namespace Sky_Bot.Engines
                             }
                             else //if a season is entered
                             {
-                                CareerSeason.CareerSeasonEmbed(playerDoc, found.playerUrl, found.playerName, seasonId, leagueId);
-                                //#region Season is entered
+                                return CareerSeason.CareerSeasonEmbed(playerDoc, found.playerUrl, found.playerName, seasonId, leagueId);
+                                #region Season is entered
                                 ////check Type against user input, if nothing entered use Reg else match.
                                 //if (playerDoc.DocumentNode.InnerHtml.ToString().Contains(seasonId))
                                 //{
@@ -227,7 +231,7 @@ namespace Sky_Bot.Engines
                                 //            passA, keypass, interceptions, tac, tacA, blk, rc, yc);
                                 //        #endregion
                                 //    }
-                                return EmbedHelpers.NotFound(lookUpPlayer, found.playerUrl);
+                                #endregion
                             }
                         }
                         catch (Exception e)
