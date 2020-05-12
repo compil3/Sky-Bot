@@ -108,6 +108,14 @@
             public string RedCards { get; set; }
         }
 
+        internal class URL
+        {
+            public int Id { get; set; }
+            public string PlayerName { get; set; }
+            public string PlayerUrl { get; set; }
+            public string System { get; set; }
+        }
+
     }
 }
 
