@@ -21,7 +21,11 @@ namespace Engine.Schedule
             {
                 var system = new string[] { "xbox", "psn" };
 
-                var seasonCount = system.Select(s => new ConsoleInformation { System = s, CurrentSeason = int.Parse(GetCurrentSeason.GetSeason(s)), PreviousSeason = int.Parse(GetPreviousSeason.GetPrevious(s)), NumberOfSeasons = Math.Abs(int.Parse(GetCurrentSeason.GetSeason(s)) - int.Parse(GetPreviousSeason.GetPrevious(s)) + 1) }).ToList();
+                var seasonCount = system.Select(s => new ConsoleInformation { System = s, 
+                    CurrentSeason = int.Parse(GetCurrentSeason.GetSeason(s)), 
+                    PreviousSeason = int.Parse(GetPreviousSeason.GetPrevious(s)), 
+                    NumberOfSeasons = Math.Abs(int.Parse(GetCurrentSeason.GetSeason(s)) - 
+                        int.Parse(GetPreviousSeason.GetPrevious(s)) + 1) }).ToList();
 
                 var options = new ProgressBarOptions()
                 {
