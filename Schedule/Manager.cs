@@ -7,6 +7,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using FluentScheduler;
+using Serilog;
 
 namespace Sky_Bot.Schedule
 {
@@ -14,7 +15,9 @@ namespace Sky_Bot.Schedule
     {
         public static Task Manage(IMessageChannel chnl)
         {
-            JobManager.Initialize(new Weekly(chnl));
+            Log.Logger.Information("Schedule Initializing.");
+             JobManager.Initialize(new WeekUpdate(chnl));
+             Log.Logger.Information("Schedule Initialized.");
             return Task.CompletedTask;
         }
     }
