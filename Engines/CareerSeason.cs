@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using Discord;
+﻿using Discord;
 using HtmlAgilityPack;
-using LiteDB;
-using Microsoft.VisualBasic;
 using Serilog;
 using Sky_Bot.Modules;
 using Sky_Bot.Properties;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Sky_Bot.Engines
 {
     public class CareerSeason
     {
-        public object SeasonId { get; private set; }
-
         public static Embed CareerSeasonEmbed(HtmlDocument playerDoc, string foundPlayerUrl, string foundPlayerName, string seasonId, int leagueId)
         {
             HtmlNodeCollection findCareerNode = null;
