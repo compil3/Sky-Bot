@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
@@ -22,9 +23,12 @@ namespace Sky_Bot.Modules
             
             if (guildId == 689119429375819951)
             {
+                var stopWatch = new Stopwatch();
                 Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-                await Context.Channel.SendMessageAsync("```asciidoc\n[Stats Provided by LGFA] ```", embed: Career.GetCareer(playerLookup, seasonId)).ConfigureAwait(false);
-                GC.Collect();
+                stopWatch.Start();
+                await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: Career.GetCareer(playerLookup, seasonId)).ConfigureAwait(false);
+                stopWatch.Stop();
+                Log.Logger.Warning($"Time taken: {stopWatch.Elapsed}");
             }
             else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
             GC.Collect();
