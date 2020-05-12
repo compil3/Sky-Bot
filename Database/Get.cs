@@ -17,18 +17,14 @@ namespace Sky_Bot.Database
             var web = new HtmlWeb();
             HtmlNodeCollection findPlayerCount;
 
-
-            var doc = web.Load(RetrieveUrl.GetUrlTwo(system, trigger, SeasonId, 1));
+            var doc = web.Load(Fetch.GetUrl(system, trigger, SeasonId, 1));
 
             findPlayerCount = doc.DocumentNode.SelectNodes("//*[@id='lgtable_memberstats51']/tbody/tr");
             if (findPlayerCount == null)
             {
-                doc = web.Load(RetrieveUrl.GetUrlTwo(system, trigger, SeasonId, 0));
+                doc = web.Load(Fetch.GetUrl(system, trigger, SeasonId, 0));
                 findPlayerCount = doc.DocumentNode.SelectNodes("//*[@id='lgtable_memberstats51']/tbody/tr");
             }
-
-            
-
 
             var childOptions = new ProgressBarOptions()
             {
@@ -40,8 +36,6 @@ namespace Sky_Bot.Database
                 ShowEstimatedDuration = true,
                 EnableTaskBarProgress = false
             };
-
-
             try
             {
                 using var child = pbar.Spawn(findPlayerCount.Count, $"Updating Season: {SeasonId} player ids",
@@ -55,7 +49,6 @@ namespace Sky_Bot.Database
                     #region nodes
                     foreach (var player in findPlayerNodes)
                     {
-
                         child.EstimatedDuration = TimeSpan.FromMilliseconds(findPlayerCount.Count * 25);
                         var playerName = WebUtility.HtmlDecode(player
                             .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a").InnerText);
@@ -69,18 +62,10 @@ namespace Sky_Bot.Database
                         int playerId = int.Parse(tempId.Get("userid"));
 
                         Writer.SaveInformation(playerId, playerName, playerUrl, system);
-                        GC.Collect();
                     }
-
                     Thread.Sleep(25);
-
                         #endregion
-
-                        //var estimatedDuration = TimeSpan.FromSeconds(60 * totalPlayersInSeason) + TimeSpan.FromSeconds(60 * i);
                         child.Tick(); //$"Completed {system} {SeasonId} updated");
-                    
-
-
                 }
             }
             catch (Exception e)
