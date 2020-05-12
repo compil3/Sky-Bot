@@ -7,6 +7,9 @@ namespace Sky_Bot.Properties
 {
     public class CareerProperties
     {
+        public string SeasonId { get; set; }
+        public string SeasonType { get; set; }
+
         #region Record
         private string gamesPlayed;
 
@@ -27,22 +30,23 @@ namespace Sky_Bot.Properties
 
         public string Record { get; set; }
 
-        private double _matchRating;
-        public double AvgMatchRating { 
+        private string _matchRating;
+        public string AvgMatchRating { 
             get => _matchRating;
             set
             {
-                _matchRating = value;
                 var tempAmr = Convert.ToDouble(_matchRating);
                 var rating = tempAmr / Convert.ToDouble(GamesPlayed);
-                _matchRating = Math.Round(rating,2);
+                _matchRating = Math.Round(rating,2).ToString();
             }
         }
+        //used for season career stats
+        public string MatchRating { get; set; }
         #endregion
         
 
         #region Offensive
-        public double Goals { get; set; }
+        public string Goals { get; set; }
         public string Assists { get; set; }
 
         private string _goalsAssist;
@@ -63,7 +67,7 @@ namespace Sky_Bot.Properties
         public string GoalsPerGame
         {
             get=> _goalsPerGame;
-            set => _goalsPerGame = Math.Round((Goals) / Convert.ToDouble(GamesPlayed),3).ToString("F");
+            set => _goalsPerGame = Math.Round((Convert.ToDouble(Goals)) / Convert.ToDouble(GamesPlayed),3).ToString("F");
         }
 
         private string _shotsPerGoal;
@@ -73,11 +77,11 @@ namespace Sky_Bot.Properties
             get => _shotsPerGoal;
             set
             {
-                if (Goals != 0)
+                if (Math.Abs(Convert.ToDouble(Goals)) > 0)
                 {
                     string[] shotsGoalPercent = new string[2];
-                    shotsGoalPercent[0] = Math.Round((Convert.ToDouble(ShotAttempts)) / Goals, 3).ToString("F");
-                    shotsGoalPercent[1] = Math.Round(Goals / Convert.ToDouble(ShotAttempts), 2).ToString("P");
+                    shotsGoalPercent[0] = Math.Round((Convert.ToDouble(ShotAttempts)) / Convert.ToDouble(Goals), 3).ToString("F");
+                    shotsGoalPercent[1] = Math.Round(Convert.ToDouble(Goals) / Convert.ToDouble(ShotAttempts), 2).ToString("P");
                     _shotsPerGoal = string.Join(" - ", shotsGoalPercent);
                 }
                 else _shotsPerGoal = "0.0";
@@ -93,7 +97,7 @@ namespace Sky_Bot.Properties
         public string ShotPercentage
         {
             get => _shotPercent;
-            set => _shotPercent = Math.Round(Goals / Convert.ToDouble(ShotAttempts), 2).ToString("P");
+            set => _shotPercent = Math.Round(Convert.ToDouble(Goals) / Convert.ToDouble(ShotAttempts), 2).ToString("P");
         }
 
         private string _shotPerGame;
