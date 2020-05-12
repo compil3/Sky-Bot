@@ -111,10 +111,10 @@ namespace Sky_Bot.Modules
                 //Record
                 GamesPlayed = record,
                 Record = record,
-                AvgMatchRating = Convert.ToDouble(amr),
+                AvgMatchRating = amr,
 
                 //Offensive
-                Goals = Convert.ToDouble(goals),
+                Goals = goals,
                 Assists = assists,
                 GoalsAssist = "0",
                 GoalsPerGame = "0",
@@ -220,16 +220,19 @@ namespace Sky_Bot.Modules
             EmbedBuilder builder = null;
             Embed embed = null;
             var offense = "";
+            if (type == "Reg") type = "Regular";
+            var seasonSplit = seasonId.Replace("S", "");
             //var stats = Compressor(record, amr, goals, assists, sot, shots, passC, passA, key, intercept, tac, tacA, blk, rc, yc);
             CareerProperties cStat = new CareerProperties
             {
+                SeasonType = type,
                 //Record
                 GamesPlayed = record,
                 Record = record,
-                AvgMatchRating = Convert.ToDouble(amr),
+                AvgMatchRating = amr,
 
                 //Offensive
-                Goals = Convert.ToDouble(goals),
+                Goals = goals,
                 Assists = assists,
                 GoalsAssist = "0",
                 GoalsPerGame = "0",
@@ -267,7 +270,7 @@ namespace Sky_Bot.Modules
             };
 
             builder = new EmbedBuilder()
-                .WithTitle($"{seasonId} Career Stats: {foundPlayerName}")
+                .WithTitle($"{foundPlayerName} - {cStat.SeasonType} Season {seasonSplit} Statistics.")
                 .WithUrl(foundPlayerUrl)
                 .WithColor(new Color(0x26A20B))
                 .WithCurrentTimestamp()
