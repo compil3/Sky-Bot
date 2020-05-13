@@ -17,11 +17,11 @@ namespace Sky_Bot.Essentials
 
             if (system == "psn")
             {
-                configLocation = @"Configuration\Season\psn.json";
+                configLocation = @"Configuration/Season/psn.json";
             }
             else if (system == "xbox")
             {
-                configLocation = @"Configuration\Season\xbox.json";
+                configLocation = @"Configuration/Season/xbox.json";
             }
 
             string JSON = "";
