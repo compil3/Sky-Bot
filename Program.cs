@@ -11,8 +11,10 @@ using Discord.Commands;
 using Discord.WebSocket;
 using FluentScheduler;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using Sky_Bot.Configuration.Bot;
 using Sky_Bot.Modules;
 using Sky_Bot.Schedule;
 using Sky_Bot.Services;
@@ -43,14 +45,13 @@ namespace Sky_Bot
                 Console.WriteLine("Sky Sports Bot v1.0");
                 Console.ResetColor();
 
-                //Console.WriteLine($"Environment Variable: {Environment.GetEnvironmentVariable("token")}");
 
                 await client.LoginAsync(TokenType.Bot, 
                     Environment.GetEnvironmentVariable("token"));
 
                 await client.StartAsync();
 
-                await services.GetRequiredService<CommandHandlingService>().InitializeAsync();
+                await services.GetRequiredService<CommandHandler>().InitializeAsync();
                 client.Ready += Client_Ready;
                 
                 await client.SetGameAsync("Watching LGFA");
@@ -62,7 +63,6 @@ namespace Sky_Bot
 
         public static Task Client_Ready()
         {
-            //DiscordSocketClient _client = new DiscordSocketClient();
             ulong id = Convert.ToUInt64(Environment.GetEnvironmentVariable("update_log_channel"));
             var chnl = client.GetChannel(id) as IMessageChannel;
 
@@ -86,7 +86,7 @@ namespace Sky_Bot
             return new ServiceCollection()
                 .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()
-                .AddSingleton<CommandHandlingService>()
+                .AddSingleton<CommandHandler>()
                 .AddSingleton<HttpClient>()
                 .BuildServiceProvider();
         }

@@ -11,13 +11,13 @@ using Serilog;
 
 namespace Sky_Bot.Services
 {
-    public class CommandHandlingService
+    public class CommandHandler
     {
         private readonly DiscordSocketClient _discord;
         private readonly CommandService _commands;
         private readonly IServiceProvider _services;
 
-        public CommandHandlingService(IServiceProvider services)
+        public CommandHandler(IServiceProvider services)
         {
             _commands = services.GetRequiredService<CommandService>();
             _discord = services.GetRequiredService<DiscordSocketClient>();
