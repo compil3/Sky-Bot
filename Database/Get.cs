@@ -65,7 +65,7 @@ namespace Sky_Bot.Database
                     }
                     Thread.Sleep(25);
                         #endregion
-                        child.Tick(); //$"Completed {system} {SeasonId} updated");
+                        child.Tick(); 
                 }
             }
             catch (Exception e)

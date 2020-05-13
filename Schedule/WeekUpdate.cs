@@ -78,7 +78,7 @@ namespace Sky_Bot.Schedule
                     throw;
                 }
             });
-            this.Schedule(update).ToRunNow().AndEvery(1).Weeks().On(DayOfWeek.Sunday).At(1, 0);
+            this.Schedule(update).ToRunNow().AndEvery(1).Weeks().On(DayOfWeek.Friday).At(3, 0);
         }
     }
 

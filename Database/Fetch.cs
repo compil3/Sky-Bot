@@ -17,11 +17,11 @@ namespace Sky_Bot.Database
 
             if (system == "psn")
             {
-                configLocation = @"Configuration/Urls/psn.json";
+                configLocation = @"Configuration/Url/psn.json";
             }
             else if (system == "xbox")
             {
-                configLocation = @"Configuration/Urls/xbox.json";
+                configLocation = @"Configuration/Url/xbox.json";
             }
 
             string JSON = "";

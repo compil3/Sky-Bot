@@ -179,7 +179,7 @@ namespace Sky_Bot.Modules.News
                         {
                             table = (system == "xbox") ? "XboxTrade" : "PsnTrade";
 
-                            using (var newsDb = new LiteDatabase(@"News.db"))
+                            using (var newsDb = new LiteDatabase(@"/Database/News.db"))
                             {
                                 var news = newsDb.GetCollection<NewsProperties.News>(table);
                                 var result = news.Find(x => x.date.Equals(lastNews));

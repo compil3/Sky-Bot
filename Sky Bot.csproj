@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Sky_Bot</RootNamespace>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,19 +14,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Configs\Season\psn.json" />
-    <None Remove="Configs\Season\xbox.json" />
-    <None Remove="Configs\Urls\news.json" />
-    <None Remove="Configs\Urls\pcn.json" />
-    <None Remove="Configs\Urls\psn.json" />
-    <None Remove="Configs\Urls\xbox.json" />
+    <None Remove="Configuration\Season\psn.json" />
+    <None Remove="Configuration\Season\xbox.json" />
+    <None Remove="Configuration\Url\player.json" />
+    <None Remove="Configuration\Url\psn.json" />
+    <None Remove="Configuration\Url\xbox.json" />
     <None Remove="Database\LGFA.db" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Essentials\News\" />
     <Folder Include="Essentials\Writer\PCN\" />
-    <Folder Include="Extras\Ticker\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,25 +42,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Configs\Season\psn.json">
+    <Content Include="Configuration\Season\psn.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\Season\xbox.json">
+    <Content Include="Configuration\Season\xbox.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\Urls\news.json">
+    <Content Include="Configuration\Url\player.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\Urls\pcn.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Configs\Urls\psn.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Configs\Urls\xbox.json">
+    <Content Include="Configuration\Url\psn.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Database\LGFA.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Configuration\Url\xbox.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

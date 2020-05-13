@@ -12,7 +12,7 @@ namespace Sky_Bot.Database
     {
         internal static bool SaveInformation(int playerId, string playerName, string playerUrl,string system)
         {
-            using var database = new LiteDatabase(@"/Database");
+            using var database = new LiteDatabase(@"Filename=Database/LGFA.db;connect=shared");
             var playerCollection = database.GetCollection<PlayerProperties.URL>("Players");
             playerCollection.EnsureIndex(x => x.Id);
 

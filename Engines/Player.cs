@@ -1,24 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Web;
 using Discord;
 using HtmlAgilityPack;
 using LiteDB;
 using Serilog;
-using ShellProgressBar;
-using Sky_Bot.Essentials;
-using Sky_Bot.Essentials.Writer;
 using Sky_Bot.Modules;
 using Sky_Bot.Modules.Helpers;
 using Sky_Bot.Properties;
-using Sky_Bot.Schedule;
-using static Sky_Bot.Extras.Tick.TickComplete;
 
 namespace Sky_Bot.Engines
 {
@@ -35,7 +24,7 @@ namespace Sky_Bot.Engines
             stopWatch.Start();
             try
             {
-                using (var playerDatabase = new LiteDatabase(@"Database/LGFA.db"))
+                using (var playerDatabase = new LiteDatabase(@"Filename=Database/LGFA.db;connection=shared"))
                 {
                     var player = playerDatabase.GetCollection<PlayerProperties.PlayerInfo>("Players");
 
