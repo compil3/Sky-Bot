@@ -39,11 +39,6 @@ namespace Sky_Bot.Engines
                 }
                 else div = 3;
 
-                var index = 1;
-
-
-                //this works to collect all the rows, but it's multidimensional.
-                //need to add Season = "S16", Type = "Reg", GP = "20" etc
                 var stopWatch = new Stopwatch();
                 stopWatch.Start();
 
@@ -60,6 +55,7 @@ namespace Sky_Bot.Engines
                     // Here we create objects CareerProperties from filtered rows.
                     .Select(tr => new CareerProperties
                     {
+                        something = tr[0],
                         Record = tr[2],
                         MatchRating = tr[3],
                         Goals = tr[4],
@@ -88,6 +84,7 @@ namespace Sky_Bot.Engines
                 //{
                 //    Log.Logger.Warning(godDamn.Season);
                 //}
+                
                 var count = findCareerNode.Count;
                 foreach (var careerStats in table)
                 {
