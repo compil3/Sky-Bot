@@ -10,7 +10,7 @@ namespace Sky_Bot.Modules.Helpers
     public class SeasonHelper
     {
         public static Embed SeasonEmbed(string playerName, string userSystem, string systemIcon, string record, string amr, string goals, string assists, string sot, string shots, string passC, string passA,
-            string key, string interceptions, string tac, string tacA, string blks, string rc, string yc, string seasonId, string playerUrl, string teamIcon, string position)
+            string key, string interceptions, string tac, string tacA, string possW, string possL, string blks, string rc, string yc, string seasonId, string playerUrl, string teamIcon, string position)
         {
 
             EmbedBuilder builder = null;
@@ -57,6 +57,10 @@ namespace Sky_Bot.Modules.Helpers
                 InterPerGame = "0",
                 BlocksPerGame = "0",
 
+                PossW = possW,
+                PossL = possL,
+                Poss = "",
+
                 YellowCards = yc,
                 RedCards = rc,
                 Discipline =  "0",
@@ -66,7 +70,7 @@ namespace Sky_Bot.Modules.Helpers
             #endregion
             #region Builder
             builder = new EmbedBuilder()
-                .WithTitle($"Statistics for ***{playerName}*** ({position.Trim()})")
+                .WithTitle($"Statistics for ***{playerName}***  (Recent Pos: {position.Trim()})")
                 .WithUrl(playerUrl)
                 .WithColor(new Color(0x26A20B))
                 .WithCurrentTimestamp()
@@ -94,25 +98,23 @@ namespace Sky_Bot.Modules.Helpers
                 .AddField("Shots - SOT", sStat.ShotSot, true)
                 .AddField("S/Game", sStat.ShotPerGame, true)
                 .AddField("Shots/Goal - SH%", sStat.ShotPerGoal, true)
-                // .AddField("SH%", sStat.ShotPercentage,true)
 
-                .AddField("\u200B", "```Career Passing Stats```", false)
+                .AddField("\u200B", "```Passing Stats```", false)
                 .AddField("Assists", sStat.Assists,true)
                 .AddField("Pass - Pass Attempts", sStat.PassRecord, true)
                 .AddField("Key Passes", sStat.KeyPasses, true)
                 .AddField("Assist/Game", sStat.AssistPerGame, true)
                 .AddField("P/Game - Pass %", sStat.PassPerGame,true)
-
-                //.AddField("Pass %", sStat.PassingPercentage, true)
                 .AddField("Key Pass/Game", sStat.KeyPassPerGame, true)
 
-                .AddField("\u200B", "```Career Defensive Stats```", false)
+                .AddField("\u200B", "```Defensive Stats```", false)
                 .AddField("Tackles - Tackle Attempts", sStat.Tackling, true)
                 .AddField("Tackles Per Game", sStat.TacklesPerGame, true)
                 .AddField("Tackle Success", sStat.TacklePercent, true)
+                .AddField("PossW-PossL",sStat.Poss, true)
                 .AddField("Int-Blk", sStat.Wall, true)
 
-                .AddField("\u200B", "```Career Discipline```", false)
+                .AddField("\u200B", "```Discipline```", false)
                 .AddField("YC-RC", sStat.Discipline, true);
             var embed = builder.Build();
             #endregion

@@ -7,6 +7,7 @@ namespace Sky_Bot.Properties
 {
     public class CareerProperties
     {
+        public string something { get; set; }
         public string SeasonId { get; set; }
         public string SeasonType { get; set; }
 
@@ -247,6 +248,12 @@ namespace Sky_Bot.Properties
                 _brick = string.Join("-", steals);
             }
         }
+
+        private string _possW;
+        public string PossW { get; set; }
+
+        private string _possL;
+        public string PossL { get; set; }
         #endregion
 
         #region Discipline

@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Sky_Bot.Properties
 {
     public class SeasonProperties
     {
-           #region Record
+        #region Record
+
+        public string SeasonId { get; set; }
+        public string SeasonType { get; set; }
         private string gamesPlayed;
 
         public string GamesPlayed
@@ -28,7 +29,7 @@ namespace Sky_Bot.Properties
 
         public string AvgMatchRating { get; set; }
         #endregion
-        
+
 
         #region Offensive
         public double Goals { get; set; }
@@ -51,8 +52,8 @@ namespace Sky_Bot.Properties
         private string _goalsPerGame;
         public string GoalsPerGame
         {
-            get=> _goalsPerGame;
-            set => _goalsPerGame = Math.Round((Goals) / Convert.ToDouble(GamesPlayed),3).ToString("F");
+            get => _goalsPerGame;
+            set => _goalsPerGame = Math.Round((Goals) / Convert.ToDouble(GamesPlayed), 3).ToString("F");
         }
 
         private string _shotsPerGoal;
@@ -188,7 +189,7 @@ namespace Sky_Bot.Properties
         public string TacklePercent
         {
             get => _tacklePercent;
-            set => _tacklePercent = Math.Round((Convert.ToDouble(Tackles)) / Convert.ToDouble(TackleAttempts),2)
+            set => _tacklePercent = Math.Round((Convert.ToDouble(Tackles)) / Convert.ToDouble(TackleAttempts), 2)
                     .ToString("P");
         }
 
@@ -206,7 +207,7 @@ namespace Sky_Bot.Properties
 
         public string InterPerGame
         {
-            get=>_interPerGame;
+            get => _interPerGame;
             set => _interPerGame = Math.Round((Convert.ToDouble(Interceptions)) / Convert.ToDouble(GamesPlayed), 2)
                 .ToString("F");
         }
@@ -216,13 +217,13 @@ namespace Sky_Bot.Properties
 
         public string BlocksPerGame
         {
-            get=>_blocksPerGame;
-            set=>_blocksPerGame=Math.Round((Convert.ToDouble(Blocks)) / Convert.ToDouble(GamesPlayed),2).ToString("F");
+            get => _blocksPerGame;
+            set => _blocksPerGame = Math.Round((Convert.ToDouble(Blocks)) / Convert.ToDouble(GamesPlayed), 2).ToString("F");
         }
         private string _brick;
         public string Wall
         {
-            get=>_brick;
+            get => _brick;
             set
             {
                 _brick = value;
@@ -232,6 +233,24 @@ namespace Sky_Bot.Properties
                 _brick = string.Join("-", steals);
             }
         }
+
+        public string PossW { get; set; }
+        public string PossL { get; set; }
+
+        private string _poss;
+
+        public string Poss
+        {
+            get => _poss;
+            set
+            {
+                string[] possWPossL = new string[2];
+                possWPossL[0] = PossW;
+                possWPossL[1] = PossL;
+                _poss = string.Join("-", possWPossL);
+            }
+        }
+
         #endregion
 
         #region Discipline
@@ -253,4 +272,5 @@ namespace Sky_Bot.Properties
         }
         #endregion
     }
+
 }
