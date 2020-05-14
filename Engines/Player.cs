@@ -83,7 +83,7 @@ namespace Sky_Bot.Engines
                             }
                         }
                         try
-
+                        {
                             HtmlNodeCollection findStatRow = null;
                             //find all the season types in the table.
                             if (seasonType == null)
