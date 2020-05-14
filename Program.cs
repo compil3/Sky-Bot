@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Net.Http;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-using System.Web;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using FluentScheduler;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
-using Sky_Bot.Configuration.Bot;
-using Sky_Bot.Modules;
 using Sky_Bot.Schedule;
 using Sky_Bot.Services;
 
