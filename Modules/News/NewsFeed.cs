@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using HtmlAgilityPack;
-using Sky_Bot.Essentials;
+using LGFA.Essentials;
 
-namespace Sky_Bot.Modules.News
+namespace LGFA.Modules.News
 {
     public class NewsFeed
     {

@@ -1,4 +1,4 @@
-﻿namespace Sky_Bot.Properties
+﻿namespace LGFA.Properties
 {
     public class PlayerProperties
     {

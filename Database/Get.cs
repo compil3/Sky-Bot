@@ -8,7 +8,7 @@ using HtmlAgilityPack;
 using Serilog;
 using ShellProgressBar;
 
-namespace Sky_Bot.Database
+namespace LGFA.Database
 {
     class Get
     {

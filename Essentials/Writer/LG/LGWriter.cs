@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using LGFA.Properties;
 using LiteDB;
 using Serilog;
-using Sky_Bot.Engines;
-using Sky_Bot.Properties;
-using Sky_Bot.Schedule;
-using Player = Sky_Bot.Engines.Player;
+using LGFA.Engines;
+using LGFA.Schedule;
+using Player = LGFA.Engines.Player;
 
-namespace Sky_Bot.Essentials
+namespace LGFA.Essentials
 {
     class LGWriter
     {

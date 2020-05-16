@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using Discord;
-using Sky_Bot.Properties;
+using LGFA.Properties;
 
-namespace Sky_Bot.Modules.Helpers
+namespace LGFA.Modules.Helpers
 {
     public class SeasonHelper
     {

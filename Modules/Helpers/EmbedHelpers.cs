@@ -4,10 +4,10 @@ using System.Globalization;
 using System.Net;
 using System.Text;
 using Discord;
+using LGFA.Properties;
 using Microsoft.Extensions.Primitives;
-using Sky_Bot.Properties;
 
-namespace Sky_Bot.Modules
+namespace LGFA.Modules
 {
     public class EmbedHelpers
     {
@@ -222,7 +222,7 @@ namespace Sky_Bot.Modules
             var offense = "";
             if (type == "Reg") type = "Regular";
             var seasonSplit = seasonId.Replace("S", "");
-            //var stats = Compressor(record, amr, goals, assists, sot, shots, passC, passA, key, intercept, tac, tacA, blk, rc, yc);
+            //var stats = Compressor(record, amr, goals, assists, sot, shots, passC, passA, key, intercept, tac, tacA, blk, rc, yc
             CareerProperties cStat = new CareerProperties
             {
                 SeasonType = type,

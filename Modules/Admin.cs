@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace Sky_Bot.Modules
+namespace LGFA.Modules
 {
     public class Admin : ModuleBase
     {

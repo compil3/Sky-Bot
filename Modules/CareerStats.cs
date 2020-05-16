@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using LGFA.Engines;
 using Serilog;
-using Sky_Bot.Engines;
 
-namespace Sky_Bot.Modules
+namespace LGFA.Modules
 {
     public class CareerStats : ModuleBase
     {
@@ -31,7 +31,6 @@ namespace Sky_Bot.Modules
                 Log.Logger.Warning($"Time taken: {stopWatch.Elapsed}");
             }
             else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
-            GC.Collect();
         }
     }
 }

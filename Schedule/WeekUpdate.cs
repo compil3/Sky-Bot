@@ -1,14 +1,15 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using Discord;
 using FluentScheduler;
+using LGFA.Database;
+using LGFA.Essentials;
 using Serilog;
 using ShellProgressBar;
-using Sky_Bot.Database;
-using Sky_Bot.Essentials;
 
-namespace Sky_Bot.Schedule
+namespace LGFA.Schedule
 {
     public class WeekUpdate : Registry
     {
@@ -16,7 +17,7 @@ namespace Sky_Bot.Schedule
         {
             Action update = new Action(async () =>
             {
-                var system = new string[] {"xbox", "psn"};
+                var system = new string[] { "xbox", "psn" };
 
                 var seasonCount = system.Select(s => new ConsoleInformation
                 {
@@ -50,27 +51,27 @@ namespace Sky_Bot.Schedule
 
                 try
                 {
-                    foreach (var t in seasonCount)
-                    {
-                        await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
-                        using var pbar = new ProgressBar(t.NumberOfSeasons,
-                            $"Running Database Update {t.System.ToString()}", options);
-
-
-                        for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
+                        foreach (var t in seasonCount)
                         {
-                            pbar.EstimatedDuration = TimeSpan.FromMilliseconds(t.NumberOfSeasons * 5000);
+                            await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
+                            using var pbar = new ProgressBar(t.NumberOfSeasons,
+                                $"Running Database Update {t.System.ToString()}", options);
 
-                            pbar.Tick(
-                                $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
-                            Get.GetPlayerIds(t.System, "player", j, pbar);
-                            Thread.Sleep(250);
+
+                            for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
+                            {
+                                pbar.EstimatedDuration = TimeSpan.FromMilliseconds(t.NumberOfSeasons * 5000);
+
+                                pbar.Tick(
+                                    $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
+                                Get.GetPlayerIds(t.System, "player", j, pbar);
+                                Thread.Sleep(250);
+                            }
+
+                            var estimatedDuration = TimeSpan.FromSeconds(60 * seasonCount.Count) +
+                                                    TimeSpan.FromSeconds(30 * t.NumberOfSeasons);
+                            pbar.Tick(estimatedDuration, $"Completed {t.System} updated");
                         }
-
-                        var estimatedDuration = TimeSpan.FromSeconds(60 * seasonCount.Count) +
-                                                TimeSpan.FromSeconds(30 * t.NumberOfSeasons);
-                        pbar.Tick(estimatedDuration, $"Completed {t.System} updated");
-                    }
                 }
                 catch (Exception e)
                 {

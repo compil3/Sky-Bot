@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using Discord;
 using HtmlAgilityPack;
+using LGFA.Modules;
+using LGFA.Properties;
 using LiteDB;
 using Serilog;
-using Sky_Bot.Essentials.Writer;
-using Sky_Bot.Modules;
-using Sky_Bot.Properties;
+using LGFA.Essentials.Writer;
 
-namespace Sky_Bot.Engines
+namespace LGFA.Engines
 {
     class Career
     {
@@ -22,7 +24,10 @@ namespace Sky_Bot.Engines
             var web = new HtmlWeb();
             try
             {
-                using (var playerDatabase = new LiteDatabase(@"Filename=Database/LGFA.db;connection=shared"))
+                var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                var dbFolder = "Database/";
+                var dbDir = Path.Combine(dbPath, dbFolder);
+                using (var playerDatabase = new LiteDatabase($"Filename={dbDir}LGFA.db;connection=shared"))
                 {
                     var player = playerDatabase.GetCollection<PlayerProperties.PlayerInfo>("Players");
                     var div = 1;

@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using Discord;
 using HtmlAgilityPack;
+using LGFA.Modules;
+using LGFA.Modules.Helpers;
+using LGFA.Properties;
 using LiteDB;
 using Serilog;
-using Sky_Bot.Modules;
-using Sky_Bot.Modules.Helpers;
-using Sky_Bot.Properties;
 
-namespace Sky_Bot.Engines
+namespace LGFA.Engines
 {
     class Player
     {
@@ -26,7 +28,11 @@ namespace Sky_Bot.Engines
             stopWatch.Start();
             try
             {
-                using (var playerDatabase = new LiteDatabase(@"Filename=Database/LGFA.db;connection=shared"))
+                var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                var dbFolder = "Database/";
+                var dbDir = Path.Combine(dbPath, dbFolder);
+
+                using (var playerDatabase = new LiteDatabase($@"Filename={dbDir}LGFA.db;connection=shared"))
                 {
                     var player = playerDatabase.GetCollection<PlayerProperties.PlayerInfo>("Players");
 

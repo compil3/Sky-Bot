@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using HtmlAgilityPack;
+using LGFA.Essentials;
 using LiteDB;
-using Sky_Bot.Essentials;
-using Sky_Bot.Properties;
-using static Sky_Bot.Modules.News.RunNews;
+using LGFA.Properties;
+using static LGFA.Modules.News.RunNews;
 
-namespace Sky_Bot.Modules.News
+namespace LGFA.Modules.News
 {
     public class NewsWire : ModuleBase<SocketCommandContext>
     {

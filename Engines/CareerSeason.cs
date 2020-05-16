@@ -1,14 +1,14 @@
 ﻿using Discord;
 using HtmlAgilityPack;
 using Serilog;
-using Sky_Bot.Modules;
-using Sky_Bot.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using LGFA.Modules;
+using LGFA.Properties;
 
-namespace Sky_Bot.Engines
+namespace LGFA.Engines
 {
     public class CareerSeason
     {
@@ -43,7 +43,7 @@ namespace Sky_Bot.Engines
                 stopWatch.Start();
 
                 // Now the return type is a List of CareerProperties.
-                List<CareerProperties> table = playerDoc.DocumentNode
+                var table = playerDoc.DocumentNode
                     .SelectSingleNode($"//*[@id='lg_team_user_leagues-{leagueId}']/div[{div}]/table/tbody")
                     .Descendants("tr")
                     .Skip(0)

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using LGFA.Properties;
 using LiteDB;
-using Sky_Bot.Modules.News;
-using Sky_Bot.Properties;
+using LGFA.Modules.News;
 
-namespace Sky_Bot.Essentials.Writer.News
+namespace LGFA.Essentials.Writer.News
 {
     public class SaveNews
     {

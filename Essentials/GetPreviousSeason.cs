@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using LGFA.Properties;
 using Newtonsoft.Json;
 using Serilog;
-using Sky_Bot.Properties;
 
-namespace Sky_Bot.Essentials
+namespace LGFA.Essentials
 {
     public class GetPreviousSeason
     {

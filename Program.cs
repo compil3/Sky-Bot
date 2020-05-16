@@ -1,32 +1,49 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using LGFA.Schedule;
+using LGFA.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
-using Sky_Bot.Schedule;
-using Sky_Bot.Services;
 
-namespace Sky_Bot
+namespace LGFA
 {
     internal class Program
     {
         //static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
-        private static void Main()
+        private static void Main(string[] args)
         {
-            MainAsync().GetAwaiter().GetResult();
+            MainAsync(args).GetAwaiter().GetResult();
             Thread.Sleep(-1);
         }
         private static DiscordSocketClient client;
 
-        public static async Task MainAsync()
-        {
+        public static async Task MainAsync(string[] args)
+        {            
+            //CreateHostBuilder(args).Build().Run();
+
             using (var services = ConfigureServices())
             {
+                var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                var dbFolder = "Database/";
+                var dbDir = Path.Combine(dbPath, dbFolder);
+
+                var temp = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                var tempLoc = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location + "/Database");
+                Console.WriteLine(dbDir);
+                if (!Directory.Exists(dbDir))
+                {
+                    Directory.CreateDirectory(dbDir);
+                }
+               
                 client = services.GetRequiredService<DiscordSocketClient>();
 
                 client.Log += LogAsync;
@@ -82,5 +99,12 @@ namespace Sky_Bot
                 .AddSingleton<HttpClient>()
                 .BuildServiceProvider();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args)
+            .UseSystemd()
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.AddHostedService<Worker>();
+            });
     }
 }

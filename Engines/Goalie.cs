@@ -5,11 +5,11 @@ using System.Net;
 using System.Text;
 using System.Web;
 using HtmlAgilityPack;
+using LGFA.Essentials;
+using LGFA.Essentials.Writer;
 using Serilog;
-using Sky_Bot.Essentials;
-using Sky_Bot.Essentials.Writer;
 
-namespace Sky_Bot.Engines
+namespace LGFA.Engines
 {
     class Goalie
     {

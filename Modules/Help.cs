@@ -6,7 +6,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace Sky_Bot.Modules
+namespace LGFA.Modules
 {
     public class HelpCommand : ModuleBase
     {

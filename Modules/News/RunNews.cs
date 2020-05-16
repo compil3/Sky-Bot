@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using HtmlAgilityPack;
+using LGFA.Essentials;
+using LGFA.Essentials.Writer.News;
+using LGFA.Properties;
 using LiteDB;
-using Sky_Bot.Essentials;
-using Sky_Bot.Essentials.Writer.News;
-using Sky_Bot.Properties;
-using static Sky_Bot.Properties.NewsProperties;
+using static LGFA.Properties.NewsProperties;
 
-namespace Sky_Bot.Modules.News
+namespace LGFA.Modules.News
 {
     public class RunNews
     {
@@ -229,7 +229,7 @@ namespace Sky_Bot.Modules.News
                         {
                             using (var waiverDb = new LiteDatabase(@"News.db"))
                             {
-                                var waiver = waiverDb.GetCollection<Waivers>(table);
+                                var waiver = waiverDb.GetCollection<NewsProperties.Waivers>(table);
                                 var result = waiver.Find(x => x.dateTime.Equals(lastNews));
 
                                 foreach (var headline in result)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sky_Bot.Properties
+namespace LGFA.Properties
 {
     public class Web
     {

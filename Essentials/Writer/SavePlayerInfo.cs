@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using LGFA.Properties;
 using LiteDB;
-using Sky_Bot.Properties;
 
-namespace Sky_Bot.Essentials.Writer
+namespace LGFA.Essentials.Writer
 {
     class SavePlayerInfo
     {

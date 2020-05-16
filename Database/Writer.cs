@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using LGFA.Properties;
 using LiteDB;
 using Serilog;
-using Sky_Bot.Properties;
 
-namespace Sky_Bot.Database
+namespace LGFA.Database
 {
     public class Writer
     {

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LGFA.Modules.News
+namespace LGFA.Engines
 {
-    class WaiverNews
+    class TeamStats
     {
     }
 }

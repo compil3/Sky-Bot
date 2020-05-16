@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Serilog;
-using Sky_Bot.Engines;
+using LGFA.Engines;
 
-namespace Sky_Bot.Modules
+namespace LGFA.Modules
 {
     class LastFiveStats : ModuleBase
     {

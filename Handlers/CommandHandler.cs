@@ -9,7 +9,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace Sky_Bot.Services
+namespace LGFA.Services
 {
     public class CommandHandler
     {
