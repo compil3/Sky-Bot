@@ -247,11 +247,22 @@ namespace LGFA.Properties
             }
         }
 
-        private string _possW;
         public string PossW { get; set; }
-
-        private string _possL;
         public string PossL { get; set; }
+
+        private string _poss;
+
+        public string Poss
+        {
+            get => _poss;
+            set
+            {
+                string[] possWPossL = new string[2];
+                possWPossL[0] = PossW;
+                possWPossL[1] = PossL;
+                _poss = string.Join("-", possWPossL);
+            }
+        }
         #endregion
 
         #region Discipline
