@@ -56,7 +56,7 @@ namespace LGFA.Essentials.Writer
 
             using (var database = new LiteDatabase(@"LGFA.db"))
             {
-                var playerCareer = database.GetCollection<PlayerProperties.Career>("Career");
+                var playerCareer = database.GetCollection<PlayerProperties.Career>("CareerBuilder");
                 playerCareer.EnsureIndex(x => x.Id);
                 var playerStats = new PlayerProperties.Career
                 {
@@ -98,7 +98,7 @@ namespace LGFA.Essentials.Writer
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Error saving Player Career Information {currentMethod} {e}");
+                    Console.WriteLine($"Error saving Player CareerBuilder Information {currentMethod} {e}");
                     return false;
                 }
             }

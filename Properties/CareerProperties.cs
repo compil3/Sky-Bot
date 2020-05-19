@@ -1,5 +1,8 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using HtmlAgilityPack;
 
 namespace LGFA.Properties
 {
@@ -7,6 +10,8 @@ namespace LGFA.Properties
     {
         public string something { get; set; }
         public string SeasonId { get; set; }
+        public string PlayerName { get; set; }
+        public string PlayerUrl { get; set; }
         public string SeasonType { get; set; }
 
         #region Record
@@ -30,13 +35,13 @@ namespace LGFA.Properties
         public string Record { get; set; }
 
         private string _matchRating;
-        public string AvgMatchRating { 
+        public string AvgMatchRating
+        {
             get => _matchRating;
             set
             {
-                var tempAmr = Convert.ToDouble(_matchRating);
-                var rating = tempAmr / Convert.ToDouble(GamesPlayed);
-                _matchRating = Math.Round(rating,2).ToString();
+                var rating = Convert.ToDouble(MatchRating) / Convert.ToDouble(GamesPlayed);
+                _matchRating = Math.Round(rating,2).ToString(CultureInfo.InvariantCulture);
             }
         }
         //used for season career stats
@@ -48,21 +53,7 @@ namespace LGFA.Properties
         public string Goals { get; set; }
         public string Assists { get; set; }
 
-        private string _goalsAssist;
-
-        public string GoalsAssist
-        {
-            get => _goalsAssist;
-            set
-            {
-                string[] tempGoalAssist = new string[2];
-                tempGoalAssist[0] = Goals.ToString();
-                tempGoalAssist[1] = Assists;
-                _goalsAssist = string.Join(" - ", tempGoalAssist).Trim();
-            }
-        }
-
-        private string _goalsPerGame;
+      private string _goalsPerGame;
         public string GoalsPerGame
         {
             get=> _goalsPerGame;
@@ -281,6 +272,11 @@ namespace LGFA.Properties
                 cards[1] = RedCards;
                 _discipline = string.Join("-", cards);
             }
+        }
+
+        public static implicit operator List<object>(CareerProperties v)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

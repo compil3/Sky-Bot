@@ -8,6 +8,7 @@ using Discord.WebSocket;
 
 namespace LGFA.Modules
 {
+    [RequireUserPermission(ChannelPermission.SendMessages)]
     public class HelpCommand : ModuleBase
     {
         private readonly CommandService _service;
@@ -19,21 +20,20 @@ namespace LGFA.Modules
 
         [Command("help")]
         [Summary("Displays this help message.")]
-        [RequireUserPermission(ChannelPermission.SendMessages)]
         public async Task HelpDisplay()
         {
             var builder = new EmbedBuilder();
 
             var user = Context.User as SocketGuildUser;
-
-            if (!user.GuildPermissions.KickMembers)
+            
+            if (user.GuildPermissions.KickMembers == true)
             {
                 foreach (var command in _service.Commands)
                 {
                     if (!user.GuildPermissions.Administrator && command.Name == "restart") continue;
                     if (!user.GuildPermissions.KickMembers && command.Name == "update") continue;
-                    string embedFieldText = command.Summary ?? "No description available.\n";
-                    builder.AddField(command.Name, embedFieldText, true);
+                    var embedFieldText = command.Remarks ?? "No description available.";
+                    builder.AddField(command.Name, embedFieldText, false);
                 }
                 await Context.User.SendMessageAsync("List of commands and their usage: ", false, builder.Build());
                 return;
@@ -43,7 +43,7 @@ namespace LGFA.Modules
                 foreach (var command in _service.Commands)
                 {
                     string embedFieldText = command.Summary ?? "No description available.\n";
-                    builder.AddField(command.Name, embedFieldText, true);
+                    builder.AddField(command.Name, embedFieldText, false);
                 }
             }
 

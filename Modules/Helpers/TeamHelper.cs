@@ -11,9 +11,6 @@ namespace LGFA.Modules.Helpers
     {
         internal static Embed StandingEmbed(string league)
         {
-
-            EmbedBuilder builder = null;
-
             var (teamStandings, teamPoints,currentSeason, leagueUrl,system) = TeamStanding.GetStandings(league);
             var ranking = string.Join(Environment.NewLine, teamStandings);
             var points = string.Join(Environment.NewLine, teamPoints);
@@ -35,7 +32,7 @@ namespace LGFA.Modules.Helpers
                         "https://cdn.discordapp.com/attachments/689119430021873737/711030386775293962/120px-Xbox_one_logo.svg.jpg";
                 }
 
-                builder = new EmbedBuilder()
+                var builder = new EmbedBuilder()
                     .WithAuthor(author =>
                     {
                         author

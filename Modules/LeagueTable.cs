@@ -16,7 +16,7 @@ namespace LGFA.Modules
 {
     public class LeagueTable : ModuleBase
     {
-        [Command("table")]
+        [Command("table", RunMode = RunMode.Async)]
         [Alias("standings")]
         [Summary(".table system Eg. .standings PSN")]
         [Remarks("Pulls up the standings table for either system")]
@@ -31,16 +31,16 @@ namespace LGFA.Modules
 
             var guildId = Context.Guild.Id;
             var channelId = Context.Channel.Id;
-            
-           Log.Logger.Warning($"{Context.User.Username} Triggered: LeagueTable.GetStandings ");
+
+            Log.Logger.Warning($"{Context.User.Username} Triggered: LeagueTable.GetStandings ");
 
             if (guildId == 689119429375819951)
             {
                 if (channelId == 705197391984197683)
                 {
                     var commandId = Context.Message.Id;
-                    
-                    var (teamStandings, teamPoints,currentSeason, leagueUrl,system) = TeamStanding.GetStandings(league);
+
+                    var (teamStandings, teamPoints, currentSeason, leagueUrl, system) = TeamStanding.GetStandings(league);
 
                     await Context.Channel
                         .SendMessageAsync("``[Stats Provided By LGFA``", embed: TeamHelper.StandingEmbed(league))

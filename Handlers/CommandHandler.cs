@@ -22,6 +22,9 @@ namespace LGFA.Services
             _commands = services.GetRequiredService<CommandService>();
             _discord = services.GetRequiredService<DiscordSocketClient>();
             _services = services;
+            _commands = CommandConfig();
+
+            
 
             _commands.CommandExecuted += CommandExecutedAsync;
             _discord.MessageReceived += HandleCommand;
@@ -29,6 +32,18 @@ namespace LGFA.Services
         public async Task InitializeAsync()
         {
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
+        }
+
+        public static CommandService CommandConfig()
+        {
+            var commandServiceConfig = new CommandServiceConfig
+            {
+                CaseSensitiveCommands = false,
+                DefaultRunMode = RunMode.Async, 
+                IgnoreExtraArgs = true, 
+                LogLevel = LogSeverity.Info
+            };
+            return new CommandService(commandServiceConfig);
         }
 
         private async Task HandleCommand(SocketMessage rawMessage)

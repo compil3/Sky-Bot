@@ -70,7 +70,7 @@ namespace LGFA.Engines
                     {
                         var lgfa = WebUtility.HtmlDecode(heading
                             .SelectSingleNode($"//*[@id='lg_team_user_leagues-{system}']/h3[1]").InnerText);
-                        if (lgfa.Contains("Last") || lgfa.Contains("Season Stats") || lgfa.Contains("Career")) return Missing.NotFound(lookUpName, systemIcon, playerHtml);
+                        if (lgfa.Contains("Last") || lgfa.Contains("Season Stats") || lgfa.Contains("CareerBuilder")) return Missing.NotFound(lookUpName, systemIcon, playerHtml);
                         if (lgfa.Contains("LGFA - Season") || lgfa.Contains("LGFA PSN - Season"))
                         {
                             var seasonNumber = EmbedHelpers.Splitter(lgfa);
@@ -135,7 +135,7 @@ namespace LGFA.Engines
                         {
                             return message = Missing.NotFound(found.playerName, systemIcon, found.playerUrl);
                         }
-                          
+                        
                         var table = playerDoc.DocumentNode
                             .SelectSingleNode($"//*[@id='lg_team_user_leagues-{system}']/div[1]/table/tbody")
                             .Descendants("tr")

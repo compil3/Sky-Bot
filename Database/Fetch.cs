@@ -25,8 +25,6 @@ namespace LGFA.Database
             }
 
             string JSON = "";
-            var xboxURL = "";
-            var psnURL = "";
 
             var sFile = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var configFile = Path.Combine(sFile, configLocation);
@@ -46,7 +44,6 @@ namespace LGFA.Database
             }
 
             General.UrlSettings settings = JsonConvert.DeserializeObject<General.UrlSettings>(JSON);
-            var url = "";
             var sTypeTemp = "&seasontypeid=";
             var seasonTypeID = string.Concat(string.Empty, sTypeTemp, seasonType);
 

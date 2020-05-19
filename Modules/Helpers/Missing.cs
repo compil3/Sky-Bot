@@ -33,14 +33,14 @@ namespace LGFA.Modules.Helpers
             return builder.Build();
         }
 
-        public static Embed NotFound(string playerName, string playerUrl)
+        public static Embed CareerNotFound(string playerName, string playerUrl)
         {
             EmbedBuilder builder;
             builder = new EmbedBuilder()
                 .WithAuthor(author =>
                 {
                     author
-                        .WithName($"No career statistics found for ***{playerName}***");
+                        .WithName($"No Official career statistics found for {playerName}");
                 })
                 .WithUrl(playerUrl)
                 .WithColor(new Color(0x26A20B))

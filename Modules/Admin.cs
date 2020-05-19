@@ -13,35 +13,13 @@ using Serilog;
 
 namespace LGFA.Modules
 {
+    [RequireOwner]
+    [RequireUserPermission(GuildPermission.Administrator)]
     public class Admin : ModuleBase
     {
-        private static DiscordSocketClient _client;
         
-        public Admin(IServiceProvider services)
-        {
-            _client = services.GetRequiredService<DiscordSocketClient>();
-
-        }
-
-
-        [Command("show",RunMode = RunMode.Async)]
-        [Summary("testing new bot re-write")]
-        public async Task ListGuilds()
-        {
-            StringBuilder sb = new StringBuilder();
-            var guilds = _client.Guilds.ToList();
-            foreach (var guild in guilds)
-            {
-                sb.AppendLine($"Name: {guild.Name} ID: {guild.Id} Owner: {guild.Owner}");
-            }
-            await ReplyAsync(sb.ToString());
-        }
-
-        [RequireOwner]
         [Command("restart")]
-        [Summary(".restart")]
-        [Remarks("Restarts the bot")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [Summary(".restart to restart the bot.")]
         public async Task Restart()
         {
             var user = Context.User as SocketGuildUser;
@@ -51,7 +29,6 @@ namespace LGFA.Modules
             }
             else
             {
-                
                 var programName = Assembly.GetExecutingAssembly().Location;
                 await ReplyAsync(programName);
                 System.Diagnostics.Process.Start(programName);

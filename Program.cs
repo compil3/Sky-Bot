@@ -29,21 +29,20 @@ namespace LGFA
         public static async Task MainAsync(string[] args)
         {            
             //CreateHostBuilder(args).Build().Run();
-
             using (var services = ConfigureServices())
             {
-                var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                var dbFolder = "Database/";
-                var dbDir = Path.Combine(dbPath, dbFolder);
+                //var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                //var dbFolder = "Database/";
+                //var dbDir = Path.Combine(dbPath, dbFolder);
 
-                var temp = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                var tempLoc = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location + "/Database");
-                Console.WriteLine(dbDir);
-                if (!Directory.Exists(dbDir))
-                {
-                    Directory.CreateDirectory(dbDir);
-                }
-               
+                //var temp = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                //var tempLoc = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location + "/Database");
+                //Console.WriteLine(dbDir);
+                //if (!Directory.Exists(dbDir))
+                //{
+                //    Directory.CreateDirectory(dbDir);
+                //}
+      
                 client = services.GetRequiredService<DiscordSocketClient>();
 
                 client.Log += LogAsync;
