@@ -43,9 +43,9 @@ namespace LGFA.Modules
                 {
                     var (career, playerUrl, playerName, seasonNumber) =
                         CareerBuilder.GetCareerSeason(playerLookup, seasonId);
-                    if (career == null)
+                    if (career.Count <= 1)
                     {
-                        embed = CareerEmbed.VirtualCareerEmbed(career);
+                        embed = CareerEmbed.VirtualSeasonEmbed(career);
                     }
                 }
 
