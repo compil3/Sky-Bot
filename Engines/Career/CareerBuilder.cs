@@ -21,8 +21,6 @@ namespace LGFA.Engines
             Embed message = null;
             var leagueId = 0;
             var web = new HtmlWeb();
-            var playerLink = "";
-            var playerName = "";
             try
             {
                 var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -45,9 +43,11 @@ namespace LGFA.Engines
                     else if (found.System == "xbox") leagueId = 53;
                     try
                     {
+                        var stopWatch = new Stopwatch();
+                        stopWatch.Start();
                         var playerDoc = web.Load(found.playerUrl);
-                        playerLink = found.playerUrl;
-                        playerName = found.playerName;
+                        stopWatch.Stop();
+                        Log.Logger.Warning($"GetCareerNoSeason Doc: {stopWatch.Elapsed}");
                         var (table, playerUrl, playerFound) = Official.OfficialParse(playerDoc, found.playerUrl,
                             found.playerName, leagueId);
                         return (table, playerUrl, playerFound);
@@ -70,12 +70,13 @@ namespace LGFA.Engines
         public static (List<CareerProperties>, string playerUrl, string playerFound, string seasonNumber)
             GetCareerSeason(string lookupPlayer, string seasonId)
         {
-            Embed message = null;
             var leagueId = 0;
+
             var web = new HtmlWeb();
-            HtmlDocument playerDoc;
             try
             {
+                var stopWatch = new Stopwatch();
+                stopWatch.Start();
                 var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                 var dbFolder = "Database/";
                 var dbDir = Path.Combine(dbPath, dbFolder);
@@ -88,14 +89,18 @@ namespace LGFA.Engines
                     .Where(x => x.playerName.Contains(lookupPlayer))
                     .ToList();
 
-                
+                stopWatch.Stop();
+                Log.Logger.Warning($"GetCareer Season Stage1: {stopWatch.Elapsed}");
                 foreach (var found in result)
                 {
                     if (found.System == "psn") leagueId = 73;
                     else if (found.System == "xbox") leagueId = 53;
                     try
                     {
-                        playerDoc = web.Load(found.playerUrl);
+                        stopWatch.Start();
+                        var playerDoc = web.Load(found.playerUrl);
+                        stopWatch.Stop();
+                        Log.Logger.Warning($"GetCareerSeason Doc Load: {stopWatch.Elapsed}");
 
                         var (table, playerUrl, playerFound, season) = Career.Season.SeasonParse(playerDoc,
                             found.playerUrl, found.playerName, seasonId, leagueId);

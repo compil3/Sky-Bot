@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using Discord;
 using LGFA.Properties;
+using Serilog;
 
 namespace LGFA.Engines.Career
 {
@@ -65,6 +67,8 @@ namespace LGFA.Engines.Career
         {
             Embed embed = null;
             EmbedBuilder builder = null;
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             foreach (var vStat in table)
             {
                 builder = new EmbedBuilder()
@@ -110,6 +114,8 @@ namespace LGFA.Engines.Career
                     .AddField("YC-RC", vStat.Discipline, true);
                 embed = builder.Build();
             }
+            stopWatch.Stop();
+            Log.Logger.Warning($"CareerSeasonEmbed: {stopWatch.Elapsed}");
             return embed;
         }
     }

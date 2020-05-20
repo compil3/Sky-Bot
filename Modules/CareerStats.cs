@@ -51,7 +51,7 @@ namespace LGFA.Modules
 
                 await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed).ConfigureAwait(false);
                 stopWatch.Stop();
-                Log.Logger.Warning($"Time taken: {stopWatch.Elapsed}");
+                Log.Logger.Warning($"Total Time Taken: {stopWatch.Elapsed}");
             }
             else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
         }

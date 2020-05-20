@@ -13,6 +13,7 @@ namespace LGFA.Engines.Career
         public static (List<CareerProperties>, string foundPlayerUrl, string foundPlayerName, string seasonId)
             SeasonParse(HtmlDocument playerDoc, string foundPlayerUrl, string foundPlayerName, string seasonId, int leagueId)
         {
+            var stopWatch = new Stopwatch();
             if (!seasonId.Contains("S")) seasonId = "S" + seasonId;
 
             var web = new HtmlWeb();
@@ -30,7 +31,6 @@ namespace LGFA.Engines.Career
                 }
                 else div = 3;
 
-                var stopWatch = new Stopwatch();
                 stopWatch.Start();
 
                 var table = playerDoc.DocumentNode
@@ -84,6 +84,8 @@ namespace LGFA.Engines.Career
                         Discipline = "0"
 
                     }).ToList();
+                stopWatch.Stop();
+                Log.Logger.Warning($"SeasonParse: {stopWatch.Elapsed}");
                 return (table, foundPlayerUrl, foundPlayerName, seasonId);
 
                 //foreach (var careerStats in table)
