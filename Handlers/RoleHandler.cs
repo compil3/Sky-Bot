@@ -9,11 +9,12 @@ using Serilog;
 
 namespace LGFA.Handlers
 {
-    class RoleHandler
+    public static class RoleHandler
     {
-        public async Task OnReaction(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel chnl,
+        public static async Task OnReaction(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel chnl,
             SocketReaction reaction)
         {
+            Log.Logger.Information("Loaded RoleHandler");
             SocketGuildUser reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
 
             ulong ruleMessageId = 712883043823779871;
@@ -37,7 +38,8 @@ namespace LGFA.Handlers
                         await reactionUser.RemoveRoleAsync(newMember);
                         //remove the users reaction after being kicked.
                     }
-                }else if (reaction.Emote.Name == declinedRules.Name)
+                }
+                else if (reaction.Emote.Name == declinedRules.Name)
                 {
                     await reactionUser.SendMessageAsync(
                         "In order to proceed into Leaguegaming FIFA Discord, you must read and accept the rules.\n" +
@@ -51,13 +53,7 @@ namespace LGFA.Handlers
                 Log.Logger.Error("Could not get message for reaction roles.");
                 await Task.CompletedTask;
             }
-
-            await CheckReactions(messageValue);
         }
 
-        private Task CheckReactions(IUserMessage messageValue)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
