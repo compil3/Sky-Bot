@@ -28,7 +28,7 @@ namespace LGFA
 
         public static async Task MainAsync(string[] args)
         {            
-            //CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run();
             await using var services = ConfigureServices();
             client = services.GetRequiredService<DiscordSocketClient>();
 
