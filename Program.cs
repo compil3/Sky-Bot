@@ -48,7 +48,6 @@ namespace LGFA
 
             await services.GetRequiredService<CommandHandler>().InitializeAsync();
             client.Ready += Client_Ready;
-            client.ReactionAdded += RoleHandler;
                 
             await client.SetGameAsync("Watching LGFA");
 
@@ -60,7 +59,6 @@ namespace LGFA
         {
             ulong id = Convert.ToUInt64(Environment.GetEnvironmentVariable("update_log_channel"));
             var chnl = client.GetChannel(id) as IMessageChannel;
-
             Manager.Manage(chnl);
             Log.Logger.Warning("Schedules Initialized.");
             return Task.CompletedTask;

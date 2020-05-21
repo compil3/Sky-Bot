@@ -9,7 +9,7 @@ using Serilog;
 
 namespace LGFA.Handlers
 {
-    public static class RoleHandler
+    public class RoleHandler
     {
         public static async Task OnReaction(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel chnl,
             SocketReaction reaction)

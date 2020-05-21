@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using LGFA.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -20,6 +21,8 @@ namespace LGFA.Services
         public CommandHandler(IServiceProvider services)
         {
             _commands = services.GetRequiredService<CommandService>();
+            //_discord.ReactionAdded += RulesRole;
+            _discord.Ready += _botReady;
             _discord = services.GetRequiredService<DiscordSocketClient>();
             _services = services;
             _commands = CommandConfig();
@@ -29,6 +32,20 @@ namespace LGFA.Services
             _commands.CommandExecuted += CommandExecutedAsync;
             _discord.MessageReceived += HandleCommand;
         }
+
+        private static async Task MemberJoined(SocketGuildUser arg)
+        {
+            await Joined.UserJoined(arg);
+            await Task.CompletedTask;
+        }
+
+        private static async Task RulesRole(Cacheable<IUserMessage, ulong> arg1, ISocketMessageChannel arg2, SocketReaction arg3)
+        {
+
+           await RoleHandler.OnReaction(arg1, arg2, arg3);
+           await Task.CompletedTask;
+        }
+
         public async Task InitializeAsync()
         {
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
