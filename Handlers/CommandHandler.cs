@@ -22,7 +22,6 @@ namespace LGFA.Services
         {
             _commands = services.GetRequiredService<CommandService>();
             //_discord.ReactionAdded += RulesRole;
-            _discord.Ready += _botReady;
             _discord = services.GetRequiredService<DiscordSocketClient>();
             _services = services;
             _commands = CommandConfig();

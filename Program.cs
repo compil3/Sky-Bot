@@ -60,6 +60,8 @@ namespace LGFA
             ulong id = Convert.ToUInt64(Environment.GetEnvironmentVariable("update_log_channel"));
             var chnl = client.GetChannel(id) as IMessageChannel;
             Manager.Manage(chnl);
+            client.ReactionAdded += RoleHandler.OnReaction;
+            client.UserJoined += Joined.UserJoined;
             Log.Logger.Warning("Schedules Initialized.");
             return Task.CompletedTask;
         }
