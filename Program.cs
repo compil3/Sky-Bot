@@ -28,7 +28,7 @@ namespace LGFA
 
         public static async Task MainAsync(string[] args)
         {            
-            //CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run();
             using (var services = ConfigureServices())
             {
                 //var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
