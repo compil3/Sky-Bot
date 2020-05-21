@@ -21,10 +21,11 @@ namespace LGFA.Modules
             ".ps Gamertag Eg: .ps SpillShot 7\n If the website name has spaces try wrapping the name (.ps \"Name tag\" ")]
         public async Task GetPlayerStatsLG(string playerLookup, string seasonType = null, string seasonId = null)
         {
-            if (Context.Guild.Id == 689119429375819951)
+            if (Context.Guild.Id == 689119429375819951 || Context.Guild.Id == 688840425162801197)
             {
-                if (Context.Channel.Id == 711778374720421918)
-                {
+                if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208)
+
+            {
                     Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
                     await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``",
                         embed: Player.GetPlayer(playerLookup, seasonType, seasonId)).ConfigureAwait(false);

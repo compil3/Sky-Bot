@@ -11,7 +11,7 @@ namespace LGFA.Modules
 {
     [RequireContext(ContextType.Guild)]
     [RequireUserPermission(ChannelPermission.SendMessages)]
-    public class TeamStats: ModuleBase
+     public class TeamStats: ModuleBase
     {
         [Command("ts")]
         [Summary(".ts TeamName xbox/psn [eg: .ts Liverpool Xbox]")]

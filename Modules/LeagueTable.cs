@@ -34,9 +34,9 @@ namespace LGFA.Modules
 
             Log.Logger.Warning($"{Context.User.Username} Triggered: LeagueTable.GetStandings ");
 
-            if (guildId == 689119429375819951)
+            if (guildId == 689119429375819951 || Context.Guild.Id == 688840425162801197)
             {
-                if (channelId == 705197391984197683)
+                if (Context.Channel.Id == 705197391984197683 || Context.Channel.Id == 713176040716894208)
                 {
                     var commandId = Context.Message.Id;
 
