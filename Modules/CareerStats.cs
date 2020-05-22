@@ -25,6 +25,7 @@ namespace LGFA.Modules
             Embed embed = null;
             if (guildId == 689119429375819951 || guildId == 688840425162801197 || Context.Guild.Id == 689119429375819951)
             {
+                Console.Write($"Guild ID: {Context.Guild.Id}");
                 var stopWatch = new Stopwatch();
                 Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
                 stopWatch.Start();
