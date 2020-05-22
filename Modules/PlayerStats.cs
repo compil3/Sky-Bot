@@ -23,9 +23,9 @@ namespace LGFA.Modules
         {
             if (Context.Guild.Id == 689119429375819951 || Context.Guild.Id == 688840425162801197)
             {
-                if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208)
+                if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 || Context.Channel.Id == 713237102145437776)
 
-            {
+                {
                     Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
                     await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``",
                         embed: Player.GetPlayer(playerLookup, seasonType, seasonId)).ConfigureAwait(false);
