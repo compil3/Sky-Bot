@@ -18,7 +18,6 @@ namespace LGFA.Schedule
         public static Task Manage(IMessageChannel chnl)
         {
 
-            Log.Logger.Information("Schedule Initializing.");
             JobManager.Initialize(new WeekUpdate(chnl));
             Log.Logger.Information("Schedule Initialized.");
             return Task.CompletedTask;

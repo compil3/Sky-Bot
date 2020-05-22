@@ -23,12 +23,13 @@ namespace LGFA.Modules
         {
             var guildId = Context.Guild.Id;
             Embed embed = null;
-            //if (guildId == 689119429375819951 || guildId == 688840425162801197 || Context.Guild.Id == 689119429375819951)
-            //{
-                Console.Write($"Guild ID: {Context.Guild.Id}");
-                var stopWatch = new Stopwatch();
-                Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-                stopWatch.Start();
+            Console.Write($"Guild ID: {Context.Guild.Id}");
+            var stopWatch = new Stopwatch();
+            Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
+            stopWatch.Start();
+            if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 ||
+                Context.Channel.Id == 713237102145437776)
+            {
                 if (seasonId == null) //if no season number is entered in the command, than look for the Career stats "Official" table.
                 {
                     var (playerCareer, playerUrl, playerName) = CareerBuilder.GetCareerNoSeason(playerLookup, seasonId);
@@ -49,11 +50,16 @@ namespace LGFA.Modules
                     }
                 }
 
-                await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed).ConfigureAwait(false);
+                await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed)
+                    .ConfigureAwait(false);
                 stopWatch.Stop();
                 Log.Logger.Warning($"Total Time Taken: {stopWatch.Elapsed}");
             }
-        //    else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
-        //}
+            else
+            {
+                await ReplyAsync(
+                    $"Channel permission denied.  Try again in the proper channel {Context.User.Mention}");
+            }
+        }
     }
 }

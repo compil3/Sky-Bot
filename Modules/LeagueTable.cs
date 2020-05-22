@@ -34,24 +34,21 @@ namespace LGFA.Modules
 
             Log.Logger.Warning($"{Context.User.Username} Triggered: LeagueTable.GetStandings ");
 
-            if (guildId == 689119429375819951 || Context.Guild.Id == 688840425162801197 || Context.Guild.Id == 689119429375819951)
+            if (Context.Channel.Id == 705197391984197683 || Context.Channel.Id == 713176040716894208 || Context.Channel.Id == 713237102145437776)
             {
-                if (Context.Channel.Id == 705197391984197683 || Context.Channel.Id == 713176040716894208 || Context.Channel.Id == 713237102145437776 )
-                {
-                    var commandId = Context.Message.Id;
+                var commandId = Context.Message.Id;
 
-                    var (teamStandings, teamPoints, currentSeason, leagueUrl, system) = TeamStanding.GetStandings(league);
+                var (teamStandings, teamPoints, currentSeason, leagueUrl, system) = TeamStanding.GetStandings(league);
 
-                    await Context.Channel
-                        .SendMessageAsync("``[Stats Provided By LGFA``", embed: TeamHelper.StandingEmbed(league))
-                        .ConfigureAwait(false);
-                }
-                else
-                {
-                    await ReplyAsync($"Channel permission denied.  Try again in the proper channel {Context.User.Mention}");
-                }
-
+                await Context.Channel
+                    .SendMessageAsync("``[Stats Provided By LGFA``", embed: TeamHelper.StandingEmbed(league))
+                    .ConfigureAwait(false);
             }
+            else
+            {
+                await ReplyAsync($"Channel permission denied.  Try again in the proper channel {Context.User.Mention}");
+            }
+
         }
     }
 }

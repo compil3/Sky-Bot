@@ -18,7 +18,7 @@ namespace LGFA.Modules
         public async Task GetTeams(string teamName, string league)
         {
             
-            if (Context.Guild.Id == 689119429375819951)
+            if (Context.Channel.Id == 689119429375819951)
             {
                 Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
                 //await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: Team.GetTeam(teamName, league)).ConfigureAwait(false);
