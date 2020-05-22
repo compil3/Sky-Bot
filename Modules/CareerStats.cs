@@ -23,8 +23,8 @@ namespace LGFA.Modules
         {
             var guildId = Context.Guild.Id;
             Embed embed = null;
-            if (guildId == 689119429375819951 || guildId == 688840425162801197 || Context.Guild.Id == 689119429375819951)
-            {
+            //if (guildId == 689119429375819951 || guildId == 688840425162801197 || Context.Guild.Id == 689119429375819951)
+            //{
                 Console.Write($"Guild ID: {Context.Guild.Id}");
                 var stopWatch = new Stopwatch();
                 Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
@@ -53,7 +53,7 @@ namespace LGFA.Modules
                 stopWatch.Stop();
                 Log.Logger.Warning($"Total Time Taken: {stopWatch.Elapsed}");
             }
-            else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
-        }
+        //    else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
+        //}
     }
 }
