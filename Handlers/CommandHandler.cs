@@ -62,26 +62,37 @@ namespace LGFA.Services
             return new CommandService(commandServiceConfig);
         }
 
-        private async Task HandleCommand(SocketMessage rawMessage)
+        private async Task HandleCommand(SocketMessage messageParam)
         {
-            var message = rawMessage as SocketUserMessage;
+            var message = messageParam as SocketUserMessage;
             if (message == null) return;
 
-            if (message.Source != MessageSource.User) return;
-            var context = new CommandContext(_discord,message);
-            var argPos = 0;
-            char prefix = '.';
+            int argPos = 0;
 
-            if (!(message.HasCharPrefix(prefix, ref argPos) || message.HasMentionPrefix(_discord.CurrentUser,ref argPos))) return;
+            if (!(message.HasCharPrefix('.', ref argPos) ||
+                  message.HasMentionPrefix(_discord.CurrentUser, ref argPos)) || message.Author.IsBot) return;
 
-            var result = await _commands.ExecuteAsync(context, argPos, _services);
-            if (!result.IsSuccess)
-            {
-                if (result.ErrorReason != "Unknown command.")
-                {
-                    await message.Channel.SendMessageAsync($"**Error:** {result.ErrorReason}");
-                }
-            }
+            var context  = new SocketCommandContext(_discord, message);
+            var result = await _commands.ExecuteAsync(context: context, argPos: argPos, services: null);
+
+            //var message = rawMessage as SocketUserMessage;
+            //if (message == null) return;
+
+            //if (message.Source != MessageSource.User) return;
+            //var context = new CommandContext(_discord,message);
+            //var argPos = 0;
+            //char prefix = '.';
+
+            //if (!(message.HasCharPrefix(prefix, ref argPos) || message.HasMentionPrefix(_discord.CurrentUser,ref argPos))) return;
+
+            //var result = await _commands.ExecuteAsync(context, argPos, _services);
+            //if (!result.IsSuccess)
+            //{
+            //    if (result.ErrorReason != "Unknown command.")
+            //    {
+            //        await message.Channel.SendMessageAsync($"**Error:** {result.ErrorReason}");
+            //    }
+            //}
         }
         
 
@@ -90,10 +101,12 @@ namespace LGFA.Services
             if (!command.IsSpecified) return;
             if (result.IsSuccess) return;
 
-            await context.Channel.SendMessageAsync($"error: {result}");
+
+            if (result.ErrorReason == "The input text has too few parameters.")
+            {
+                await context.Channel.SendMessageAsync($"***.{command.Value.Name}*** is missing parameters.  Use ***.help*** for more information.");
+            }
+            else await context.Channel.SendMessageAsync($"{command.Value.Name}: {result.ErrorReason}");
         }
-
-      
-
     }
 }

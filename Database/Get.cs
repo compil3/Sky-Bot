@@ -50,11 +50,11 @@ namespace LGFA.Database
                     foreach (var player in findPlayerNodes)
                     {
                         child.EstimatedDuration = TimeSpan.FromMilliseconds(findPlayerCount.Count * 25);
-                        var playerName = WebUtility.HtmlDecode(player
-                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a").InnerText);
-                        var playerShortUrl = WebUtility.HtmlDecode(player
+                        var playerName = player
+                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a").InnerText;
+                        var playerShortUrl = player
                             .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a")
-                            .Attributes["href"].Value);
+                            .Attributes["href"].Value;
 
                         var playerUrl = string.Join(string.Empty,
                             "https://www.leaguegaming.com/forums/" + playerShortUrl);

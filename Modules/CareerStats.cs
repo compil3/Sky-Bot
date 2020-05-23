@@ -16,11 +16,18 @@ namespace LGFA.Modules
     [RequireUserPermission(ChannelPermission.SendMessages)]
     public class CareerStats : ModuleBase
     {
-        [Command("c")]
-        [Summary(
-            ".c Web-Site-UserName SeasonNumber (optional)\n Eg: .ps SpillShot 7\n If the website name has spaces try wrapping the name (.ps \"Name tag\" ")]
+        [Command("cs")]
+        [Alias("career")]
+        //[Summary(".cs Web-Site-UserName SeasonNumber (optional)\n Eg: .ps SpillShot 7\n If the website name has spaces try wrapping the name (.ps \"Name tag\" ")]
+        [Summary("Retrieve a players overall career stats or a season.")]
         public async Task GetPlayerCareer(string playerLookup, string seasonId = null)
         {
+            if (!Context.User.IsBot)
+            {
+                var options = new RequestOptions {Timeout = 2};
+                await Context.Message.DeleteAsync(options);
+            }
+
             var guildId = Context.Guild.Id;
             Embed embed = null;
             Console.Write($"Guild ID: {Context.Guild.Id}");
@@ -28,7 +35,7 @@ namespace LGFA.Modules
             Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
             stopWatch.Start();
             if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 ||
-                Context.Channel.Id == 713237102145437776)
+                Context.Channel.Id == 713237102145437776 || Context.Channel.Name == "statistics")
             {
                 if (seasonId == null) //if no season number is entered in the command, than look for the Career stats "Official" table.
                 {

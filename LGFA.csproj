@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Discord.Addons.CommandsExtension" Version="1.0.4" />
     <PackageReference Include="Discord.Net" Version="2.2.0" />
     <PackageReference Include="FluentScheduler" Version="5.3.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />

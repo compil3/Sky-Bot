@@ -28,7 +28,7 @@ namespace LGFA
 
         public static async Task MainAsync(string[] args)
         {            
-            CreateHostBuilder(args).Build().Run();
+            //CreateHostBuilder(args).Build().Run();
             await using var services = ConfigureServices();
             client = services.GetRequiredService<DiscordSocketClient>();
 
@@ -41,8 +41,8 @@ namespace LGFA
             Console.ResetColor();
 
 
-            await client.LoginAsync(TokenType.Bot, 
-                Environment.GetEnvironmentVariable("token"));
+            await client.LoginAsync(TokenType.Bot, "NzEwOTI2NTEzNTExNDY0OTYx.XsgLjA.GNdRrmGLmlIaxfL7WrgXpe1ez2k");
+                //Environment.GetEnvironmentVariable("token"));
 
             await client.StartAsync();
 

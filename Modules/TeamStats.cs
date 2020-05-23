@@ -11,11 +11,11 @@ namespace LGFA.Modules
 {
     [RequireContext(ContextType.Guild)]
     [RequireUserPermission(ChannelPermission.SendMessages)]
-     public class TeamStats: ModuleBase
+     class TeamStats: ModuleBase
     {
         [Command("ts")]
         [Summary(".ts TeamName xbox/psn [eg: .ts Liverpool Xbox]")]
-        public async Task GetTeams(string teamName, string league)
+        private async Task GetTeams(string teamName, string league)
         {
             
             if (Context.Channel.Id == 689119429375819951)

@@ -6,6 +6,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using LGFA.Engines;
+using LGFA.Extensions;
 using LiteDB;
 using Serilog;
 using LGFA.Properties;
@@ -17,21 +18,27 @@ namespace LGFA.Modules
     public class PlayerStats : ModuleBase
     {
         [Command("ps")]
-        [Summary(
-            ".ps Gamertag Eg: .ps SpillShot 7\n If the website name has spaces try wrapping the name (.ps \"Name tag\" ")]
+        [Summary("Get the players current season statistics.")]
         public async Task GetPlayerStatsLG(string playerLookup, string seasonType = null, string seasonId = null)
         {
-                Log.Logger.Warning($"Guild: {Context.Guild.Name}\nID:{Context.Guild.Id}");
-                if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 || Context.Channel.Id == 713237102145437776)
-                {
-                    Log.Logger.Warning($"Channel: {Context.Channel.Name}\nID: {Context.Channel.Id}");
-                    Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-                    await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``",
-                        embed: Player.GetPlayer(playerLookup, seasonType, seasonId)).ConfigureAwait(false);
-                }
-                else
-                    await ReplyAsync(
-                        $"Channel permission denied.  Try again in the proper channel {Context.User.Mention}");
+            if (!Context.User.IsBot)
+            {
+                var options = new RequestOptions { Timeout = 2 };
+                await Context.Message.DeleteAsync(options);
+            }
+            Log.Logger.Warning($"Guild: {Context.Guild.Name} ID:{Context.Guild.Id}");
+            if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 || Context.Channel.Id == 713237102145437776)
+            {
+                //var (playerLookup) = 
+                //Log.Logger.Warning($"Channel: {Context.Channel.Name}\nID: {Context.Channel.Id}");
+                //Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
+                //await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``",
+                //    embed: Player.GetPlayer(playerLookup, seasonType, seasonId)).ConfigureAwait(false);
+                var test = LeagueInfo.GetSeason();
+            }
+            else
+                await ReplyAsync(
+                    $"Channel permission denied.  Try again in the proper channel {Context.User.Mention}");
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -16,17 +17,18 @@ namespace LGFA.Modules
 {
     public class LeagueTable : ModuleBase
     {
-        [Command("table", RunMode = RunMode.Async)]
+        [Command("table")]
         [Alias("standings")]
-        [Summary(".table system Eg. .standings PSN")]
-        [Remarks("Pulls up the standings table for either system")]
+        [Summary("Retrieve the current season standings.")]
         [RequireUserPermission(GuildPermission.SendMessages)]
         public async Task GetStandings(string league)
         {
 
             if (!Context.User.IsBot)
             {
-                await Context.Message.DeleteAsync();
+                var options = new RequestOptions();
+                options.Timeout = 2;
+                await Context.Message.DeleteAsync(options);
             }
 
             var guildId = Context.Guild.Id;
@@ -34,7 +36,7 @@ namespace LGFA.Modules
 
             Log.Logger.Warning($"{Context.User.Username} Triggered: LeagueTable.GetStandings ");
 
-            if (Context.Channel.Id == 705197391984197683 || Context.Channel.Id == 713176040716894208 || Context.Channel.Id == 713237102145437776)
+            if (Context.Channel.Id == 705197391984197683 || Context.Channel.Id == 713176040716894208 || Context.Channel.Id == 713237102145437776 || Context.Channel.Id == 711778374720421918) 
             {
                 var commandId = Context.Message.Id;
 
