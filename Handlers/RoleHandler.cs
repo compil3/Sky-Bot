@@ -21,10 +21,10 @@ namespace LGFA.Handlers
 
             var acceptedRules = new Emoji("✅");
             var declinedRules = new Emoji("❌");
+            var messageValue = await message.GetOrDownloadAsync();
 
             var newMember = reactionUser.Guild.Roles.FirstOrDefault(n => n.Name == "New Member");
             var acceptedMember = reactionUser.Guild.Roles.FirstOrDefault(a => a.Name == "Accepted Rules");
-
             //add timer to wipe reactions every day.
             if (reaction.MessageId == ruleMessageId && !reactionUser.IsBot)
             {
@@ -36,7 +36,7 @@ namespace LGFA.Handlers
                     {
                         await reactionUser.AddRoleAsync(acceptedMember);
                         await reactionUser.RemoveRoleAsync(newMember);
-                        //remove the users reaction after being kicked.
+                        await messageValue.RemoveReactionAsync(acceptedRules, reactionUser, RequestOptions.Default);
                     }
                 }
                 else if (reaction.Emote.Name == declinedRules.Name)
@@ -47,9 +47,9 @@ namespace LGFA.Handlers
                     await reactionUser.KickAsync(null);
                 }
             }
-            var messageValue = await message.GetOrDownloadAsync();
             if (messageValue == null)
             {
+                await messageValue.RemoveAllReactionsAsync();
                 Log.Logger.Error("Could not get message for reaction roles.");
                 await Task.CompletedTask;
             }
