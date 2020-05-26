@@ -9,13 +9,18 @@ namespace LGFA.Extensions
 {
     class LeagueInfo
     {
-        public static List<LeagueProperties> GetSeason()
+        public static List<LeagueProperties> GetSeason(string system)
         {
             var homepage = new HtmlWeb();
-
-            var doc = homepage.Load(
-                "https://www.leaguegaming.com/forums/index.php?forums/leaguegaming-fifa-association-lgfa.56/");
-
+            HtmlDocument doc = null;
+            if (system.Contains("psn"))
+            {
+                doc = homepage.Load("https://www.leaguegaming.com/forums/index.php?forums/lgfa-psn.604/");
+            }else if (system.Contains("xbox"))
+            {
+                doc = homepage.Load(
+                    "https://www.leaguegaming.com/forums/index.php?forums/leaguegaming-fifa-association-lgfa.56/");
+            }
 
             var leagueInfo = new List<LeagueProperties>
             {
