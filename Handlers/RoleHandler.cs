@@ -23,33 +23,35 @@ namespace LGFA.Handlers
             var declinedRules = new Emoji("❌");
             var messageValue = await message.GetOrDownloadAsync();
 
-            var newMember = reactionUser.Guild.Roles.FirstOrDefault(n => n.Name == "New Member");
-            var acceptedMember = reactionUser.Guild.Roles.FirstOrDefault(a => a.Name == "Accepted Rules");
-            //add timer to wipe reactions every day.
-            if (reaction.MessageId == ruleMessageId && !reactionUser.IsBot)
+            if (reactionUser != null)
             {
-                Log.Logger.Information($"Rules triggered by: {reactionUser.Nickname}");
+                var newMember = reactionUser.Guild.Roles.FirstOrDefault(n => n.Name == "New Member");
+                var acceptedMember = reactionUser.Guild.Roles.FirstOrDefault(a => a.Name == "Accepted Rules");
+                //add timer to wipe reactions every day.
+                if (reaction.MessageId == ruleMessageId && !reactionUser.IsBot)
+                {
+                    Log.Logger.Information($"Rules triggered by: {reactionUser.Nickname}");
 
-                if (reaction.Emote.Name == acceptedRules.Name)
-                {
-                    if (reactionUser.Roles.Contains(newMember))
+                    if (reaction.Emote.Name == acceptedRules.Name)
                     {
-                        await reactionUser.AddRoleAsync(acceptedMember);
-                        await reactionUser.RemoveRoleAsync(newMember);
-                        await messageValue.RemoveReactionAsync(acceptedRules, reactionUser, RequestOptions.Default);
+                        if (reactionUser.Roles.Contains(newMember))
+                        {
+                            await reactionUser.AddRoleAsync(acceptedMember);
+                            await reactionUser.RemoveRoleAsync(newMember);
+                            await messageValue.RemoveReactionAsync(acceptedRules, reactionUser, RequestOptions.Default);
+                        }
                     }
-                }
-                else if (reaction.Emote.Name == declinedRules.Name)
-                {
-                    await reactionUser.SendMessageAsync(
-                        "In order to proceed into Leaguegaming FIFA Discord, you must read and accept the rules.\n" +
-                        "Please re-join, re-read the rules and accept if you wish to be part of our Discord community.");
-                    await reactionUser.KickAsync(null);
+                    else if (reaction.Emote.Name == declinedRules.Name)
+                    {
+                        await reactionUser.SendMessageAsync(
+                            "In order to proceed into Leaguegaming FIFA Discord, you must read and accept the rules.\n" +
+                            "Please re-join, re-read the rules and accept if you wish to be part of our Discord community.");
+                        await reactionUser.KickAsync(null);
+                    }
                 }
             }
             if (messageValue == null)
             {
-                await messageValue.RemoveAllReactionsAsync();
                 Log.Logger.Error("Could not get message for reaction roles.");
                 await Task.CompletedTask;
             }
