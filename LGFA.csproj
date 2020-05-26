@@ -26,7 +26,6 @@
   <ItemGroup>
     <Folder Include="Essentials\News\" />
     <Folder Include="Essentials\Writer\PCN\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
