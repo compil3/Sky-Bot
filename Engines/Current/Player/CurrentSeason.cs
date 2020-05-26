@@ -14,19 +14,15 @@ namespace LGFA.Engines.Current.Player
 {
     class CurrentSeason
     {
-        public static List<CareerProperties> SeasonStats(string playerLookup, List<LeagueProperties> currentSeason)
+        public static List<CareerProperties> SeasonStats(string playerLookup)
         {
             var web = new HtmlWeb();
             var season = "";
             var leagueId = "";
             var systemIcon = "";
-            
+            List<LeagueProperties> currentSeason = null;
              
-            foreach (var leagueProp in currentSeason)
-            {
-                if (!leagueProp.Season.Contains("S")) season = "S" + leagueProp.Season;
-                break;
-            }
+           
 
             var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var dbFolder = "Database/";
@@ -43,12 +39,32 @@ namespace LGFA.Engines.Current.Player
             foreach (var found in result)
             {
                 var playerDoc = web.Load(found.playerUrl);
-                if (found.System == "psn") leagueId = "73";
-                else if (found.System == "xbox") leagueId = "53";
+                leagueId = found.System switch
+                {
+                    "psn" => "73",
+                    "xbox" => "53",
+                    _ => leagueId
+                };
 
-                if (found.System == "psn") systemIcon =
-                        "https://cdn.discordapp.com/attachments/689119430021873737/711030693743820800/220px-PlayStation_logo.svg.jpg";
-                else if (found.System == "xbox") systemIcon = "https://cdn.discordapp.com/attachments/689119430021873737/711030386775293962/120px-Xbox_one_logo.svg.jpg";
+                switch (found.System)
+                {
+                    case "psn":
+                        systemIcon =
+                            "https://cdn.discordapp.com/attachments/689119430021873737/711030693743820800/220px-PlayStation_logo.svg.jpg";
+                        currentSeason = LeagueInfo.GetSeason("psn");
+                        break;
+                    case "xbox":
+                        systemIcon = "https://cdn.discordapp.com/attachments/689119430021873737/711030386775293962/120px-Xbox_one_logo.svg.jpg";
+                        currentSeason = LeagueInfo.GetSeason("xbox");
+                        break;
+                }
+
+                if (currentSeason != null)
+                    foreach (var leagueProp in currentSeason)
+                    {
+                        if (!leagueProp.Season.Contains("S")) season = "S" + leagueProp.Season;
+                        break;
+                    }
 
                 try
                 {
