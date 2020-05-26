@@ -9,6 +9,10 @@ namespace LGFA.Properties
     public class CareerProperties
     {
         public string something { get; set; }
+        public string System { get; set; }
+        public string SystemIcon { get; set; }
+        public string TeamIcon { get; set; }
+        public string Position { get; set; }
         public string SeasonId { get; set; }
         public string PlayerName { get; set; }
         public string PlayerUrl { get; set; }
