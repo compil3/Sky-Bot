@@ -41,7 +41,7 @@ namespace LGFA
             Console.ResetColor();
 
 
-            await client.LoginAsync(TokenType.Bot, "NzEwOTI2NTEzNTExNDY0OTYx.XsgLjA.GNdRrmGLmlIaxfL7WrgXpe1ez2k");
+            await client.LoginAsync(TokenType.Bot, "NzEwOTI2NTEzNTExNDY0OTYx.XstNnQ.3Kskq2wOVjddJyHjlWFvkYkvBvc");
                 //Environment.GetEnvironmentVariable("token"));
 
             await client.StartAsync();
