@@ -18,7 +18,6 @@ namespace LGFA.Engines
         public static (List<CareerProperties>, string playerUrl, string playerFound) GetCareerNoSeason(
             string lookUpPlayer, string seasonId)
         {
-            Embed message = null;
             var leagueId = 0;
             var web = new HtmlWeb();
             try
@@ -28,7 +27,6 @@ namespace LGFA.Engines
                 var dbDir = Path.Combine(dbPath, dbFolder);
                 using var playerDatabase = new LiteDatabase($"Filename={dbDir}LGFA.db;connection=shared");
                 var player = playerDatabase.GetCollection<PlayerProperties.PlayerInfo>("Players");
-                var div = 1;
                 player.EnsureIndex(x => x.playerName);
 
                 var result = player.Query()
@@ -55,13 +53,14 @@ namespace LGFA.Engines
                     }
                     catch (Exception e)
                     {
-                        Log.Logger.Warning($"{found.playerName} in GetCareerNoSeason");
+                        Log.Logger.Warning($"{found.playerName} in GetCareerNoSeason: {e}");
                         throw;
                     }
                 }
             }
             catch (Exception e)
             {
+                Log.Logger.Error($"Exception thrown: {e}");
                 return (null, null, null);
             }
             return (null, null, null);
@@ -82,7 +81,6 @@ namespace LGFA.Engines
                 var dbDir = Path.Combine(dbPath, dbFolder);
                 using var playerDatabase = new LiteDatabase($"Filename={dbDir}LGFA.db;connection=shared");
                 var player = playerDatabase.GetCollection<PlayerProperties.PlayerInfo>("Players");
-                var div = 1;
                 player.EnsureIndex(x => x.playerName);
 
                 var result = player.Query()
