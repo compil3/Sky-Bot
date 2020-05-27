@@ -51,7 +51,7 @@ namespace LGFA.Essentials
             }
             catch (Exception ex)
             {
-                Log.Fatal($"Error saving previous season to {configLocation}");
+                Log.Fatal($"Error saving previous season to {configLocation}\nEx: {ex}");
             }
             return false;
         }

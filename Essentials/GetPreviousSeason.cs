@@ -25,7 +25,7 @@ namespace LGFA.Essentials
             }
 
             string JSON = "";
-            var previousSeason = "";
+            //var previousSeason = "";
 
             var sFile = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var configFile = Path.Combine(sFile, configLocation);

@@ -5,6 +5,7 @@ using Discord;
 using HtmlAgilityPack;
 using LGFA.Essentials;
 using LGFA.Properties;
+using Serilog;
 
 namespace LGFA.Engines
 {
@@ -19,7 +20,6 @@ namespace LGFA.Engines
             var leagueid = "";
             string[] tempUrl = new string[4];
             var standingsUrl = "";
-            Embed message = null;
             try
             {
                 HtmlDocument teamDoc;
@@ -73,7 +73,7 @@ namespace LGFA.Engines
                     return (teamStandings, teamPoints, currentSeason, standingsUrl,system.ToUpper());
                 } else if (system == "psn" || system == "PSN")
                 {
-                      tempUrl[0] = standingsUrlTemp;
+                    tempUrl[0] = standingsUrlTemp;
                     tempUrl[1] = leagueid;
                     tempUrl[2] = "73&seasonid=";
                     tempUrl[3] = currentSeason;
@@ -120,6 +120,7 @@ namespace LGFA.Engines
             }
             catch (Exception e)
             {
+                Log.Logger.Error($"Exception thrown: {e}");
                 return (null,null, null, null, null);
             }
         }

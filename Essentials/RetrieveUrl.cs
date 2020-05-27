@@ -25,8 +25,8 @@ namespace LGFA.Essentials
             }
 
             string JSON = "";
-            var xboxURL = "";
-            var psnURL = "";
+            //var xboxURL = "";
+            //var psnURL = "";
 
             var sFile = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var configFile = Path.Combine(sFile, configLocation);
@@ -49,7 +49,7 @@ namespace LGFA.Essentials
             if (SeasonType == "pre") SeasonType = "0";
             else if (SeasonType == "reg") SeasonType = "1";
 
-            var url = "";
+            //var url = "";
             var sTypeTemp = "&seasontypeid=";
             var seasonTypeID = string.Concat(string.Empty, sTypeTemp, SeasonType);
 
