@@ -41,7 +41,7 @@ namespace LGFA.Services
         private static async Task RulesRole(Cacheable<IUserMessage, ulong> arg1, ISocketMessageChannel arg2, SocketReaction arg3)
         {
 
-           await RoleHandler.OnReaction(arg1, arg2, arg3);
+           await RoleHandler.OnRulesReaction(arg1, arg2, arg3);
            await Task.CompletedTask;
         }
 

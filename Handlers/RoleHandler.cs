@@ -11,10 +11,9 @@ namespace LGFA.Handlers
 {
     public class RoleHandler
     {
-        public static async Task OnReaction(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel chnl,
+        public static async Task OnRulesReaction(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel chnl,
             SocketReaction reaction)
         {
-            Log.Logger.Information("Loaded RoleHandler");
             SocketGuildUser reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
 
             ulong ruleMessageId = 712883043823779871;
@@ -44,7 +43,7 @@ namespace LGFA.Handlers
                     else if (reaction.Emote.Name == declinedRules.Name)
                     {
                         await reactionUser.SendMessageAsync(
-                            "In order to proceed into Leaguegaming FIFA Discord, you must read and accept the rules.\n" +
+                            "In order to proceed into Leagu715267433170206855egaming FIFA Discord, you must read and accept the rules.\n" +
                             "Please re-join, re-read the rules and accept if you wish to be part of our Discord community.");
                         await reactionUser.KickAsync(null);
                     }
@@ -56,6 +55,24 @@ namespace LGFA.Handlers
                 await Task.CompletedTask;
             }
         }
+        public static async Task OnSystemReaction(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, 
+        SocketReaction reaction) 
+        {
+            SocketGuildUser reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
+
+            ulong roleMessage = 715267433170206855;
+            var xboxRole = new Emoji(":regional_indicator_x:");
+            var psnRole = new Emoji(":regional_indicator_p:");
+            var messageValue = await message.GetOrDownloadAsync();
+
+            if (!reactionUser.IsBot) 
+            {
+               
+            }
+
+
+        }
+
 
     }
 }
