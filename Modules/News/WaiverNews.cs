@@ -13,7 +13,6 @@ namespace LGFA.Modules.News
 {
     public class WaiverNews : Registry
     {
-        private DiscordSocketClient _client;
         public WaiverNews(IMessageChannel channel)
         {
             Action waivers = new Action(async () =>

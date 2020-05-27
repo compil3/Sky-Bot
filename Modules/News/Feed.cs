@@ -18,7 +18,6 @@ namespace LGFA.Modules.News
         {
             var feedString = "//*[@id='newsfeed_page']/ol/li[1]";
             var tempDateTime = "";
-            var teamTwoName = "";
             var systemIcon = "";
             Embed embed = null;
 
@@ -48,7 +47,6 @@ namespace LGFA.Modules.News
                 splitStr[1] = splitStr[1].Replace("  ", " ");
                 var tradeIcon = item.SelectSingleNode("//*[@id='newsfeed_page']/ol/li[1]/a[2]/img")
                     .Attributes["src"].Value;
-                var icon = "https://www.leaguegaming.com/images/feed/trade.png";
                 var lastNews = DateTime.Parse(tempDateTime);
 
                 if (!NewsWriter.SaveTrade(lastNews, splitStr[0], splitStr[1], leagueId))
