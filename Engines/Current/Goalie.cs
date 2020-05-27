@@ -104,11 +104,11 @@ namespace LGFA.Engines
                         SavePlayerInfo.SavePlayerUrl(playerID, playerName, playerURL);
 
                         //CareerBuilder.GetCareer(playerID, playerName, league);
-                        LGWriter.SaveGoalie(playerID, league, playerName,
-                            gamesPlayed, record, goalsAgainst, shotsAgainst, saves, savePercentage, goalsAgainstAvg,
-                            cleanSheets, manOfTheMatch, avgMatchRating, playerURL, iconURL, command, histSeasonID,
-                            seasonTypeID);
-                        GC.Collect();
+                        //LGWriter.SaveGoalie(playerID, league, playerName,
+                        //    gamesPlayed, record, goalsAgainst, shotsAgainst, saves, savePercentage, goalsAgainstAvg,
+                        //    cleanSheets, manOfTheMatch, avgMatchRating, playerURL, iconURL, command, histSeasonID,
+                        //    seasonTypeID);
+                        //GC.Collect();
                     }
                 }
 

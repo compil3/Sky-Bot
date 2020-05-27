@@ -12,7 +12,7 @@ namespace LGFA.Database
     {
         internal static bool SaveInformation(int playerId, string playerName, string playerUrl,string system)
         {
-            using var database = new LiteDatabase(@"Filename=Database/LGFA.db;connect=shared");
+            using var database = new LiteDatabase(@"Filename=Database/LGFA.db;connection=shared");
             var playerCollection = database.GetCollection<PlayerProperties.URL>("Players");
             playerCollection.EnsureIndex(x => x.Id);
 
