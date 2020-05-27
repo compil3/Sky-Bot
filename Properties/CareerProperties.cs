@@ -277,11 +277,6 @@ namespace LGFA.Properties
                 _discipline = string.Join("-", cards);
             }
         }
-
-        public static implicit operator List<object>(CareerProperties v)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
     }
 }
