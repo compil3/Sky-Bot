@@ -349,3 +349,6 @@ ASALocalRun/
 healthchecksdb
 /list_output.png
 /Configuration/Bot/Settings.cs
+.vscode/launch.json
+.vscode/tasks.json
+Database/LGFA.db
