@@ -14,7 +14,7 @@ namespace LGFA.Handlers
         {
             var reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
 
-            ulong ruleMessageId = 712883043823779871;
+            ulong ruleMessageId = Convert.ToUInt64(Environment.GetEnvironmentVariable("rules_message"));
 
             var acceptedRules = new Emoji("✅");
             var declinedRules = new Emoji("❌");
@@ -41,7 +41,7 @@ namespace LGFA.Handlers
                     else if (reaction.Emote.Name == declinedRules.Name)
                     {
                         await reactionUser.SendMessageAsync(
-                            "In order to proceed into Leagu715267433170206855egaming FIFA Discord, you must read and accept the rules.\n" +
+                            "In order to proceed into Leaguegaming FIFA Discord, you must read and accept the rules.\n" +
                             "Please re-join, re-read the rules and accept if you wish to be part of our Discord community.");
                         await reactionUser.KickAsync();
                     }
@@ -60,7 +60,7 @@ namespace LGFA.Handlers
         {
             var reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
 
-            ulong roleMessage = 715267433170206855;
+            ulong roleMessage = Convert.ToUInt64(Environment.GetEnvironmentVariable("roles_message"));
             var xboxRole = new Emoji("🇽");
             var psnRole = new Emoji("🇵");
 
