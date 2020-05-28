@@ -61,7 +61,8 @@ namespace LGFA
             var newsChn = client.GetChannel(715065247852920884) as IMessageChannel;
             var chnl = client.GetChannel(id) as IMessageChannel;
             Manager.Manage(chnl, newsChn);
-            client.ReactionAdded += RoleHandler.OnReaction;
+            client.ReactionAdded += RoleHandler.OnRulesReaction;
+            client.ReactionAdded += RoleHandler.OnSystemReaction;
             client.UserJoined += Joined.UserJoined;
             Log.Logger.Warning("Schedules Initialized.");
             return Task.CompletedTask;
