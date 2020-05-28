@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using Discord.WebSocket;
 using HtmlAgilityPack;
 using LGFA.Properties;
 using LiteDB;
@@ -39,8 +37,8 @@ namespace LGFA.Modules.News
                 if (line.Contains("The ")) newLine = line.Replace("The ", string.Empty);
                 if (line.Contains("the ")) newLine = newLine.Replace("the ", string.Empty);
 
-                var startTeam = newLine.Split(new string[] {"have", "traded", "to"}, StringSplitOptions.None);
-                var endTeam = newLine.Split(new string[] {"to", "for"}, StringSplitOptions.None);
+                var startTeam = newLine.Split(new string[] { "have", "traded", "to" }, StringSplitOptions.None);
+                var endTeam = newLine.Split(new string[] { "to", "for" }, StringSplitOptions.None);
 
 
                 var splitStr = newLine.Split(new string[] { "to " }, StringSplitOptions.None);
@@ -53,45 +51,42 @@ namespace LGFA.Modules.News
                 {
                     break;
                 }
-                else
+                try
                 {
-                    try
-                    {
-                        
-                        using var newsDb = new LiteDatabase(@"Filename=Database/LGFA.db;connection=shared");
-                        var news = newsDb.GetCollection<LeagueNews.News>("Trades");
-                        var result = news.Find(x => x.Date.Equals(lastNews));
-                        foreach (var headline in result)
-                        {
-                            var builder = new EmbedBuilder()
-                                .WithColor(new Color(0xFF0019))
-                                .WithTimestamp(lastNews)
-                                .WithFooter(footer =>
-                                {
-                                    footer
-                                        .WithText("leaguegaming.com")
-                                        .WithIconUrl("https://www.leaguegaming.com/images/logo/logonew.png");
-                                })
-                                .WithThumbnailUrl("https://www.leaguegaming.com/images/feed/trade.png")
-                                .WithAuthor(author =>
-                                {
-                                    author
-                                        .WithName("LGFA Breaking News: Trade")
-                                        .WithIconUrl(systemIcon);
-                                })
-                                .AddField($"**{startTeam[0].Trim()}**",$"{endTeam[2].Trim()}", true)
-                                .AddField($"**{endTeam[1].Trim()}**", $"{startTeam[2].Trim()}", true);
 
-                            embed = builder.Build();
-                        }
-                        await channel.SendMessageAsync(null, embed: embed).ConfigureAwait(false);
-
-                    }
-                    catch (Exception e)
+                    using var newsDb = new LiteDatabase(@"Filename=Database/LGFA.db;connection=shared");
+                    var news = newsDb.GetCollection<LeagueNews.News>("Trades");
+                    var result = news.Find(x => x.Date.Equals(lastNews));
+                    foreach (var headline in result)
                     {
-                        Log.Logger.Error($"{e}");
-                        throw;
+                        var builder = new EmbedBuilder()
+                            .WithColor(new Color(0xFF0019))
+                            .WithTimestamp(lastNews)
+                            .WithFooter(footer =>
+                            {
+                                footer
+                                    .WithText("leaguegaming.com")
+                                    .WithIconUrl("https://www.leaguegaming.com/images/logo/logonew.png");
+                            })
+                            .WithThumbnailUrl("https://www.leaguegaming.com/images/feed/trade.png")
+                            .WithAuthor(author =>
+                            {
+                                author
+                                    .WithName("LGFA Breaking News: Trade")
+                                    .WithIconUrl(systemIcon);
+                            })
+                            .AddField($"**To {startTeam[0].Trim()}**", $"{endTeam[2].Trim()}", true)
+                            .AddField($"**To {endTeam[1].Trim()}**", $"{startTeam[2].Trim()}", true);
+
+                        embed = builder.Build();
                     }
+                    await channel.SendMessageAsync(null, embed: embed).ConfigureAwait(false);
+
+                }
+                catch (Exception e)
+                {
+                    Log.Logger.Error($"{e}");
+                    throw;
                 }
             }
 
@@ -120,53 +115,110 @@ namespace LGFA.Modules.News
 
             foreach (var items in nodes)
             {
-                var newLine = "";
                 tempDateTime = items.SelectSingleNode("//*[@id='newsfeed_page']/ol/li[1]/div/abbr").InnerText;
                 var line = items.SelectSingleNode("//*[@id='newsfeed_page']/ol/li[1]/div/h3").InnerText;
+                var newLine = "";
 
                 if (line.Contains("The ")) newLine = line.Replace("The ", string.Empty);
                 if (line.Contains("the ")) newLine = newLine.Replace("the ", string.Empty);
+                if (newLine == string.Empty)
+                {
+                    newLine = line;
+                }
+                IList<string> waiverLine = new List<string>();
+                var element = "";
+                var condition = "";
+                var statement = "";
+                var placement = "";
+                var team = "";
 
                 var lastNews = DateTime.Parse(tempDateTime);
-                if (!NewsWriter.SaveWaiver(lastNews, newLine, leagueId)) return;
-                else
+                if (!NewsWriter.SaveWaiver(lastNews, newLine, leagueId)) break;
+                EmbedBuilder builder = null;
+
+                if (line.Contains("has cleared"))
                 {
-                    try
+                    waiverLine = newLine.Split(new string[] { "has", "cleared", "and put onto" }, StringSplitOptions.None);
+                    if (waiverLine.Any())
                     {
-                        using var newsDb = new LiteDatabase(@"Filename=Database/LGFA.db;connection=shared");
-                        var waivers = newsDb.GetCollection<LeagueNews.News>("Waivers");
-                        var result = waivers.Find(w => w.Date.Equals(lastNews));
-
-                        foreach (var headline in result)
-                        {
-                            var builder = new EmbedBuilder()
-                                .WithColor(new Color(0xFF0019))
-                                .WithTimestamp(lastNews)
-                                .WithFooter(footer =>
-                                {
-                                    footer
-                                        .WithText("leaguegaming.com/fifa")
-                                        .WithIconUrl("https://www.leaguegaming.com/images/league/icon/l53.png");
-                                })
-                                .WithAuthor(author =>
-                                {
-                                    author
-                                        .WithName("LGFA Waiver Wire")
-                                        .WithIconUrl(systemIcon);
-                                })
-                                .WithDescription("**" +newLine + "**");
-                            embed = builder.Build();
-                        }
-                        await channel.SendMessageAsync(null, embed: embed).ConfigureAwait(false);
-
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Logger.Error($"{e}");
-                        throw;
+                        builder = new EmbedBuilder()
+                            .WithColor(new Color(0xFF0019))
+                            .WithTimestamp(lastNews)
+                            .WithFooter(footer =>
+                            {
+                                footer
+                                    .WithText("leaguegaming.com/fifa")
+                                    .WithIconUrl("https://www.leaguegaming.com/images/league/icon/l53.png");
+                            })
+                            .WithAuthor(author =>
+                            {
+                                author
+                                    .WithName("LGFA Waiver News")
+                                    .WithIconUrl(systemIcon);
+                            })
+                            .WithDescription("**Player cleared waivers.**")
+                            .AddField("Name", waiverLine[0], true)
+                            .AddField("Status", "Cleared", true)
+                            .AddField("Placement", "Training Camp", true);
+                        embed = builder.Build();
                     }
                 }
-
+                else if (line.Contains("have claimed"))
+                {
+                    waiverLine = newLine.Split(new string[] { "have claimed", "off of waivers" }, StringSplitOptions.None);
+                    if (waiverLine.Any())
+                    {
+                        builder = new EmbedBuilder()
+                            .WithColor(new Color(0xFF0019))
+                            .WithTimestamp(lastNews)
+                            .WithFooter(footer =>
+                            {
+                                footer
+                                    .WithText("leaguegaming.com/fifa")
+                                    .WithIconUrl("https://www.leaguegaming.com/images/league/icon/l53.png");
+                            })
+                            .WithAuthor(author =>
+                            {
+                                author
+                                    .WithName("LGFA Waiver News")
+                                    .WithIconUrl(systemIcon);
+                            })
+                            .WithDescription("**Player Claimed off waivers.**")
+                            .AddField("New Team", waiverLine[0], true)
+                            .AddField("Name", waiverLine[1], true)
+                            .AddField("Status", "Claimed", true);
+                        //.AddField("Placement", placement, true);
+                        embed = builder.Build();
+                    }
+                }
+                else if (line.Contains("have placed"))
+                {
+                    waiverLine = newLine.Split(new string[] { "have placed", "on waivers" }, StringSplitOptions.None);
+                    if (waiverLine.Any())
+                    {
+                        builder = new EmbedBuilder()
+                            .WithColor(new Color(0xFF0019))
+                            .WithTimestamp(lastNews)
+                            .WithFooter(footer =>
+                            {
+                                footer
+                                    .WithText("leaguegaming.com/fifa")
+                                    .WithIconUrl("https://www.leaguegaming.com/images/league/icon/l53.png");
+                            })
+                            .WithAuthor(author =>
+                            {
+                                author
+                                    .WithName("LGFA Waiver News")
+                                    .WithIconUrl(systemIcon);
+                            })
+                            .WithDescription("**Player placed on waivers.**")
+                            .AddField("Name", waiverLine[1], true)
+                            .AddField("Current Team", waiverLine[0], true)
+                            .AddField("Status", "On Waivers", true);
+                        embed = builder.Build();
+                    }
+                }
+                await channel.SendMessageAsync(null, embed: embed).ConfigureAwait(false);
             }
         }
     }
