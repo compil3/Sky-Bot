@@ -40,8 +40,7 @@ namespace LGFA
             Console.ResetColor();
 
 
-            await client.LoginAsync(TokenType.Bot, "NzEwOTI2NTEzNTExNDY0OTYx.XstNnQ.3Kskq2wOVjddJyHjlWFvkYkvBvc");
-            //Environment.GetEnvironmentVariable("token"));
+            await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("token"));
 
             await client.StartAsync();
 
@@ -57,7 +56,7 @@ namespace LGFA
         public static Task Client_Ready()
         {
             var id = Convert.ToUInt64(Environment.GetEnvironmentVariable("update_log_channel"));
-            var newsChn = client.GetChannel(715065247852920884) as IMessageChannel;
+            var newsChn = client.GetChannel(Convert.ToUInt64(Environment.GetEnvironmentVariable("news_channel"))) as IMessageChannel;
             var chnl = client.GetChannel(id) as IMessageChannel;
             Manager.Manage(chnl, newsChn);
             client.ReactionAdded += RoleHandler.OnRulesReaction;
