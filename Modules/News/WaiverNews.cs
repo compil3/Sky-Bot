@@ -27,7 +27,7 @@ namespace LGFA.Modules.News
                         $"https://www.leaguegaming.com/forums/index.php?leaguegaming/league&action=league&page=team_news&leagueid=" +id +"&typeid=9");
 
                     await Feed.RunWaivers(feed, id, channel);
-                    Log.Logger.Information("Waivers ran.");
+                    //Log.Logger.Information("Waivers ran.");
                 }
             });
             this.Schedule(waivers).ToRunEvery(5).Seconds();
