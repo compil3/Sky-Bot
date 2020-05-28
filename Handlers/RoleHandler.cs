@@ -55,24 +55,50 @@ namespace LGFA.Handlers
                 await Task.CompletedTask;
             }
         }
-        public static async Task OnSystemReaction(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel, 
-        SocketReaction reaction) 
+        public static async Task OnSystemReaction(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel,
+        SocketReaction reaction)
         {
             SocketGuildUser reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
 
             ulong roleMessage = 715267433170206855;
-            var xboxRole = new Emoji(":regional_indicator_x:");
-            var psnRole = new Emoji(":regional_indicator_p:");
-            var messageValue = await message.GetOrDownloadAsync();
+            var xboxRole = new Emoji("🇽");
+            var psnRole = new Emoji("🇵");
 
-            if (!reactionUser.IsBot) 
+            try
             {
-               
+                if (reaction.MessageId == roleMessage && !reactionUser.IsBot)
+                {
+                    var messageValue = await message.GetOrDownloadAsync();
+                    var xbox = reactionUser.Guild.Roles.FirstOrDefault(x => x.Name == "Xbox");
+                    var psn = reactionUser.Guild.Roles.FirstOrDefault(p => p.Name == "PSN");
+                    var verified = reactionUser.Guild.Roles.FirstOrDefault(v => v.Name == "Accepted Rules");
+                    if (reaction.Emote.Name == xboxRole.Name)
+                    {
+                        if (reactionUser.Roles.Contains(verified))
+                        {
+                            await reactionUser.AddRoleAsync(xbox);
+                            await reactionUser.RemoveRoleAsync(verified);
+                            await messageValue.RemoveReactionAsync(xboxRole, reactionUser, RequestOptions.Default);
+                        }
+                    }
+                    else if (reaction.Emote.Name == psnRole.Name)
+                    {
+                        if (reactionUser.Roles.Contains(verified))
+                        {
+                            await reactionUser.AddRoleAsync(psn);
+                            await reactionUser.RemoveRoleAsync(verified);
+                            await messageValue.RemoveReactionAsync(psnRole, reactionUser, RequestOptions.Default);
+                        }
+                    }
+                    else await reactionUser.SendMessageAsync("Error assigning requested role, please contact a BOG.");
+                }
             }
-
-
+            catch (Exception e)
+            {
+                Log.Logger.Error($"Error assigning PSN/Xbox role. {e}");
+                throw;
+            }
+           
         }
-
-
     }
 }
