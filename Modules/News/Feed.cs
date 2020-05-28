@@ -150,7 +150,7 @@ namespace LGFA.Modules.News
                                     .WithIconUrl(systemIcon);
                             })
                             .WithDescription("**Player cleared waivers.**")
-                            .AddField("Name", waiverLine[0], true)
+                            .AddField("User", waiverLine[0], true)
                             .AddField("Status", "Cleared", true)
                             .AddField("Placement", "Training Camp", true);
                         embed = builder.Build();
@@ -178,7 +178,7 @@ namespace LGFA.Modules.News
                             })
                             .WithDescription("**Player Claimed off waivers.**")
                             .AddField("New Team", waiverLine[0], true)
-                            .AddField("Name", waiverLine[1], true)
+                            .AddField("User", waiverLine[1], true)
                             .AddField("Status", "Claimed", true);
                         //.AddField("Placement", placement, true);
                         embed = builder.Build();
@@ -205,7 +205,7 @@ namespace LGFA.Modules.News
                                     .WithIconUrl(systemIcon);
                             })
                             .WithDescription("**Player placed on waivers.**")
-                            .AddField("Name", waiverLine[1], true)
+                            .AddField("User", waiverLine[1], true)
                             .AddField("Current Team", waiverLine[0], true)
                             .AddField("Status", "On Waivers", true);
                         embed = builder.Build();
