@@ -68,7 +68,7 @@ namespace LGFA.Modules.News
 
             using var waiverDb = new LiteDatabase(@"Filename=Database/LGFA.db;connection=shared");
             var waiver = waiverDb.GetCollection<LeagueNews.Waivers>("Waivers");
-            var result = waiver.Find(x => x.Id == 1);
+            var result = waiver.Find(x => x.Id == index);
             foreach (var datetime in result)
             {
                 dbDateTime = datetime.Date;
