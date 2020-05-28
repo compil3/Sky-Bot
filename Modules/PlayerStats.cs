@@ -1,10 +1,10 @@
-﻿using Discord;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using LGFA.Engines.Current.Player;
 using LGFA.Properties;
 using Serilog;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LGFA.Modules
 {
@@ -18,11 +18,13 @@ namespace LGFA.Modules
         {
             if (!Context.User.IsBot)
             {
-                var options = new RequestOptions { Timeout = 2 };
+                var options = new RequestOptions {Timeout = 2};
                 await Context.Message.DeleteAsync(options);
             }
+
             Log.Logger.Warning($"Guild: {Context.Guild.Name} ID:{Context.Guild.Id}");
-            if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 || Context.Channel.Id == 713237102145437776)
+            if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 ||
+                Context.Channel.Id == 713237102145437776)
             {
                 //var (playerLookup) = 
                 //Log.Logger.Warning($"Channel: {Context.Channel.Name}\nID: {Context.Channel.Id}");
@@ -35,8 +37,10 @@ namespace LGFA.Modules
                     .ConfigureAwait(false);
             }
             else
+            {
                 await ReplyAsync(
                     $"Channel permission denied.  Try again in the proper channel {Context.User.Mention}");
+            }
         }
 
         private Embed SeasonEmbed(List<CareerProperties> player)
@@ -62,37 +66,34 @@ namespace LGFA.Modules
                             .WithName($"{pStat.System.ToUpper()} {pStat.SeasonId} Stats")
                             .WithIconUrl(pStat.SystemIcon);
                     })
-                    .AddField("\u200B", $"```Record```", false)
+                    .AddField("\u200B", "```Record```")
                     .AddField("GP", pStat.GamesPlayed, true)
                     .AddField("Record (W-D-L)", pStat.Record, true)
                     .AddField("AMR", pStat.MatchRating, true)
-
-                    .AddField("\u200B", $"```Offensive Stats```", false)
+                    .AddField("\u200B", "```Offensive Stats```")
                     .AddField("Goals", pStat.Goals, true)
                     .AddField("G/Game", pStat.GoalsPerGame, true)
                     .AddField("Shots - SOT", pStat.ShotSot, true)
                     .AddField("S/Game", pStat.ShotPerGame, true)
                     .AddField("Shots/Goal - SH%", pStat.ShotPerGoal, true)
-
-                    .AddField("\u200B", $"```Passing Stats```", false)
+                    .AddField("\u200B", "```Passing Stats```")
                     .AddField("Assists", pStat.Assists, true)
                     .AddField("Pass - Pass Attempts", pStat.PassRecord, true)
                     .AddField("Key Passes", pStat.KeyPasses, true)
                     .AddField("AST/Game", pStat.AssistPerGame, true)
                     .AddField("P/Game - Pass %", pStat.PassPerGame, true)
                     .AddField("Key Pass/Game", pStat.KeyPassPerGame, true)
-
-                    .AddField("\u200B", $"```Defensive Stats```", false)
+                    .AddField("\u200B", "```Defensive Stats```")
                     .AddField("Tac - Tac Att", pStat.Tackling, true)
                     .AddField("Tac/Game", pStat.TacklesPerGame, true)
                     .AddField("Tac %", pStat.TacklePercent, true)
                     .AddField("PossW-PossL", pStat.Poss, true)
                     .AddField("Int-Blk", pStat.Wall, true)
-
-                    .AddField("\u200B", $"```Discipline```", false)
+                    .AddField("\u200B", "```Discipline```")
                     .AddField("YC-RC", pStat.Discipline, true);
                 embed = builder.Build();
             }
+
             return embed;
         }
     }

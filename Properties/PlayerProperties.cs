@@ -36,7 +36,7 @@
             public string Saves { get; set; }
             public string SavePercentage { get; set; }
             public string GoalsAgainstAvg { get; set; }
-            
+
             public string Record { get; set; }
             public string AvgMatchRating { get; set; }
             public string ManOfTheMatch { get; set; }
@@ -115,7 +115,5 @@
             public string PlayerUrl { get; set; }
             public string System { get; set; }
         }
-
     }
 }
-

@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LGFA.Properties
+﻿namespace LGFA.Properties
 {
-    class Types //Datatypes > Settings
+    internal class Types //Datatypes > Settings
     {
-        
     }
 
     public class Season
     {
         public string currentSeason { get; set; }
-        public string previousSeason { get; set; }  
+        public string previousSeason { get; set; }
     }
 
     public class UrlSettings

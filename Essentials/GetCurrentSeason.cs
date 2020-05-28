@@ -1,30 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using LGFA.Properties;
 using Newtonsoft.Json;
 using Serilog;
 
 namespace LGFA.Essentials
 {
-    class GetCurrentSeason
+    internal class GetCurrentSeason
     {
         public static string GetSeason(string system)
         {
             var configLocation = "";
 
             if (system == "psn")
-            {
                 configLocation = @"Configuration/Season/psn.json";
-            }
-            else if (system == "xbox")
-            {
-                configLocation = @"Configuration/Season/xbox.json";
-            }
+            else if (system == "xbox") configLocation = @"Configuration/Season/xbox.json";
 
-            string JSON = "";
+            var JSON = "";
             var sFile = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var configFile = Path.Combine(sFile, configLocation);
             if (!File.Exists(configFile)) Log.Fatal($"{configFile} does not exist");
@@ -42,7 +35,7 @@ namespace LGFA.Essentials
                 throw;
             }
 
-            Season seasonID = JsonConvert.DeserializeObject<Season>(JSON);
+            var seasonID = JsonConvert.DeserializeObject<Season>(JSON);
             if (seasonID.currentSeason != null) return seasonID.currentSeason;
             return null;
         }

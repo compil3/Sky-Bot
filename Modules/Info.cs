@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -28,9 +26,11 @@ namespace LGFA.Modules
                         "https://cdn.discordapp.com/attachments/689119430021873737/711030693743820800/220px-PlayStation_logo.svg.jpg";
                     break;
                 case "xbox":
-                    systemIcon = "https://cdn.discordapp.com/attachments/689119430021873737/711030386775293962/120px-Xbox_one_logo.svg.jpg";
+                    systemIcon =
+                        "https://cdn.discordapp.com/attachments/689119430021873737/711030386775293962/120px-Xbox_one_logo.svg.jpg";
                     break;
             }
+
             leagueInfo = LeagueInfo.GetSeason(system);
             foreach (var info in leagueInfo)
             {
@@ -49,7 +49,7 @@ namespace LGFA.Modules
                 embed = builder.Build();
             }
 
-            await Context.Channel.SendMessageAsync($"``[Information provided by LGFA]``", embed: embed)
+            await Context.Channel.SendMessageAsync("``[Information provided by LGFA]``", embed: embed)
                 .ConfigureAwait(false);
         }
     }

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Serilog;
-using LGFA.Engines;
 
 namespace LGFA.Modules
 {
-    class LastFiveStats : ModuleBase
+    internal class LastFiveStats : ModuleBase
     {
         [Command("l5")]
         [Summary(
@@ -26,9 +23,12 @@ namespace LGFA.Modules
                 //await Context.Channel.SendMessageAsync(null, embed: Recent.GetLastFive(playerLookup)).ConfigureAwait(false);
                 GC.Collect();
             }
-            else if (Context.Guild.Id == 689119429375819951) await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
-            GC.Collect();
+            else if (Context.Guild.Id == 689119429375819951)
+            {
+                await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
+            }
 
+            GC.Collect();
         }
     }
 }

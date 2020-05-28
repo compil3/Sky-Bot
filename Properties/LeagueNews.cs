@@ -2,7 +2,7 @@
 
 namespace LGFA.Properties
 {
-    class LeagueNews
+    internal class LeagueNews
     {
         public class News
         {

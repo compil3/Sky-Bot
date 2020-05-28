@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LGFA.Properties
+﻿namespace LGFA.Properties
 {
-    class General
+    internal class General
     {
         public class Season
         {

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -37,24 +35,20 @@ namespace LGFA.Modules
             if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 ||
                 Context.Channel.Id == 713237102145437776 || Context.Channel.Name == "statistics")
             {
-                if (seasonId == null) //if no season number is entered in the command, than look for the Career stats "Official" table.
+                if (seasonId == null
+                ) //if no season number is entered in the command, than look for the Career stats "Official" table.
                 {
                     var (playerCareer, playerUrl, playerName) = CareerBuilder.GetCareerNoSeason(playerLookup, seasonId);
                     if (playerCareer == null && playerUrl == null && playerName == null)
                         embed = Missing.CareerNotFound(playerLookup, playerUrl);
                     else
-                    {
                         embed = CareerEmbed.VirtualCareerEmbed(playerCareer);
-                    }
                 }
                 else
                 {
                     var (career, playerUrl, playerName, seasonNumber) =
                         CareerBuilder.GetCareerSeason(playerLookup, seasonId);
-                    if (career.Count <= 1)
-                    {
-                        embed = CareerEmbed.VirtualSeasonEmbed(career);
-                    }
+                    if (career.Count <= 1) embed = CareerEmbed.VirtualSeasonEmbed(career);
                 }
 
                 await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed)

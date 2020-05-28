@@ -1,15 +1,14 @@
-﻿using Discord;
-using HtmlAgilityPack;
-using Serilog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
+using HtmlAgilityPack;
 using LGFA.Engines.Career;
 using LGFA.Properties;
 using LiteDB;
+using Serilog;
+using Season = LGFA.Engines.Career.Season;
 
 namespace LGFA.Engines
 {
@@ -34,7 +33,6 @@ namespace LGFA.Engines
                     .ToList();
 
 
-
                 foreach (var found in result)
                 {
                     if (found.System == "psn") leagueId = 73;
@@ -49,7 +47,6 @@ namespace LGFA.Engines
                         var (table, playerUrl, playerFound) = Official.OfficialParse(playerDoc, found.playerUrl,
                             found.playerName, leagueId);
                         return (table, playerUrl, playerFound);
-
                     }
                     catch (Exception e)
                     {
@@ -63,6 +60,7 @@ namespace LGFA.Engines
                 Log.Logger.Error($"Exception thrown: {e}");
                 return (null, null, null);
             }
+
             return (null, null, null);
         }
 
@@ -100,7 +98,7 @@ namespace LGFA.Engines
                         stopWatch.Stop();
                         Log.Logger.Warning($"GetCareerSeason Doc Load: {stopWatch.Elapsed}");
 
-                        var (table, playerUrl, playerFound, season) = Career.Season.SeasonParse(playerDoc,
+                        var (table, playerUrl, playerFound, season) = Season.SeasonParse(playerDoc,
                             found.playerUrl, found.playerName, seasonId, leagueId);
                         return (table, playerUrl, playerFound, season);
                     }
@@ -121,4 +119,3 @@ namespace LGFA.Engines
         }
     }
 }
-

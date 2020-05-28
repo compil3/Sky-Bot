@@ -8,6 +8,5 @@
         public string User { get; set; }
         public string Games { get; set; }
         public string Latest { get; set; }
-
     }
 }

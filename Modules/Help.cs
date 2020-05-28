@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Addons.CommandsExtension;
 using Discord.Commands;
-using Discord.WebSocket;
 using LGFA.Extensions;
 
 namespace LGFA.Modules
@@ -29,6 +25,7 @@ namespace LGFA.Modules
                 var options = new RequestOptions {Timeout = 2};
                 await Context.Message.DeleteAsync(options);
             }
+
             const string botPrefix = ".";
             var helpEmbed = _service.GetDefaultHelpEmbed(command, botPrefix);
             await Context.User.SendMessageAsync(embed: helpEmbed);

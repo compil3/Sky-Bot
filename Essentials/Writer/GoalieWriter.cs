@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using LGFA.Properties;
 using LiteDB;
 using Serilog;
 
 namespace LGFA.Essentials.Writer
 {
-    class GoalieWriter
+    internal class GoalieWriter
     {
         public static bool SaveGoalie(int ID, string System, string playerName, string gamesPlayed, string record,
             string goalsAgainst, string shotsAgainst, string saves, string savePercentage, string goalsAgainstAvg,
-            string cleanSheets, string manOfTheMatch, string avgMatchRating, string playerURL, string iconURL, string Command, int SeasonId, string SeasonTypeId)
+            string cleanSheets, string manOfTheMatch, string avgMatchRating, string playerURL, string iconURL,
+            string Command, int SeasonId, string SeasonTypeId)
         {
             var dbName = "";
             var tableName = "";
@@ -31,7 +30,6 @@ namespace LGFA.Essentials.Writer
             }
             else if (Command == "uh")
             {
-
                 if (System == "xbox" || System == "psn")
                 {
                     var historicalSeason = SeasonId;
@@ -50,7 +48,6 @@ namespace LGFA.Essentials.Writer
 
             using (var database = new LiteDatabase(dbName))
             {
-
                 var goalieCollection = database.GetCollection<PlayerProperties.GoalieProperties>(tableName);
 
                 goalieCollection.EnsureIndex(x => x.SeasonId);
@@ -81,17 +78,16 @@ namespace LGFA.Essentials.Writer
                         goalieCollection.Update(goalieStats);
                         return true;
                     }
-                    else
-                    {
-                        goalieCollection.Insert(goalieStats);
-                        return true;
-                    }
+
+                    goalieCollection.Insert(goalieStats);
+                    return true;
                 }
                 catch (Exception ex)
                 {
                     Log.Fatal(ex, "Error saving goalie stats to database");
                 }
             }
+
             return false;
         }
     }

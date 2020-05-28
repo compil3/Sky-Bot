@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace LGFA.Engines
+﻿namespace LGFA.Engines
 {
-    class TeamStats
+    internal class TeamStats
     {
     }
 }

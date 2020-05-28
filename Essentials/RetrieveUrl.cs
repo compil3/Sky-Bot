@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using LGFA.Properties;
 using Newtonsoft.Json;
 using Serilog;
@@ -16,15 +14,10 @@ namespace LGFA.Essentials
             var configLocation = "";
 
             if (System == "psn")
-            {
                 configLocation = @"Configs\Urls\psn.json";
-            }
-            else if (System == "xbox")
-            {
-                configLocation = @"Configs\Urls\xbox.json";
-            }
+            else if (System == "xbox") configLocation = @"Configs\Urls\xbox.json";
 
-            string JSON = "";
+            var JSON = "";
             //var xboxURL = "";
             //var psnURL = "";
 
@@ -45,7 +38,7 @@ namespace LGFA.Essentials
                 throw;
             }
 
-            UrlSettings settings = JsonConvert.DeserializeObject<UrlSettings>(JSON);
+            var settings = JsonConvert.DeserializeObject<UrlSettings>(JSON);
             if (SeasonType == "pre") SeasonType = "0";
             else if (SeasonType == "reg") SeasonType = "1";
 
@@ -61,11 +54,10 @@ namespace LGFA.Essentials
                     Web.XboxPlayerStatsURL = settings.xboxPlayerStatsURL;
                     return Web.XboxPlayerStatsURL + SeasonId + seasonTypeID;
                 }
-                else if (Trigger == "draftlist")
-                {
-                    return Web.XboxDraftListURL + SeasonId;
-                }
-                else if (Trigger == "teamstats")
+
+                if (Trigger == "draftlist") return Web.XboxDraftListURL + SeasonId;
+
+                if (Trigger == "teamstats")
                 {
                     Web.XboxTeamStandingsURL = settings.xboxStandingsURL;
                     return Web.XboxTeamStandingsURL + SeasonId + seasonTypeID;
@@ -78,16 +70,19 @@ namespace LGFA.Essentials
                     Web.PSNPlayerStatsURL = settings.psnPlayerStatsURL;
                     return Web.PSNPlayerStatsURL + SeasonId + seasonTypeID;
                 }
-                else if (Trigger == "draftlist")
+
+                if (Trigger == "draftlist")
                 {
                     return Web.PSNDraftListURL + SeasonId;
                 }
-                else if (Trigger == "teamstats")
+
+                if (Trigger == "teamstats")
                 {
                     Web.PSNTeamStandingsURL = settings.psnStandingsURL;
                     return Web.PSNTeamStandingsURL + SeasonId + seasonTypeID;
                 }
             }
+
             return null;
         }
 
@@ -113,14 +108,11 @@ namespace LGFA.Essentials
                 throw;
             }
 
-            UrlSettings settings = JsonConvert.DeserializeObject<UrlSettings>(JSON);
+            var settings = JsonConvert.DeserializeObject<UrlSettings>(JSON);
             var url = "";
             Web.NewsUrl = settings.newsUrl;
             url = Web.NewsUrl;
             return url;
         }
-
     }
-
 }
-

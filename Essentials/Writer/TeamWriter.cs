@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LGFA.Properties;
-using LiteDB;
-using Serilog;
-
-namespace LGFA.Essentials.Writer
+﻿namespace LGFA.Essentials.Writer
 {
     //class TeamWriter
     //{

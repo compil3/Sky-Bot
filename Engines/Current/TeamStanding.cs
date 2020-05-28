@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Discord;
 using HtmlAgilityPack;
 using LGFA.Essentials;
 using LGFA.Properties;
@@ -9,23 +8,23 @@ using Serilog;
 
 namespace LGFA.Engines
 {
-    class TeamStanding
+    internal class TeamStanding
     {
-        public static (List<string>, List<string>, string season, string leagueUrl, string system) GetStandings(string system)
+        public static (List<string>, List<string>, string season, string leagueUrl, string system) GetStandings(
+            string system)
         {
             var web = new HtmlWeb();
             var standingsUrlTemp =
                 "https://www.leaguegaming.com/forums/index.php?leaguegaming/league&action=league&page=standing&leagueid=";
             var currentSeason = GetCurrentSeason.GetSeason(system);
             var leagueid = "";
-            string[] tempUrl = new string[4];
+            var tempUrl = new string[4];
             var standingsUrl = "";
             try
             {
                 HtmlDocument teamDoc;
                 if (system == "xbox" || system == "Xbox")
                 {
-
                     tempUrl[0] = standingsUrlTemp;
                     tempUrl[1] = leagueid;
                     tempUrl[2] = "53&seasonid=";
@@ -60,18 +59,20 @@ namespace LGFA.Engines
                             AwayRecord = tr[12],
                             OneGoalGames = tr[13]
                         }).ToList();
-                    List<string> teamStandings = new List<string>();
-                    List<string> teamPoints = new List<string>();
+                    var teamStandings = new List<string>();
+                    var teamPoints = new List<string>();
 
 
                     foreach (var team in standings)
                     {
                         teamStandings.Add(team.Rank + ". " + team.TeamName);
                         teamPoints.Add(team.Points);
-
                     }
-                    return (teamStandings, teamPoints, currentSeason, standingsUrl,system.ToUpper());
-                } else if (system == "psn" || system == "PSN")
+
+                    return (teamStandings, teamPoints, currentSeason, standingsUrl, system.ToUpper());
+                }
+
+                if (system == "psn" || system == "PSN")
                 {
                     tempUrl[0] = standingsUrlTemp;
                     tempUrl[1] = leagueid;
@@ -104,24 +105,25 @@ namespace LGFA.Engines
                             AwayRecord = tr[12],
                             OneGoalGames = tr[13]
                         }).ToList();
-                    List<string> teamStandings = new List<string>();
-                    List<string> teamPoints = new List<string>();
+                    var teamStandings = new List<string>();
+                    var teamPoints = new List<string>();
 
 
                     foreach (var team in standings)
                     {
                         teamStandings.Add(team.Rank + ". " + team.TeamName);
                         teamPoints.Add(team.Points);
-
                     }
-                    return (teamStandings, teamPoints, currentSeason, standingsUrl,system.ToUpper());
+
+                    return (teamStandings, teamPoints, currentSeason, standingsUrl, system.ToUpper());
                 }
-                return (null,null, null, null, null);
+
+                return (null, null, null, null, null);
             }
             catch (Exception e)
             {
                 Log.Logger.Error($"Exception thrown: {e}");
-                return (null,null, null, null, null);
+                return (null, null, null, null, null);
             }
         }
     }

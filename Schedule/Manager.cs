@@ -16,7 +16,6 @@ namespace LGFA.Schedule
             JobManager.Initialize(new WeekUpdate(chnl));
             Log.Logger.Information("Schedule Initialized.");
             return Task.CompletedTask;
-
         }
     }
 }

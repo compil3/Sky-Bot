@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using HtmlAgilityPack;
 using LGFA.Extensions;
 using LGFA.Properties;
@@ -12,7 +11,7 @@ using Serilog;
 
 namespace LGFA.Engines.Current.Player
 {
-    class CurrentSeason
+    internal class CurrentSeason
     {
         public static List<CareerProperties> SeasonStats(string playerLookup)
         {
@@ -21,8 +20,7 @@ namespace LGFA.Engines.Current.Player
             var leagueId = "";
             var systemIcon = "";
             List<LeagueProperties> currentSeason = null;
-             
-           
+
 
             var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             var dbFolder = "Database/";
@@ -54,7 +52,8 @@ namespace LGFA.Engines.Current.Player
                         currentSeason = LeagueInfo.GetSeason("psn");
                         break;
                     case "xbox":
-                        systemIcon = "https://cdn.discordapp.com/attachments/689119430021873737/711030386775293962/120px-Xbox_one_logo.svg.jpg";
+                        systemIcon =
+                            "https://cdn.discordapp.com/attachments/689119430021873737/711030386775293962/120px-Xbox_one_logo.svg.jpg";
                         currentSeason = LeagueInfo.GetSeason("xbox");
                         break;
                 }
@@ -78,13 +77,20 @@ namespace LGFA.Engines.Current.Player
                             $"//*[@id='lg_team_user_leagues-{leagueId}']/div[4]/table/tbody/tr");
                         div = 4;
                     }
-                    else div = 3;
+                    else
+                    {
+                        div = 3;
+                    }
 
                     var position = "";
-                    var lastFiveGames = playerDoc.DocumentNode.SelectNodes($"//*[@id='lg_team_user_leagues-{leagueId}']/div[2]/table/tbody/tr");
+                    var lastFiveGames =
+                        playerDoc.DocumentNode.SelectNodes(
+                            $"//*[@id='lg_team_user_leagues-{leagueId}']/div[2]/table/tbody/tr");
                     foreach (var recent in lastFiveGames)
                     {
-                        position = recent.SelectSingleNode($"//*[@id='lg_team_user_leagues-{leagueId}']/div[2]/table/tbody/tr[1]/td[2]").InnerText;
+                        position = recent
+                            .SelectSingleNode(
+                                $"//*[@id='lg_team_user_leagues-{leagueId}']/div[2]/table/tbody/tr[1]/td[2]").InnerText;
                         break;
                     }
 
@@ -97,11 +103,13 @@ namespace LGFA.Engines.Current.Player
                         .Select(tr => new CareerProperties
                         {
                             PlayerName = found.playerName,
-                            PlayerUrl = found.playerUrl, 
+                            PlayerUrl = found.playerUrl,
                             System = found.System,
                             SystemIcon = systemIcon,
                             TeamIcon = playerDoc.DocumentNode
-                                .SelectSingleNode("//*[@id='content']/div/div/div[3]/div[1]/div/table/thead/tr/th/div/a/img").Attributes["src"].Value,
+                                .SelectSingleNode(
+                                    "//*[@id='content']/div/div/div[3]/div[1]/div/table/thead/tr/th/div/a/img")
+                                .Attributes["src"].Value,
                             Position = position,
                             SeasonId = season,
 
@@ -147,7 +155,6 @@ namespace LGFA.Engines.Current.Player
                             RedCards = tr[17],
                             YellowCards = tr[18],
                             Discipline = "0"
-
                         }).ToList();
                     return table;
                 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Discord;
+﻿using Discord;
 
 namespace LGFA.Modules.Helpers
 {
@@ -53,7 +50,5 @@ namespace LGFA.Modules.Helpers
                 });
             return builder.Build();
         }
-
-
     }
 }

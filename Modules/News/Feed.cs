@@ -32,28 +32,24 @@ namespace LGFA.Modules.News
             {
                 tempDateTime = item.SelectSingleNode("//*[@id='newsfeed_page']/ol/li[1]/div/abbr").InnerText;
                 var line = item.SelectSingleNode("//*[@id='newsfeed_page']/ol/li[1]/div/h3").InnerText;
-                var removeThe = new string[] { "The ", "the " };
+                var removeThe = new[] {"The ", "the "};
                 var newLine = "";
                 if (line.Contains("The ")) newLine = line.Replace("The ", string.Empty);
                 if (line.Contains("the ")) newLine = newLine.Replace("the ", string.Empty);
 
-                var startTeam = newLine.Split(new string[] { "have", "traded", "to" }, StringSplitOptions.None);
-                var endTeam = newLine.Split(new string[] { "to", "for" }, StringSplitOptions.None);
+                var startTeam = newLine.Split(new[] {"have", "traded", "to"}, StringSplitOptions.None);
+                var endTeam = newLine.Split(new[] {"to", "for"}, StringSplitOptions.None);
 
 
-                var splitStr = newLine.Split(new string[] { "to " }, StringSplitOptions.None);
+                var splitStr = newLine.Split(new[] {"to "}, StringSplitOptions.None);
                 splitStr[1] = splitStr[1].Replace("  ", " ");
                 var tradeIcon = item.SelectSingleNode("//*[@id='newsfeed_page']/ol/li[1]/a[2]/img")
                     .Attributes["src"].Value;
                 var lastNews = DateTime.Parse(tempDateTime);
 
-                if (!NewsWriter.SaveTrade(lastNews, splitStr[0], splitStr[1], leagueId))
-                {
-                    break;
-                }
+                if (!NewsWriter.SaveTrade(lastNews, splitStr[0], splitStr[1], leagueId)) break;
                 try
                 {
-
                     using var newsDb = new LiteDatabase(@"Filename=Database/LGFA.db;connection=shared");
                     var news = newsDb.GetCollection<LeagueNews.News>("Trades");
                     var result = news.Find(x => x.Date.Equals(lastNews));
@@ -72,16 +68,17 @@ namespace LGFA.Modules.News
                             .WithAuthor(author =>
                             {
                                 author
-                                    .WithName("LGFA Breaking News: Trade")
+                                    .WithName("LGFA Breaking News")
                                     .WithIconUrl(systemIcon);
                             })
+                            .WithDescription("**New Trade**")
                             .AddField($"**To {startTeam[0].Trim()}**", $"{endTeam[2].Trim()}", true)
                             .AddField($"**To {endTeam[1].Trim()}**", $"{startTeam[2].Trim()}", true);
 
                         embed = builder.Build();
                     }
-                    await channel.SendMessageAsync(null, embed: embed).ConfigureAwait(false);
 
+                    await channel.SendMessageAsync(null, embed: embed).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
@@ -89,7 +86,6 @@ namespace LGFA.Modules.News
                     throw;
                 }
             }
-
         }
 
         public static async Task RunWaivers(HtmlDocument feed, string leagueId, IMessageChannel channel)
@@ -121,10 +117,7 @@ namespace LGFA.Modules.News
 
                 if (line.Contains("The ")) newLine = line.Replace("The ", string.Empty);
                 if (line.Contains("the ")) newLine = newLine.Replace("the ", string.Empty);
-                if (newLine == string.Empty)
-                {
-                    newLine = line;
-                }
+                if (newLine == string.Empty) newLine = line;
                 IList<string> waiverLine = new List<string>();
                 var element = "";
                 var condition = "";
@@ -138,7 +131,7 @@ namespace LGFA.Modules.News
 
                 if (line.Contains("has cleared"))
                 {
-                    waiverLine = newLine.Split(new string[] { "has", "cleared", "and put onto" }, StringSplitOptions.None);
+                    waiverLine = newLine.Split(new[] {"has", "cleared", "and put onto"}, StringSplitOptions.None);
                     if (waiverLine.Any())
                     {
                         builder = new EmbedBuilder()
@@ -165,7 +158,7 @@ namespace LGFA.Modules.News
                 }
                 else if (line.Contains("have claimed"))
                 {
-                    waiverLine = newLine.Split(new string[] { "have claimed", "off of waivers" }, StringSplitOptions.None);
+                    waiverLine = newLine.Split(new[] {"have claimed", "off of waivers"}, StringSplitOptions.None);
                     if (waiverLine.Any())
                     {
                         builder = new EmbedBuilder()
@@ -193,7 +186,7 @@ namespace LGFA.Modules.News
                 }
                 else if (line.Contains("have placed"))
                 {
-                    waiverLine = newLine.Split(new string[] { "have placed", "on waivers" }, StringSplitOptions.None);
+                    waiverLine = newLine.Split(new[] {"have placed", "on waivers"}, StringSplitOptions.None);
                     if (waiverLine.Any())
                     {
                         builder = new EmbedBuilder()
@@ -218,6 +211,7 @@ namespace LGFA.Modules.News
                         embed = builder.Build();
                     }
                 }
+
                 await channel.SendMessageAsync(null, embed: embed).ConfigureAwait(false);
             }
         }

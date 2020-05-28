@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
-using Discord;
 using HtmlAgilityPack;
-using LGFA.Modules;
-using LGFA.Modules.Helpers;
 using LGFA.Properties;
 using LiteDB;
 using Serilog;
-using Missing = LGFA.Modules.Helpers.Missing;
 
 namespace LGFA.Engines
 {
-    class Player
+    internal class Player
     {
         //public static bool GetPlayer(string lookUpName, string PcnOrLg, string trigger, int histSeasonID, string seasonTypeID,
         //    string command, ProgressBar pbar)
@@ -48,32 +42,40 @@ namespace LGFA.Engines
                     var system = 0;
                     var web = new HtmlWeb();
 
-                    if (playerSystem == "xbox")system = 53;
+                    if (playerSystem == "xbox") system = 53;
                     else if (playerSystem == "psn") system = 73;
 
                     if (found.System == "psn")
                         systemIcon =
                             "https://cdn.discordapp.com/attachments/689119430021873737/711030693743820800/220px-PlayStation_logo.svg.jpg";
-                    else if (found.System == "xbox") systemIcon =
-                        "https://cdn.discordapp.com/attachments/689119430021873737/711030386775293962/120px-Xbox_one_logo.svg.jpg";
+                    else if (found.System == "xbox")
+                        systemIcon =
+                            "https://cdn.discordapp.com/attachments/689119430021873737/711030386775293962/120px-Xbox_one_logo.svg.jpg";
 
 
                     var playerDoc = web.Load(playerHtml);
                     var tableHeadinng =
                         playerDoc.DocumentNode.SelectNodes($"//*[@id='lg_team_user_leagues-{system}']/h3[1]");
                     //foreach (var heading in tableHeadinng)
-                    
+
                     try
                     {
                         var position = "";
                         var teamIcon = playerDoc.DocumentNode
-                            .SelectSingleNode("//*[@id='content']/div/div/div[3]/div[1]/div/table/thead/tr/th/div/a/img").Attributes["src"].Value;
+                            .SelectSingleNode(
+                                "//*[@id='content']/div/div/div[3]/div[1]/div/table/thead/tr/th/div/a/img")
+                            .Attributes["src"].Value;
                         var teamIconLink = string.Join(string.Empty, "http://leaguegaming.com" + teamIcon);
 
-                        var lastFiveGames = playerDoc.DocumentNode.SelectNodes($"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr");
+                        var lastFiveGames =
+                            playerDoc.DocumentNode.SelectNodes(
+                                $"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr");
                         foreach (var recent in lastFiveGames)
                         {
-                            position = recent.SelectSingleNode($"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr[1]/td[2]").InnerText;
+                            position = recent
+                                .SelectSingleNode(
+                                    $"//*[@id='lg_team_user_leagues-{system}']/div[2]/table/tbody/tr[1]/td[2]")
+                                .InnerText;
                             break;
                         }
 
@@ -86,7 +88,7 @@ namespace LGFA.Engines
                             // Each row is presented as List<string>.
                             .Select(tr => tr.Elements("td").Select(td => td.InnerText.Trim()).ToList())
                             // Here we filter table rows by "seasonId" and "Reg".
-                            .Where(tr => tr[0] == "Reg") 
+                            .Where(tr => tr[0] == "Reg")
                             // Here we create objects CareerProperties from filtered rows.
                             .Select(tr => new SeasonProperties
                             {
@@ -95,7 +97,9 @@ namespace LGFA.Engines
                                 System = found.System,
                                 SystemIcon = systemIcon,
                                 TeamIcon = playerDoc.DocumentNode
-                                    .SelectSingleNode("//*[@id='content']/div/div/div[3]/div[1]/div/table/thead/tr/th/div/a/img").Attributes["src"].Value,
+                                    .SelectSingleNode(
+                                        "//*[@id='content']/div/div/div[3]/div[1]/div/table/thead/tr/th/div/a/img")
+                                    .Attributes["src"].Value,
                                 Position = position,
                                 Record = tr[1],
                                 AvgMatchRating = tr[2],
@@ -131,6 +135,7 @@ namespace LGFA.Engines
                 Log.Logger.Error($"Error: {e}");
                 throw;
             }
+
             return null;
         }
     }

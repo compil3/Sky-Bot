@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Discord.Rest;
 using LGFA.Engines;
 using LGFA.Modules.Helpers;
-using Microsoft.VisualBasic;
 using Serilog;
 
 namespace LGFA.Modules
@@ -23,7 +15,6 @@ namespace LGFA.Modules
         [RequireUserPermission(GuildPermission.SendMessages)]
         public async Task GetStandings(string league)
         {
-
             if (!Context.User.IsBot)
             {
                 var options = new RequestOptions();
@@ -36,7 +27,8 @@ namespace LGFA.Modules
 
             Log.Logger.Warning($"{Context.User.Username} Triggered: LeagueTable.GetStandings ");
 
-            if (Context.Channel.Id == 705197391984197683 || Context.Channel.Id == 713176040716894208 || Context.Channel.Id == 713237102145437776 || Context.Channel.Id == 711778374720421918) 
+            if (Context.Channel.Id == 705197391984197683 || Context.Channel.Id == 713176040716894208 ||
+                Context.Channel.Id == 713237102145437776 || Context.Channel.Id == 711778374720421918)
             {
                 var commandId = Context.Message.Id;
 
@@ -50,7 +42,6 @@ namespace LGFA.Modules
             {
                 await ReplyAsync($"Channel permission denied.  Try again in the proper channel {Context.User.Mention}");
             }
-
         }
     }
 }

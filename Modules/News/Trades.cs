@@ -4,30 +4,28 @@ using Discord;
 using FluentScheduler;
 using HtmlAgilityPack;
 
-
 namespace LGFA.Modules.News
 {
-
     public class Trades : Registry
     {
         public Trades(IMessageChannel chnl)
         {
-            Action trades = new Action(async () =>
+            Action trades = async () =>
             {
                 var web = new HtmlWeb();
                 new HtmlWeb();
-                var leagueList = new List<string>() {"53", "73"};
+                var leagueList = new List<string> {"53", "73"};
 
                 foreach (var id in leagueList)
                 {
                     var feed = web.Load(
-                        $"https://www.leaguegaming.com/forums/index.php?leaguegaming/league&action=league&page=team_news&leagueid=" + id + "&typeid=7");
+                        "https://www.leaguegaming.com/forums/index.php?leaguegaming/league&action=league&page=team_news&leagueid=" +
+                        id + "&typeid=7");
                     await Feed.RunTrades(feed, id, chnl);
                     //Log.Logger.Information("Trades ran.");
                 }
-            });
-            this.Schedule(trades).ToRunEvery(2).Seconds();
+            };
+            Schedule(trades).ToRunEvery(2).Seconds();
         }
     }
 }
-

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Net.Http;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -19,15 +17,16 @@ namespace LGFA
 {
     internal class Program
     {
+        private static DiscordSocketClient client;
+
         private static void Main(string[] args)
         {
             MainAsync(args).GetAwaiter().GetResult();
             Thread.Sleep(-1);
         }
-        private static DiscordSocketClient client;
 
         public static async Task MainAsync(string[] args)
-        {            
+        {
             //CreateHostBuilder(args).Build().Run();
             await using var services = ConfigureServices();
             client = services.GetRequiredService<DiscordSocketClient>();
@@ -42,13 +41,13 @@ namespace LGFA
 
 
             await client.LoginAsync(TokenType.Bot, "NzEwOTI2NTEzNTExNDY0OTYx.XstNnQ.3Kskq2wOVjddJyHjlWFvkYkvBvc");
-                //Environment.GetEnvironmentVariable("token"));
+            //Environment.GetEnvironmentVariable("token"));
 
             await client.StartAsync();
 
             await services.GetRequiredService<CommandHandler>().InitializeAsync();
             client.Ready += Client_Ready;
-                
+
             await client.SetGameAsync("Watching LGFA");
 
 
@@ -57,21 +56,20 @@ namespace LGFA
 
         public static Task Client_Ready()
         {
-            ulong id = Convert.ToUInt64(Environment.GetEnvironmentVariable("update_log_channel"));
+            var id = Convert.ToUInt64(Environment.GetEnvironmentVariable("update_log_channel"));
             var newsChn = client.GetChannel(715065247852920884) as IMessageChannel;
             var chnl = client.GetChannel(id) as IMessageChannel;
             Manager.Manage(chnl, newsChn);
             client.ReactionAdded += RoleHandler.OnRulesReaction;
             client.ReactionAdded += RoleHandler.OnSystemReaction;
             client.UserJoined += Joined.UserJoined;
-            Log.Logger.Warning("Schedules Initialized.");
             return Task.CompletedTask;
         }
 
         public static Task LogAsync(LogMessage log)
         {
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console(theme:AnsiConsoleTheme.Code)
+                .WriteTo.Console(theme: AnsiConsoleTheme.Code)
                 .CreateLogger();
             Log.Fatal(log.ToString());
             return Task.CompletedTask;
@@ -89,11 +87,11 @@ namespace LGFA
                 .BuildServiceProvider();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args)
-            .UseSystemd()
-            .ConfigureServices((hostContext, services) =>
-            {
-                services.AddHostedService<Worker>();
-            });
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .UseSystemd()
+                .ConfigureServices((hostContext, services) => { services.AddHostedService<Worker>(); });
+        }
     }
 }

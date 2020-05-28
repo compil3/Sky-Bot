@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Web;
 using HtmlAgilityPack;
@@ -10,9 +7,9 @@ using ShellProgressBar;
 
 namespace LGFA.Database
 {
-    class Get
+    internal class Get
     {
-         public static bool GetPlayerIds(string system, string trigger, int SeasonId, ProgressBar pbar)
+        public static bool GetPlayerIds(string system, string trigger, int SeasonId, ProgressBar pbar)
         {
             var web = new HtmlWeb();
             HtmlNodeCollection findPlayerCount;
@@ -26,7 +23,7 @@ namespace LGFA.Database
                 findPlayerCount = doc.DocumentNode.SelectNodes("//*[@id='lgtable_memberstats51']/tbody/tr");
             }
 
-            var childOptions = new ProgressBarOptions()
+            var childOptions = new ProgressBarOptions
             {
                 ForegroundColor = ConsoleColor.Green,
                 BackgroundColor = ConsoleColor.DarkGreen,
@@ -41,12 +38,13 @@ namespace LGFA.Database
                 using var child = pbar.Spawn(findPlayerCount.Count, $"Updating Season: {SeasonId} player ids",
                     childOptions);
 
-                for (int i = 1; i < findPlayerCount.Count; i++)
+                for (var i = 1; i < findPlayerCount.Count; i++)
                 {
                     var findPlayerNodes =
                         doc.DocumentNode.SelectNodes($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]");
-                    
+
                     #region nodes
+
                     foreach (var player in findPlayerNodes)
                     {
                         child.EstimatedDuration = TimeSpan.FromMilliseconds(findPlayerCount.Count * 25);
@@ -59,20 +57,24 @@ namespace LGFA.Database
                         var playerUrl = string.Join(string.Empty,
                             "https://www.leaguegaming.com/forums/" + playerShortUrl);
                         var tempId = HttpUtility.ParseQueryString(new Uri(playerUrl).Query);
-                        int playerId = int.Parse(tempId.Get("userid"));
+                        var playerId = int.Parse(tempId.Get("userid"));
 
                         Writer.SaveInformation(playerId, playerName, playerUrl, system);
                     }
+
                     Thread.Sleep(25);
-                        #endregion
-                        child.Tick(); 
+
+                    #endregion
+
+                    child.Tick();
                 }
             }
             catch (Exception e)
             {
-                Log.Logger.Fatal(e, $"Error processing Player stats.");
+                Log.Logger.Fatal(e, "Error processing Player stats.");
                 throw;
             }
+
             return false;
         }
     }

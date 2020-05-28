@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 
 namespace LGFA.Modules
 {
@@ -17,7 +12,6 @@ namespace LGFA.Modules
     [RequireUserPermission(GuildPermission.Administrator)]
     public class Admin : ModuleBase
     {
-        
         [Command("restart")]
         [Summary(".restart to restart the bot.")]
         public async Task Restart()
@@ -31,11 +25,9 @@ namespace LGFA.Modules
             {
                 var programName = Assembly.GetExecutingAssembly().Location;
                 await ReplyAsync(programName);
-                System.Diagnostics.Process.Start(programName);
+                Process.Start(programName);
                 Environment.Exit(0);
             }
         }
     }
-
 }
-

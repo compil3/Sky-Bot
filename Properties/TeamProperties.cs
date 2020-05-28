@@ -2,6 +2,7 @@
 {
     public class TeamProperties
     {
+        private string _teamName;
         public int SeasonId { get; set; }
         public int Id { get; set; }
         public string SeasonTypeId { get; set; }
@@ -9,24 +10,23 @@
 
 
         public string Rank { get; set; }
-      
-        private string _teamName;
+
         public string TeamName
         {
             get => _teamName;
             set
             {
                 _teamName = value;
-                string[] splitTeam = _teamName.Split(' ');
+                var splitTeam = _teamName.Split(' ');
                 if (splitTeam.Length >= 3)
                 {
                     var split = _teamName.Split(new[] {' '}, 2);
-                    Rank = split[0].Replace(")","").Trim();
+                    Rank = split[0].Replace(")", "").Trim();
                     _teamName = split[1];
                 }
                 else
                 {
-                    Rank = splitTeam[0].Replace(")","").Trim();
+                    Rank = splitTeam[0].Replace(")", "").Trim();
                     _teamName = splitTeam[1];
                 }
             }

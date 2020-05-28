@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using HtmlAgilityPack;
 using LGFA.Properties;
 using Serilog;
 
 namespace LGFA.Engines.Career
 {
-    class Official
+    internal class Official
     {
-        public static (List<CareerProperties>, string playerUrl, string playerName) OfficialParse(HtmlDocument playerDoc, string foundPlayerUrl, string foundPlayerName, int system)
+        public static (List<CareerProperties>, string playerUrl, string playerName) OfficialParse(
+            HtmlDocument playerDoc, string foundPlayerUrl, string foundPlayerName, int system)
         {
             try
             {
@@ -67,20 +67,18 @@ namespace LGFA.Engines.Career
                         BlocksPerGame = "0",
                         RedCards = tr[16],
                         YellowCards = tr[17],
-                        Discipline = "0",
-
-
+                        Discipline = "0"
                     })
                     .ToList();
-                
+
                 return (table, foundPlayerUrl, foundPlayerName);
             }
             catch (Exception e)
             {
                 Log.Logger.Error(e.ToString());
             }
+
             return (null, null, null);
         }
-
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -14,7 +12,7 @@ namespace LGFA.Handlers
         public static async Task OnRulesReaction(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel chnl,
             SocketReaction reaction)
         {
-            SocketGuildUser reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
+            var reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
 
             ulong ruleMessageId = 712883043823779871;
 
@@ -45,20 +43,22 @@ namespace LGFA.Handlers
                         await reactionUser.SendMessageAsync(
                             "In order to proceed into Leagu715267433170206855egaming FIFA Discord, you must read and accept the rules.\n" +
                             "Please re-join, re-read the rules and accept if you wish to be part of our Discord community.");
-                        await reactionUser.KickAsync(null);
+                        await reactionUser.KickAsync();
                     }
                 }
             }
+
             if (messageValue == null)
             {
                 Log.Logger.Error("Could not get message for reaction roles.");
                 await Task.CompletedTask;
             }
         }
+
         public static async Task OnSystemReaction(Cacheable<IUserMessage, ulong> message, ISocketMessageChannel channel,
-        SocketReaction reaction)
+            SocketReaction reaction)
         {
-            SocketGuildUser reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
+            var reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
 
             ulong roleMessage = 715267433170206855;
             var xboxRole = new Emoji("🇽");
@@ -90,7 +90,10 @@ namespace LGFA.Handlers
                             await messageValue.RemoveReactionAsync(psnRole, reactionUser, RequestOptions.Default);
                         }
                     }
-                    else await reactionUser.SendMessageAsync("Error assigning requested role, please contact a BOG.");
+                    else
+                    {
+                        await reactionUser.SendMessageAsync("Error assigning requested role, please contact a BOG.");
+                    }
                 }
             }
             catch (Exception e)
@@ -98,7 +101,6 @@ namespace LGFA.Handlers
                 Log.Logger.Error($"Error assigning PSN/Xbox role. {e}");
                 throw;
             }
-           
         }
     }
 }

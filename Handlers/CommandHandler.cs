@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using LGFA.Handlers;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
 
 namespace LGFA.Services
 {
     public class CommandHandler
     {
-        private readonly DiscordSocketClient _discord;
         private readonly CommandService _commands;
+        private readonly DiscordSocketClient _discord;
         private readonly IServiceProvider _services;
 
         public CommandHandler(IServiceProvider services)
@@ -26,7 +23,6 @@ namespace LGFA.Services
             _services = services;
             _commands = CommandConfig();
 
-            
 
             _commands.CommandExecuted += CommandExecutedAsync;
             _discord.MessageReceived += HandleCommand;
@@ -38,11 +34,11 @@ namespace LGFA.Services
             await Task.CompletedTask;
         }
 
-        private static async Task RulesRole(Cacheable<IUserMessage, ulong> arg1, ISocketMessageChannel arg2, SocketReaction arg3)
+        private static async Task RulesRole(Cacheable<IUserMessage, ulong> arg1, ISocketMessageChannel arg2,
+            SocketReaction arg3)
         {
-
-           await RoleHandler.OnRulesReaction(arg1, arg2, arg3);
-           await Task.CompletedTask;
+            await RoleHandler.OnRulesReaction(arg1, arg2, arg3);
+            await Task.CompletedTask;
         }
 
         public async Task InitializeAsync()
@@ -55,8 +51,8 @@ namespace LGFA.Services
             var commandServiceConfig = new CommandServiceConfig
             {
                 CaseSensitiveCommands = false,
-                DefaultRunMode = RunMode.Async, 
-                IgnoreExtraArgs = true, 
+                DefaultRunMode = RunMode.Async,
+                IgnoreExtraArgs = true,
                 LogLevel = LogSeverity.Info
             };
             return new CommandService(commandServiceConfig);
@@ -67,13 +63,13 @@ namespace LGFA.Services
             var message = messageParam as SocketUserMessage;
             if (message == null) return;
 
-            int argPos = 0;
+            var argPos = 0;
 
             if (!(message.HasCharPrefix('.', ref argPos) ||
                   message.HasMentionPrefix(_discord.CurrentUser, ref argPos)) || message.Author.IsBot) return;
 
-            var context  = new SocketCommandContext(_discord, message);
-            var result = await _commands.ExecuteAsync(context: context, argPos: argPos, services: null);
+            var context = new SocketCommandContext(_discord, message);
+            var result = await _commands.ExecuteAsync(context, argPos, null);
 
             //var message = rawMessage as SocketUserMessage;
             //if (message == null) return;
@@ -94,18 +90,18 @@ namespace LGFA.Services
             //    }
             //}
         }
-        
 
-        private static async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
+
+        private static async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context,
+            IResult result)
         {
             if (!command.IsSpecified) return;
             if (result.IsSuccess) return;
 
 
             if (result.ErrorReason == "The input text has too few parameters.")
-            {
-                await context.Channel.SendMessageAsync($"***.{command.Value.Name}*** is missing parameters.  Use ***.help*** for more information.");
-            }
+                await context.Channel.SendMessageAsync(
+                    $"***.{command.Value.Name}*** is missing parameters.  Use ***.help*** for more information.");
             else await context.Channel.SendMessageAsync($"{command.Value.Name}: {result.ErrorReason}");
         }
     }

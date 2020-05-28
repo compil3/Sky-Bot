@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using LGFA.Properties;
 using LiteDB;
 
 namespace LGFA.Essentials.Writer
 {
-    class SavePlayerInfo
+    internal class SavePlayerInfo
     {
         public static bool SavePlayerUrl(int id, string playerName, string playerUrl)
         {
@@ -32,11 +30,9 @@ namespace LGFA.Essentials.Writer
                         playerCollection.Update(playerInfo);
                         return true;
                     }
-                    else
-                    {
-                        playerCollection.Insert(playerInfo);
-                        return true;
-                    }
+
+                    playerCollection.Insert(playerInfo);
+                    return true;
                 }
                 catch (Exception e)
                 {
@@ -47,8 +43,10 @@ namespace LGFA.Essentials.Writer
         }
 
         public static bool SaveCareer(int id, string playerName, string careerRecord, int gamesPlayed, double amr,
-            double goals, string assists, string SOT, double shotAttempts, double shotPercentage, double passesC, double passesA,double passPercentage,
-            string keypass, string interceptions, double tackles, double tackleAttempts, double tacklePercentage, string blocks, string red, string yellow)
+            double goals, string assists, string SOT, double shotAttempts, double shotPercentage, double passesC,
+            double passesA, double passPercentage,
+            string keypass, string interceptions, double tackles, double tackleAttempts, double tacklePercentage,
+            string blocks, string red, string yellow)
         {
             var st = new StackTrace();
             var sf = st.GetFrame(0);
@@ -90,11 +88,9 @@ namespace LGFA.Essentials.Writer
                         playerCareer.Update(playerStats);
                         return true;
                     }
-                    else
-                    {
-                        playerCareer.Insert(playerStats);
-                        return true;
-                    }
+
+                    playerCareer.Insert(playerStats);
+                    return true;
                 }
                 catch (Exception e)
                 {

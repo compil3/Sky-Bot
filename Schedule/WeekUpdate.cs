@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using Discord;
@@ -15,9 +14,9 @@ namespace LGFA.Schedule
     {
         public WeekUpdate(IMessageChannel chnl)
         {
-            Action update = new Action(async () =>
+            var update = new Action(async () =>
             {
-                var system = new string[] { "xbox", "psn" };
+                var system = new[] {"xbox", "psn"};
 
                 var seasonCount = system.Select(s => new ConsoleInformation
                 {
@@ -28,7 +27,7 @@ namespace LGFA.Schedule
                         int.Parse(GetPreviousSeason.GetPrevious(s)) + 1)
                 }).ToList();
 
-                var options = new ProgressBarOptions()
+                var options = new ProgressBarOptions
                 {
                     ForegroundColorDone = ConsoleColor.DarkBlue,
                     ForegroundColor = ConsoleColor.Yellow,
@@ -38,7 +37,7 @@ namespace LGFA.Schedule
                     DisplayTimeInRealTime = false,
                     CollapseWhenFinished = false
                 };
-                var childOptions = new ProgressBarOptions()
+                var childOptions = new ProgressBarOptions
                 {
                     ForegroundColor = ConsoleColor.Green,
                     BackgroundColor = ConsoleColor.DarkGreen,
@@ -51,27 +50,27 @@ namespace LGFA.Schedule
 
                 try
                 {
-                        foreach (var t in seasonCount)
+                    foreach (var t in seasonCount)
+                    {
+                        await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
+                        using var pbar = new ProgressBar(t.NumberOfSeasons,
+                            $"Running Database Update {t.System}", options);
+
+
+                        for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
                         {
-                            await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
-                            using var pbar = new ProgressBar(t.NumberOfSeasons,
-                                $"Running Database Update {t.System.ToString()}", options);
+                            pbar.EstimatedDuration = TimeSpan.FromMilliseconds(t.NumberOfSeasons * 5000);
 
-
-                            for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
-                            {
-                                pbar.EstimatedDuration = TimeSpan.FromMilliseconds(t.NumberOfSeasons * 5000);
-
-                                pbar.Tick(
-                                    $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
-                                Get.GetPlayerIds(t.System, "player", j, pbar);
-                                Thread.Sleep(250);
-                            }
-
-                            var estimatedDuration = TimeSpan.FromSeconds(60 * seasonCount.Count) +
-                                                    TimeSpan.FromSeconds(30 * t.NumberOfSeasons);
-                            pbar.Tick(estimatedDuration, $"Completed {t.System} updated");
+                            pbar.Tick(
+                                $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
+                            Get.GetPlayerIds(t.System, "player", j, pbar);
+                            Thread.Sleep(250);
                         }
+
+                        var estimatedDuration = TimeSpan.FromSeconds(60 * seasonCount.Count) +
+                                                TimeSpan.FromSeconds(30 * t.NumberOfSeasons);
+                        pbar.Tick(estimatedDuration, $"Completed {t.System} updated");
+                    }
                 }
                 catch (Exception e)
                 {
@@ -79,7 +78,7 @@ namespace LGFA.Schedule
                     throw;
                 }
             });
-            this.Schedule(update).ToRunEvery(1).Weeks().On(DayOfWeek.Friday).At(3, 0);
+            Schedule(update).ToRunEvery(1).Weeks().On(DayOfWeek.Friday).At(3, 0);
         }
     }
 

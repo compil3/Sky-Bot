@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 using Discord;
 using LGFA.Properties;
 
@@ -9,15 +6,16 @@ namespace LGFA.Modules.Helpers
 {
     public class SeasonHelper
     {
-        public static Embed SeasonEmbed(string playerName, string userSystem, string systemIcon, string record, string amr, string goals, string assists, string sot, string shots, string passC, string passA,
-            string key, string interceptions, string tac, string tacA, string possW, string possL, string blks, string rc, string yc, string seasonId, string playerUrl, string teamIcon, string position)
+        public static Embed SeasonEmbed(string playerName, string userSystem, string systemIcon, string record,
+            string amr, string goals, string assists, string sot, string shots, string passC, string passA,
+            string key, string interceptions, string tac, string tacA, string possW, string possL, string blks,
+            string rc, string yc, string seasonId, string playerUrl, string teamIcon, string position)
         {
-
             EmbedBuilder builder = null;
 
             #region stat compression
 
-            SeasonProperties sStat = new SeasonProperties
+            var sStat = new SeasonProperties
             {
                 //Record
                 GamesPlayed = record,
@@ -63,12 +61,13 @@ namespace LGFA.Modules.Helpers
 
                 YellowCards = yc,
                 RedCards = rc,
-                Discipline =  "0",
+                Discipline = "0"
             };
-            
 
             #endregion
+
             #region Builder
+
             builder = new EmbedBuilder()
                 .WithTitle($"Statistics for ***{playerName}***  (Recent Pos: {position.Trim()})")
                 .WithUrl(playerUrl)
@@ -87,37 +86,35 @@ namespace LGFA.Modules.Helpers
                         .WithName($"{userSystem.ToUpper()} Season {seasonId} Stats.") // provided by Sky Sports.")
                         .WithIconUrl(systemIcon);
                 })
-                .AddField("\u200B", $"```Record```", false)
+                .AddField("\u200B", "```Record```")
                 .AddField("GP", sStat.GamesPlayed, true)
                 .AddField("Record (W-D-L)", sStat.Record, true)
                 .AddField("AMR", sStat.AvgMatchRating, true)
-
-                .AddField("\u200B", "```Offensive Stats```", false)
+                .AddField("\u200B", "```Offensive Stats```")
                 .AddField("Goals", sStat.Goals, true)
                 .AddField("G/Game", sStat.GoalsPerGame, true)
                 .AddField("Shots - SOT", sStat.ShotSot, true)
                 .AddField("S/Game", sStat.ShotPerGame, true)
                 .AddField("Shots/Goal - SH%", sStat.ShotPerGoal, true)
-
-                .AddField("\u200B", "```Passing Stats```", false)
-                .AddField("Assists", sStat.Assists,true)
+                .AddField("\u200B", "```Passing Stats```")
+                .AddField("Assists", sStat.Assists, true)
                 .AddField("Pass - Pass Attempts", sStat.PassRecord, true)
                 .AddField("Key Passes", sStat.KeyPasses, true)
                 .AddField("Assist/Game", sStat.AssistPerGame, true)
-                .AddField("P/Game - Pass %", sStat.PassPerGame,true)
+                .AddField("P/Game - Pass %", sStat.PassPerGame, true)
                 .AddField("Key Pass/Game", sStat.KeyPassPerGame, true)
-
-                .AddField("\u200B", "```Defensive Stats```", false)
+                .AddField("\u200B", "```Defensive Stats```")
                 .AddField("Tackles - Tackle Attempts", sStat.Tackling, true)
                 .AddField("Tackles Per Game", sStat.TacklesPerGame, true)
                 .AddField("Tackle Success", sStat.TacklePercent, true)
-                .AddField("PossW-PossL",sStat.Poss, true)
+                .AddField("PossW-PossL", sStat.Poss, true)
                 .AddField("Int-Blk", sStat.Wall, true)
-
-                .AddField("\u200B", "```Discipline```", false)
+                .AddField("\u200B", "```Discipline```")
                 .AddField("YC-RC", sStat.Discipline, true);
             var embed = builder.Build();
+
             #endregion
+
             return embed;
         }
     }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using LGFA.Properties;
 using Newtonsoft.Json;
 using Serilog;
@@ -16,15 +14,10 @@ namespace LGFA.Essentials
             var configLocation = "";
 
             if (system == "psn")
-            {
                 configLocation = @"Configuration/Season/psn.json";
-            }
-            else if (system == "xbox")
-            {
-                configLocation = @"Configuration/Season/xbox.json";
-            }
+            else if (system == "xbox") configLocation = @"Configuration/Season/xbox.json";
 
-            string JSON = "";
+            var JSON = "";
             //var previousSeason = "";
 
             var sFile = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -44,10 +37,9 @@ namespace LGFA.Essentials
                 throw;
             }
 
-            Season seasonID = JsonConvert.DeserializeObject<Season>(JSON);
+            var seasonID = JsonConvert.DeserializeObject<Season>(JSON);
             //WebSettings.currentSeason = seasonID.currentSeason;
             return seasonID.previousSeason;
-
         }
     }
 }

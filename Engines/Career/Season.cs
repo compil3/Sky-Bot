@@ -8,10 +8,11 @@ using Serilog;
 
 namespace LGFA.Engines.Career
 {
-    class Season
+    internal class Season
     {
         public static (List<CareerProperties>, string foundPlayerUrl, string foundPlayerName, string seasonId)
-            SeasonParse(HtmlDocument playerDoc, string foundPlayerUrl, string foundPlayerName, string seasonId, int leagueId)
+            SeasonParse(HtmlDocument playerDoc, string foundPlayerUrl, string foundPlayerName, string seasonId,
+                int leagueId)
         {
             var stopWatch = new Stopwatch();
             if (!seasonId.Contains("S")) seasonId = "S" + seasonId;
@@ -29,7 +30,10 @@ namespace LGFA.Engines.Career
                         $"//*[@id='lg_team_user_leagues-{leagueId}']/div[4]/table/tbody/tr");
                     div = 4;
                 }
-                else div = 3;
+                else
+                {
+                    div = 3;
+                }
 
                 stopWatch.Start();
 
@@ -70,7 +74,7 @@ namespace LGFA.Engines.Career
                         Interceptions = tr[11],
                         Tackles = tr[12],
                         TackleAttempts = tr[13],
-                        PossW =tr[14],
+                        PossW = tr[14],
                         PossL = tr[15],
                         Poss = "0",
                         Blocks = tr[16],
@@ -82,7 +86,6 @@ namespace LGFA.Engines.Career
                         RedCards = tr[17],
                         YellowCards = tr[18],
                         Discipline = "0"
-
                     }).ToList();
                 stopWatch.Stop();
                 Log.Logger.Warning($"SeasonParse: {stopWatch.Elapsed}");
@@ -98,10 +101,11 @@ namespace LGFA.Engines.Career
             }
             catch (Exception e)
             {
-                Log.Logger.Error(e.ToString()); ;
+                Log.Logger.Error(e.ToString());
+                ;
             }
-            return (null, null, null, null);
 
+            return (null, null, null, null);
         }
     }
 }

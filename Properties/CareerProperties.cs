@@ -1,8 +1,5 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using HtmlAgilityPack;
 
 namespace LGFA.Properties
 {
@@ -19,6 +16,7 @@ namespace LGFA.Properties
         public string SeasonType { get; set; }
 
         #region Record
+
         private string gamesPlayed;
 
         public string GamesPlayed
@@ -28,10 +26,10 @@ namespace LGFA.Properties
             {
                 this.gamesPlayed = value;
                 var splitRecord = this.gamesPlayed.Split('-');
-                int wins = int.Parse(splitRecord[0]);
-                int draws = int.Parse(splitRecord[1]);
-                int loses = int.Parse(splitRecord[2]);
-                int gamesPlayed = wins + draws + loses;
+                var wins = int.Parse(splitRecord[0]);
+                var draws = int.Parse(splitRecord[1]);
+                var loses = int.Parse(splitRecord[2]);
+                var gamesPlayed = wins + draws + loses;
                 this.gamesPlayed = gamesPlayed.ToString().Trim();
             }
         }
@@ -39,29 +37,34 @@ namespace LGFA.Properties
         public string Record { get; set; }
 
         private string _matchRating;
+
         public string AvgMatchRating
         {
             get => _matchRating;
             set
             {
                 var rating = Convert.ToDouble(MatchRating) / Convert.ToDouble(GamesPlayed);
-                _matchRating = Math.Round(rating,2).ToString(CultureInfo.InvariantCulture);
+                _matchRating = Math.Round(rating, 2).ToString(CultureInfo.InvariantCulture);
             }
         }
+
         //used for season career stats
         public string MatchRating { get; set; }
+
         #endregion
-        
+
 
         #region Offensive
+
         public string Goals { get; set; }
         public string Assists { get; set; }
 
-      private string _goalsPerGame;
+        private string _goalsPerGame;
+
         public string GoalsPerGame
         {
-            get=> _goalsPerGame;
-            set => _goalsPerGame = Math.Round((Convert.ToDouble(Goals)) / Convert.ToDouble(GamesPlayed),3).ToString("F");
+            get => _goalsPerGame;
+            set => _goalsPerGame = Math.Round(Convert.ToDouble(Goals) / Convert.ToDouble(GamesPlayed), 3).ToString("F");
         }
 
         private string _shotsPerGoal;
@@ -73,13 +76,17 @@ namespace LGFA.Properties
             {
                 if (Math.Abs(Convert.ToDouble(Goals)) > 0)
                 {
-                    string[] shotsGoalPercent = new string[2];
-                    shotsGoalPercent[0] = Math.Round((Convert.ToDouble(ShotAttempts)) / Convert.ToDouble(Goals), 3).ToString("F");
-                    shotsGoalPercent[1] = Math.Round(Convert.ToDouble(Goals) / Convert.ToDouble(ShotAttempts), 2).ToString("P");
+                    var shotsGoalPercent = new string[2];
+                    shotsGoalPercent[0] = Math.Round(Convert.ToDouble(ShotAttempts) / Convert.ToDouble(Goals), 3)
+                        .ToString("F");
+                    shotsGoalPercent[1] = Math.Round(Convert.ToDouble(Goals) / Convert.ToDouble(ShotAttempts), 2)
+                        .ToString("P");
                     _shotsPerGoal = string.Join(" - ", shotsGoalPercent);
                 }
-                else _shotsPerGoal = "0.0";
-
+                else
+                {
+                    _shotsPerGoal = "0.0";
+                }
             }
         }
 
@@ -99,16 +106,18 @@ namespace LGFA.Properties
         public string ShotPerGame
         {
             get => _shotPerGame;
-            set => _shotPerGame = Math.Round((Convert.ToDouble(ShotAttempts)) / Convert.ToDouble(GamesPlayed), 3).ToString("F");
+            set => _shotPerGame = Math.Round(Convert.ToDouble(ShotAttempts) / Convert.ToDouble(GamesPlayed), 3)
+                .ToString("F");
         }
 
         private string _shotSot;
+
         public string ShotSot
         {
             get => _shotSot;
             set
             {
-                string[] tempShotSot = new string[2];
+                var tempShotSot = new string[2];
                 tempShotSot[0] = ShotAttempts;
                 tempShotSot[1] = ShotsOnTarget;
                 _shotSot = string.Join(" - ", tempShotSot);
@@ -118,6 +127,7 @@ namespace LGFA.Properties
         #endregion
 
         #region Passing
+
         private string _passPercent;
         public string PassesCompleted { get; set; }
         public string PassesAttempted { get; set; }
@@ -129,7 +139,7 @@ namespace LGFA.Properties
             get => _passRecord;
             set
             {
-                string[] tempPassRec = new string[2];
+                var tempPassRec = new string[2];
                 tempPassRec[0] = PassesCompleted;
                 tempPassRec[1] = PassesAttempted;
                 _passRecord = string.Join(" - ", tempPassRec);
@@ -139,7 +149,8 @@ namespace LGFA.Properties
         public string PassingPercentage
         {
             get => _passPercent;
-            set => _passPercent = Math.Round((Convert.ToDouble(PassesCompleted) / Convert.ToDouble(PassesAttempted)), 3).ToString("P");
+            set => _passPercent = Math.Round(Convert.ToDouble(PassesCompleted) / Convert.ToDouble(PassesAttempted), 3)
+                .ToString("P");
         }
 
         private string _avgPassGame;
@@ -149,10 +160,11 @@ namespace LGFA.Properties
             get => _avgPassGame;
             set
             {
-                string[] passGamePercent = new string[2];
-                passGamePercent[0] = Math.Round((Convert.ToDouble(PassesAttempted)) / Convert.ToDouble(GamesPlayed), 3)
+                var passGamePercent = new string[2];
+                passGamePercent[0] = Math.Round(Convert.ToDouble(PassesAttempted) / Convert.ToDouble(GamesPlayed), 3)
                     .ToString("F");
-                passGamePercent[1] = _passPercent = Math.Round((Convert.ToDouble(PassesCompleted) / Convert.ToDouble(PassesAttempted)), 3).ToString("P");
+                passGamePercent[1] = _passPercent = Math
+                    .Round(Convert.ToDouble(PassesCompleted) / Convert.ToDouble(PassesAttempted), 3).ToString("P");
                 _avgPassGame = string.Join(" - ", passGamePercent);
             }
         }
@@ -162,7 +174,8 @@ namespace LGFA.Properties
         public string AssistPerGame
         {
             get => _assistPerGame;
-            set => _assistPerGame = Math.Round((Convert.ToDouble(Assists)) / Convert.ToDouble(GamesPlayed), 3).ToString("F");
+            set => _assistPerGame =
+                Math.Round(Convert.ToDouble(Assists) / Convert.ToDouble(GamesPlayed), 3).ToString("F");
         }
 
         private string _keyPassPerGame;
@@ -171,12 +184,14 @@ namespace LGFA.Properties
         public string KeyPassPerGame
         {
             get => _keyPassPerGame;
-            set => _keyPassPerGame = Math.Round((Convert.ToDouble(KeyPasses)) / Convert.ToDouble(GamesPlayed), 3).ToString("F");
+            set => _keyPassPerGame = Math.Round(Convert.ToDouble(KeyPasses) / Convert.ToDouble(GamesPlayed), 3)
+                .ToString("F");
         }
 
         #endregion
 
         #region Defensive
+
         private string _tackling;
         public string Tackles { get; set; }
         public string TackleAttempts { get; set; }
@@ -186,7 +201,7 @@ namespace LGFA.Properties
             get => _tackling;
             set
             {
-                string[] defensive = new string[2];
+                var defensive = new string[2];
                 defensive[0] = Tackles;
                 defensive[1] = TackleAttempts;
                 _tackling = string.Join("-", defensive);
@@ -194,11 +209,12 @@ namespace LGFA.Properties
         }
 
         private string _tacklePercent;
+
         public string TacklePercent
         {
             get => _tacklePercent;
-            set => _tacklePercent = Math.Round((Convert.ToDouble(Tackles)) / Convert.ToDouble(TackleAttempts),2)
-                    .ToString("P");
+            set => _tacklePercent = Math.Round(Convert.ToDouble(Tackles) / Convert.ToDouble(TackleAttempts), 2)
+                .ToString("P");
         }
 
         private string _tacklePerGame;
@@ -206,7 +222,7 @@ namespace LGFA.Properties
         public string TacklesPerGame
         {
             get => _tacklePerGame;
-            set => _tacklePerGame = Math.Round((Convert.ToDouble(Tackles)) / Convert.ToDouble(GamesPlayed), 2)
+            set => _tacklePerGame = Math.Round(Convert.ToDouble(Tackles) / Convert.ToDouble(GamesPlayed), 2)
                 .ToString("F");
         }
 
@@ -215,8 +231,8 @@ namespace LGFA.Properties
 
         public string InterPerGame
         {
-            get=>_interPerGame;
-            set => _interPerGame = Math.Round((Convert.ToDouble(Interceptions)) / Convert.ToDouble(GamesPlayed), 2)
+            get => _interPerGame;
+            set => _interPerGame = Math.Round(Convert.ToDouble(Interceptions) / Convert.ToDouble(GamesPlayed), 2)
                 .ToString("F");
         }
 
@@ -225,17 +241,20 @@ namespace LGFA.Properties
 
         public string BlocksPerGame
         {
-            get=>_blocksPerGame;
-            set=>_blocksPerGame=Math.Round((Convert.ToDouble(Blocks)) / Convert.ToDouble(GamesPlayed),2).ToString("F");
+            get => _blocksPerGame;
+            set => _blocksPerGame =
+                Math.Round(Convert.ToDouble(Blocks) / Convert.ToDouble(GamesPlayed), 2).ToString("F");
         }
+
         private string _brick;
+
         public string Wall
         {
-            get=>_brick;
+            get => _brick;
             set
             {
                 _brick = value;
-                string[] steals = new string[2];
+                var steals = new string[2];
                 steals[0] = Interceptions;
                 steals[1] = Blocks;
                 _brick = string.Join("-", steals);
@@ -252,15 +271,17 @@ namespace LGFA.Properties
             get => _poss;
             set
             {
-                string[] possWPossL = new string[2];
+                var possWPossL = new string[2];
                 possWPossL[0] = PossW;
                 possWPossL[1] = PossL;
                 _poss = string.Join("-", possWPossL);
             }
         }
+
         #endregion
 
         #region Discipline
+
         public string YellowCards { get; set; }
         public string RedCards { get; set; }
         private string _discipline;
@@ -271,12 +292,13 @@ namespace LGFA.Properties
             set
             {
                 _discipline = value;
-                string[] cards = new string[2];
+                var cards = new string[2];
                 cards[0] = YellowCards;
                 cards[1] = RedCards;
                 _discipline = string.Join("-", cards);
             }
         }
+
         #endregion
     }
 }
