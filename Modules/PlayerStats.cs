@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Discord;
+﻿using Discord;
 using Discord.Commands;
-using Discord.WebSocket;
-using LGFA.Engines;
 using LGFA.Engines.Current.Player;
-using LGFA.Extensions;
-using LiteDB;
-using Serilog;
 using LGFA.Properties;
+using Serilog;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LGFA.Modules
 {
