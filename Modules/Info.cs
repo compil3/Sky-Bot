@@ -15,6 +15,9 @@ namespace LGFA.Modules
         [Summary("Gets the league general information.")]
         public async Task GetInfo(string system)
         {
+            var options = new RequestOptions{Timeout = 2};
+            await Context.Message.DeleteAsync(options);
+
             Embed embed = null;
             var systemIcon = "";
             List<LeagueProperties> leagueInfo = null;

@@ -14,11 +14,9 @@ namespace LGFA.Modules
         [Summary(".ts TeamName xbox/psn [eg: .ts Liverpool Xbox]")]
         private async Task GetTeams(string teamName, string league)
         {
-            if (!Context.User.IsBot)
-            {
-                var options = new RequestOptions {Timeout = 2};
-                await Context.Message.DeleteAsync(options);
-            }
+            var options = new RequestOptions { Timeout = 2 };
+            await Context.Message.DeleteAsync(options);
+
             if (Context.Channel.Id == Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))
             {
                 Embed embed;

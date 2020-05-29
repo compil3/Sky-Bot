@@ -17,15 +17,12 @@ namespace LGFA.Modules
         [Summary("Get the players current season statistics.")]
         public async Task GetPlayerStatsLg(string playerLookup, string seasonType = null, string seasonId = null)
         {
-            if (!Context.User.IsBot)
-            {
-                var options = new RequestOptions {Timeout = 2};
-                await Context.Message.DeleteAsync(options);
-            }
+            var options = new RequestOptions { Timeout = 2 };
+            await Context.Message.DeleteAsync(options);
 
-            Log.Logger.Warning($"Guild: {Context.Guild.Name} ID:{Context.Guild.Id}");
             if (Context.Channel.Id == Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")) || Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208)
             {
+                Log.Logger.Warning($"Guild: {Context.Guild.Name} ID:{Context.Guild.Id}");
                 var player = CurrentSeason.SeasonStats(playerLookup);
                 var embed = SeasonEmbed(player);
                 await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed)
@@ -33,7 +30,7 @@ namespace LGFA.Modules
             }
             else
             {
-                
+
                 await ReplyAsync(
                     $"{Context.User.Mention} you are using the command in the wrong channel, try again in " +
                     $"{MentionUtils.MentionChannel(Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))}");

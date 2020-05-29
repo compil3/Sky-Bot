@@ -15,6 +15,9 @@ namespace LGFA.Modules
             [Summary("Get a goalies current statistics. [Command not yet implemented]")]
             public async Task GetGoalieStats(string playerLookup)
             {
+                var options = new RequestOptions{Timeout = 2};
+                await Context.Message.DeleteAsync(options);
+
                 if (Context.Channel.Id == Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))
                 {
                     Embed embed;

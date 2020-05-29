@@ -16,16 +16,12 @@ namespace LGFA.Modules
         [RequireUserPermission(GuildPermission.SendMessages)]
         public async Task GetStandings(string league)
         {
+            var options = new RequestOptions {Timeout = 2};
+            await Context.Message.DeleteAsync(options);
+
             if (Context.Channel.Id == Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))
             {
-                if (!Context.User.IsBot)
-                {
-                    var options = new RequestOptions();
-                    options.Timeout = 2;
-                    await Context.Message.DeleteAsync(options);
-                }
-
-                var guildId = Context.Guild.Id;
+               var guildId = Context.Guild.Id;
                 var channelId = Context.Channel.Id;
 
                 Log.Logger.Warning($"{Context.User.Username} Triggered: LeagueTable.GetStandings ");

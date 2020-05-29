@@ -20,11 +20,8 @@ namespace LGFA.Modules
         [Summary("Displays this help message.")]
         public async Task HelpDisplay([Remainder] string command = null)
         {
-            if (!Context.User.IsBot)
-            {
-                var options = new RequestOptions {Timeout = 2};
-                await Context.Message.DeleteAsync(options);
-            }
+            var options = new RequestOptions{Timeout = 2};
+            await Context.Message.DeleteAsync(options);
 
             const string botPrefix = ".";
             var helpEmbed = _service.GetDefaultHelpEmbed(command, botPrefix);

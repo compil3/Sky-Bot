@@ -20,23 +20,15 @@ namespace LGFA.Modules
         [Summary("Retrieve a players overall career stats or a season.")]
         public async Task GetPlayerCareer(string playerLookup, string seasonId = null)
         {
+            var options = new RequestOptions{Timeout = 2};
+            await Context.Message.DeleteAsync(options);
+
             if (Context.Channel.Id == Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))
             {
-                if (!Context.User.IsBot)
-                {
-                    var options = new RequestOptions { Timeout = 2 };
-                    await Context.Message.DeleteAsync(options);
-                }
-
-                var guildId = Context.Guild.Id;
                 Embed embed = null;
-                Console.Write($"Guild ID: {Context.Guild.Id}");
-                var stopWatch = new Stopwatch();
                 Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-                stopWatch.Start();
 
-                if (seasonId == null
-                ) //if no season number is entered in the command, than look for the Career stats "Official" table.
+                if (seasonId == null) //if no season number is entered in the command, than look for the Career stats "Official" table.
                 {
                     var (playerCareer, playerUrl, playerName) = CareerBuilder.GetCareerNoSeason(playerLookup, seasonId);
                     if (playerCareer == null && playerUrl == null && playerName == null)
@@ -53,8 +45,6 @@ namespace LGFA.Modules
 
                 await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed)
                     .ConfigureAwait(false);
-                stopWatch.Stop();
-                Log.Logger.Warning($"Total Time Taken: {stopWatch.Elapsed}");
             }
             else
             {
