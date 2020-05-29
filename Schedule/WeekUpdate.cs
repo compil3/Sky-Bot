@@ -16,8 +16,8 @@ namespace LGFA.Schedule
         {
             var update = new Action(async () =>
             {
-                var system = new[] {"xbox", "psn"};
-                
+                var system = new[] { "xbox", "psn" };
+
                 var seasonCount = system.Select(s => new ConsoleInformation
                 {
                     System = s,
@@ -50,28 +50,46 @@ namespace LGFA.Schedule
 
                 try
                 {
-                    foreach (var t in seasonCount)
+                    if (Console.IsOutputRedirected)
                     {
-                        await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
-                        using var pbar = new ProgressBar(t.NumberOfSeasons,
-                            $"Running Database Update {t.System}", options);
-
-
-                        for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
+                        foreach (var t in seasonCount)
                         {
-                            pbar.EstimatedDuration = TimeSpan.FromMilliseconds(t.NumberOfSeasons * 5000);
-
-                            pbar.Tick(
-                                $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
-                            await chnl.SendMessageAsync(
-                                $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
-                            Get.GetPlayerIds(t.System, "player", j, pbar);
-                            Thread.Sleep(250);
+                            await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
+                            for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
+                            {
+                                Get.GetPlayerIds(t.System, "player", j);
+                                await chnl.SendMessageAsync(
+                                    $"Ran Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
+                            }
                         }
+                    }
+                    else
+                    {
 
-                        var estimatedDuration = TimeSpan.FromSeconds(60 * seasonCount.Count) +
-                                                TimeSpan.FromSeconds(30 * t.NumberOfSeasons);
-                        pbar.Tick(estimatedDuration, $"Completed {t.System} updated");
+                        foreach (var t in seasonCount)
+                        {
+                            await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
+                            using var pbar = new ProgressBar(t.NumberOfSeasons,
+                                $"Running Database Update {t.System}", options);
+
+
+                            for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
+                            {
+                                pbar.EstimatedDuration = TimeSpan.FromMilliseconds(t.NumberOfSeasons * 5000);
+
+                                pbar.Tick(
+                                    $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
+                                Get.GetPlayerIds(t.System, "player", j, pbar);
+                                await chnl.SendMessageAsync(
+                                    $"Ran Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
+
+                                Thread.Sleep(250);
+                            }
+
+                            var estimatedDuration = TimeSpan.FromSeconds(60 * seasonCount.Count) +
+                                                    TimeSpan.FromSeconds(30 * t.NumberOfSeasons);
+                            pbar.Tick(estimatedDuration, $"Completed {t.System} updated");
+                        }
                     }
                 }
                 catch (Exception e)
