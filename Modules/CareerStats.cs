@@ -20,21 +20,21 @@ namespace LGFA.Modules
         [Summary("Retrieve a players overall career stats or a season.")]
         public async Task GetPlayerCareer(string playerLookup, string seasonId = null)
         {
-            if (!Context.User.IsBot)
+            if (Context.Channel.Id == Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))
             {
-                var options = new RequestOptions {Timeout = 2};
-                await Context.Message.DeleteAsync(options);
-            }
+                if (!Context.User.IsBot)
+                {
+                    var options = new RequestOptions { Timeout = 2 };
+                    await Context.Message.DeleteAsync(options);
+                }
 
-            var guildId = Context.Guild.Id;
-            Embed embed = null;
-            Console.Write($"Guild ID: {Context.Guild.Id}");
-            var stopWatch = new Stopwatch();
-            Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-            stopWatch.Start();
-            if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 ||
-                Context.Channel.Id == 713237102145437776 || Context.Channel.Name == "statistics")
-            {
+                var guildId = Context.Guild.Id;
+                Embed embed = null;
+                Console.Write($"Guild ID: {Context.Guild.Id}");
+                var stopWatch = new Stopwatch();
+                Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
+                stopWatch.Start();
+
                 if (seasonId == null
                 ) //if no season number is entered in the command, than look for the Career stats "Official" table.
                 {
@@ -59,7 +59,8 @@ namespace LGFA.Modules
             else
             {
                 await ReplyAsync(
-                    $"Channel permission denied.  Try again in the proper channel {Context.User.Mention}");
+                    $"{Context.User.Mention} you are using the command in the wrong channel, try again in " +
+                    $"{MentionUtils.MentionChannel(Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))}");
             }
         }
     }

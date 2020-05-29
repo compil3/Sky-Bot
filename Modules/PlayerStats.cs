@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -23,8 +24,7 @@ namespace LGFA.Modules
             }
 
             Log.Logger.Warning($"Guild: {Context.Guild.Name} ID:{Context.Guild.Id}");
-            if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 ||
-                Context.Channel.Id == 713237102145437776)
+            if (Context.Channel.Id == Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")) || Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208)
             {
                 var player = CurrentSeason.SeasonStats(playerLookup);
                 var embed = SeasonEmbed(player);
@@ -33,8 +33,10 @@ namespace LGFA.Modules
             }
             else
             {
+                
                 await ReplyAsync(
-                    $"Channel permission denied.  Try again in the proper channel {Context.User.Mention}");
+                    $"{Context.User.Mention} you are using the command in the wrong channel, try again in " +
+                    $"{MentionUtils.MentionChannel(Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))}");
             }
         }
 
