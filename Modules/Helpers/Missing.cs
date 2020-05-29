@@ -6,11 +6,7 @@ namespace LGFA.Modules.Helpers
     {
         public static Embed NotFound(string playerName, string playerSystem, string playerUrl)
         {
-            var systemIcon = "";
-            if (playerSystem == "psn") systemIcon = "73";
-            else if (playerSystem == "xbox") systemIcon = "53";
-            EmbedBuilder builder;
-            builder = new EmbedBuilder()
+            var builder = new EmbedBuilder()
                 .WithTitle(playerName)
                 .WithUrl(playerUrl)
                 .WithColor(new Color(0x26A20B))
@@ -32,8 +28,7 @@ namespace LGFA.Modules.Helpers
 
         public static Embed CareerNotFound(string playerName, string playerUrl)
         {
-            EmbedBuilder builder;
-            builder = new EmbedBuilder()
+            var builder = new EmbedBuilder()
                 .WithAuthor(author =>
                 {
                     author
