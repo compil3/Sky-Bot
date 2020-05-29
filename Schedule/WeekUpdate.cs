@@ -17,7 +17,7 @@ namespace LGFA.Schedule
             var update = new Action(async () =>
             {
                 var system = new[] {"xbox", "psn"};
-
+                
                 var seasonCount = system.Select(s => new ConsoleInformation
                 {
                     System = s,
@@ -62,6 +62,8 @@ namespace LGFA.Schedule
                             pbar.EstimatedDuration = TimeSpan.FromMilliseconds(t.NumberOfSeasons * 5000);
 
                             pbar.Tick(
+                                $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
+                            await chnl.SendMessageAsync(
                                 $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
                             Get.GetPlayerIds(t.System, "player", j, pbar);
                             Thread.Sleep(250);
