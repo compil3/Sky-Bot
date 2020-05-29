@@ -55,18 +55,17 @@ namespace LGFA.Schedule
                 {
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
-                        Console.WriteLine("ENTERED LINUX LOOP.");
                         var appDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                        Console.WriteLine($"Path to app: {appDir}");
                         foreach (var t in seasonCount)
                         {
-                            await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
+                            await chnl.SendMessageAsync($"Starting update for {t.System.ToUpper()}.").ConfigureAwait(false);
                             for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
                             {
                                 Get.GetPlayerIds(t.System, "player", j);
-                                await chnl.SendMessageAsync(
-                                    $"Ran Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
+                                //await chnl.SendMessageAsync(
+                                //    $"Ran Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
                             }
+                            await chnl.SendMessageAsync($"Update for {t.System.ToUpper()} completed.");
                         }
                     }
                     else
@@ -74,7 +73,7 @@ namespace LGFA.Schedule
 
                         foreach (var t in seasonCount)
                         {
-                            await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
+                            await chnl.SendMessageAsync($"Starting update for {t.System.ToUpper()}.").ConfigureAwait(false);
                             using var pbar = new ProgressBar(t.NumberOfSeasons,
                                 $"Running Database Update {t.System}", options);
 
@@ -86,11 +85,11 @@ namespace LGFA.Schedule
                                 pbar.Tick(
                                     $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
                                 Get.GetPlayerIds(t.System, "player", j, pbar);
-                                await chnl.SendMessageAsync(
-                                    $"Ran Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
-
+                                //await chnl.SendMessageAsync(
+                                //    $"Ran Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
                                 Thread.Sleep(250);
                             }
+                            await chnl.SendMessageAsync($"Update for {t.System.ToUpper()} completed.");
 
                             var estimatedDuration = TimeSpan.FromSeconds(60 * seasonCount.Count) +
                                                     TimeSpan.FromSeconds(30 * t.NumberOfSeasons);
