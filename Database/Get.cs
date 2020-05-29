@@ -9,17 +9,17 @@ namespace LGFA.Database
 {
     internal class Get
     {
-        public static bool GetPlayerIds(string system, string trigger, int SeasonId, ProgressBar pbar)
+        public static bool GetPlayerIds(string system, string trigger, int seasonId, ProgressBar pbar)
         {
             var web = new HtmlWeb();
             HtmlNodeCollection findPlayerCount;
 
-            var doc = web.Load(Fetch.GetUrl(system, trigger, SeasonId, 1));
+            var doc = web.Load(Fetch.GetUrl(system, trigger, seasonId, 1));
 
             findPlayerCount = doc.DocumentNode.SelectNodes("//*[@id='lgtable_memberstats51']/tbody/tr");
             if (findPlayerCount == null)
             {
-                doc = web.Load(Fetch.GetUrl(system, trigger, SeasonId, 0));
+                doc = web.Load(Fetch.GetUrl(system, trigger, seasonId, 0));
                 findPlayerCount = doc.DocumentNode.SelectNodes("//*[@id='lgtable_memberstats51']/tbody/tr");
             }
 
@@ -35,7 +35,7 @@ namespace LGFA.Database
             };
             try
             {
-                using var child = pbar.Spawn(findPlayerCount.Count, $"Updating Season: {SeasonId} player ids",
+                using var child = pbar.Spawn(findPlayerCount.Count, $"Updating Season: {seasonId} player ids",
                     childOptions);
 
                 for (var i = 1; i < findPlayerCount.Count; i++)
@@ -75,6 +75,56 @@ namespace LGFA.Database
                 throw;
             }
 
+            return false;
+        }
+
+        public static bool GetPlayerIds(string system, string trigger, int seasonId)
+        {
+            var web = new HtmlWeb();
+            HtmlNodeCollection findPlayerCount;
+
+            var doc = web.Load(Fetch.GetUrl(system, trigger, seasonId, 1));
+
+            findPlayerCount = doc.DocumentNode.SelectNodes("//*[@id='lgtable_memberstats51']/tbody/tr");
+            if (findPlayerCount == null)
+            {
+                doc = web.Load(Fetch.GetUrl(system, trigger, seasonId, 0));
+                findPlayerCount = doc.DocumentNode.SelectNodes("//*[@id='lgtable_memberstats51']/tbody/tr");
+            }
+
+            try
+            {
+
+                for (var i = 1; i < findPlayerCount.Count; i++)
+                {
+                    var findPlayerNodes =
+                        doc.DocumentNode.SelectNodes($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]");
+
+                    #region nodes
+
+                    foreach (var player in findPlayerNodes)
+                    {
+                        var playerName = player
+                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a").InnerText;
+                        var playerShortUrl = player
+                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a")
+                            .Attributes["href"].Value;
+
+                        var playerUrl = string.Join(string.Empty,
+                            "https://www.leaguegaming.com/forums/" + playerShortUrl);
+                        var tempId = HttpUtility.ParseQueryString(new Uri(playerUrl).Query);
+                        var playerId = int.Parse(tempId.Get("userid"));
+
+                        Writer.SaveInformation(playerId, playerName, playerUrl, system);
+                    }
+                    #endregion
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Fatal(e, "Error processing Player stats.");
+                throw;
+            }
             return false;
         }
     }
