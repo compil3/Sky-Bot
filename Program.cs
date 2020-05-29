@@ -36,7 +36,7 @@ namespace LGFA
             services.GetRequiredService<CommandService>().Log += LogAsync;
 
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Sky Sports Bot v1.0");
+            Console.WriteLine("Sky Sports Bot v2.0");
             Console.ResetColor();
 
 
@@ -70,7 +70,7 @@ namespace LGFA
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console(theme: AnsiConsoleTheme.Code)
                 .CreateLogger();
-            Log.Fatal(log.ToString());
+            Log.Logger.Fatal(log.ToString());
             return Task.CompletedTask;
         }
 
