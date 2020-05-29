@@ -26,11 +26,6 @@ namespace LGFA.Modules
             if (Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208 ||
                 Context.Channel.Id == 713237102145437776)
             {
-                //var (playerLookup) = 
-                //Log.Logger.Warning($"Channel: {Context.Channel.Name}\nID: {Context.Channel.Id}");
-                //Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-                //await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``",
-                //    embed: Player.GetPlayer(playerLookup, seasonType, seasonId)).ConfigureAwait(false);
                 var player = CurrentSeason.SeasonStats(playerLookup);
                 var embed = SeasonEmbed(player);
                 await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed)
