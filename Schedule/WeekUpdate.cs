@@ -51,7 +51,7 @@ namespace LGFA.Schedule
 
                 try
                 {
-                    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
                         foreach (var t in seasonCount)
                         {
