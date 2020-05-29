@@ -119,11 +119,6 @@ namespace LGFA.Modules.News
                 if (line.Contains("the ")) newLine = newLine.Replace("the ", string.Empty);
                 if (newLine == string.Empty) newLine = line;
                 IList<string> waiverLine = new List<string>();
-                var element = "";
-                var condition = "";
-                var statement = "";
-                var placement = "";
-                var team = "";
 
                 var lastNews = DateTime.Parse(tempDateTime);
                 if (!NewsWriter.SaveWaiver(lastNews, newLine, leagueId)) break;
