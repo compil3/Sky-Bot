@@ -13,11 +13,22 @@ namespace LGFA.Modules
         [Summary(".ts TeamName xbox/psn [eg: .ts Liverpool Xbox]")]
         private async Task GetTeams(string teamName, string league)
         {
-            if (Context.Channel.Id == 689119429375819951)
-                Log.Logger.Warning($"{Context.Guild.Name} (LG command triggered)");
-            //await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: Team.GetTeam(teamName, league)).ConfigureAwait(false);
-            else if (Context.Guild.Id == 689119429375819951)
-                await Context.Channel.SendMessageAsync($"{Context.Guild.Name} (LG command triggered)");
+            Embed embed;
+            var builder = new EmbedBuilder()
+                .WithTitle("LGFA Team Stats")
+                .WithColor(new Color(0xFF0019))
+                .WithCurrentTimestamp()
+                .WithFooter(footer =>
+                {
+                    footer
+                        .WithText("leaguegaming.com/fifa")
+                        .WithIconUrl("https://www.leaguegaming.com/images/league/icon/l53.png");
+                })
+                .WithDescription("**Command not yet implemented.**\n You can check the standings using the *.table* command.");
+            embed = builder.Build();
+            await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed)
+                .ConfigureAwait(false);
+
         }
     }
 }
