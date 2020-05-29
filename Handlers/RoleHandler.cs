@@ -60,7 +60,7 @@ namespace LGFA.Handlers
         {
             var reactionUser = reaction.User.IsSpecified ? reaction.User.Value as SocketGuildUser : null;
 
-            ulong roleMessage = Convert.ToUInt64(Environment.GetEnvironmentVariable("roles_message"));
+            ulong roleMessage = Convert.ToUInt64(Environment.GetEnvironmentVariable("role_message"));
             var xboxRole = new Emoji("🇽");
             var psnRole = new Emoji("🇵");
 
