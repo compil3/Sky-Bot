@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Reflection;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using FluentScheduler;
@@ -11,6 +13,14 @@ namespace LGFA.Schedule
     {
         public static Task Manage(IMessageChannel chnl, IMessageChannel news)
         {
+            var dbPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var dbFolder = "Database/";
+            var dbDir = Path.Combine(dbPath, dbFolder);
+
+            if (!Directory.Exists(dbDir))
+            {
+                Directory.CreateDirectory(dbDir);
+            }
             JobManager.Initialize(new WeekUpdate(chnl));
             JobManager.Initialize(new Trades(news));
             JobManager.Initialize(new WaiverNews(news));
