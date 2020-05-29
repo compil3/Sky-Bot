@@ -51,8 +51,9 @@ namespace LGFA.Schedule
 
                 try
                 {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
+                        Console.WriteLine("ENTERED LINUX LOOP.");
                         foreach (var t in seasonCount)
                         {
                             await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
