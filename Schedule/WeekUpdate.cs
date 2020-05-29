@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Discord;
 using FluentScheduler;
@@ -50,7 +51,7 @@ namespace LGFA.Schedule
 
                 try
                 {
-                    if (Console.IsOutputRedirected)
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         foreach (var t in seasonCount)
                         {
