@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Discord;
@@ -54,6 +56,8 @@ namespace LGFA.Schedule
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
                         Console.WriteLine("ENTERED LINUX LOOP.");
+                        var appDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                        Console.WriteLine($"Path to app: {appDir}");
                         foreach (var t in seasonCount)
                         {
                             await chnl.SendMessageAsync("Starting update.").ConfigureAwait(false);
