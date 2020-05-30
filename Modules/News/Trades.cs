@@ -13,7 +13,6 @@ namespace LGFA.Modules.News
             Action trades = async () =>
             {
                 var web = new HtmlWeb();
-                new HtmlWeb();
                 var leagueList = new List<string> {"53", "73"};
 
                 foreach (var id in leagueList)

@@ -103,7 +103,7 @@ namespace LGFA.Schedule
                     throw;
                 }
             });
-            Schedule(update).ToRunNow().AndEvery(1).Weeks().On(DayOfWeek.Saturday).At(3, 0);
+            Schedule(update).ToRunEvery(1).Weeks().On(DayOfWeek.Saturday).At(3, 0);
         }
     }
 
