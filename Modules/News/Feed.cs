@@ -32,13 +32,11 @@ namespace LGFA.Modules.News
             {
                 tempDateTime = item.SelectSingleNode("//*[@id='newsfeed_page']/ol/li[1]/div/abbr").InnerText;
                 var line = item.SelectSingleNode("//*[@id='newsfeed_page']/ol/li[1]/div/h3").InnerText;
-                var removeThe = new[] {"The ", "the "};
                 var newLine = "";
                 if (line.Contains("The ")) newLine = line.Replace("The ", string.Empty);
                 if (line.Contains("the ")) newLine = newLine.Replace("the ", string.Empty);
 
-                var startTeam = newLine.Split(new[] {"have", "traded", "to"}, StringSplitOptions.None);
-                var endTeam = newLine.Split(new[] {"to", "for"}, StringSplitOptions.None);
+                var splits = newLine.Split(new[] {"have traded", " to ", "for"}, StringSplitOptions.None);
 
 
                 var splitStr = newLine.Split(new[] {"to "}, StringSplitOptions.None);
@@ -72,8 +70,8 @@ namespace LGFA.Modules.News
                                     .WithIconUrl(systemIcon);
                             })
                             .WithDescription("**New Trade**")
-                            .AddField($"**To {startTeam[0].Trim()}**", $"{endTeam[2].Trim()}", true)
-                            .AddField($"**To {endTeam[1].Trim()}**", $"{startTeam[2].Trim()}", true);
+                            .AddField($"**To {splits[0].Trim()}**", $"{splits[3].Trim()}", true)
+                            .AddField($"**To {splits[2].Trim()}**", $"{splits[1].Trim()}", true);
 
                         embed = builder.Build();
                     }
