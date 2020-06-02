@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HtmlAgilityPack;
 using LGFA.Essentials;
+using LGFA.Extensions;
 using LGFA.Properties;
 using Serilog;
 
@@ -16,7 +17,8 @@ namespace LGFA.Engines
             var web = new HtmlWeb();
             var standingsUrlTemp =
                 "https://www.leaguegaming.com/forums/index.php?leaguegaming/league&action=league&page=standing&leagueid=";
-            var currentSeason = GetCurrentSeason.GetSeason(system);
+            var leagueInfo = LeagueInfo.GetSeason(system);
+            var currentSeason = "";
             var leagueid = "";
             var tempUrl = new string[4];
             var standingsUrl = "";
@@ -25,17 +27,25 @@ namespace LGFA.Engines
                 HtmlDocument teamDoc;
                 if (system == "xbox" || system == "Xbox")
                 {
-                    tempUrl[0] = standingsUrlTemp;
-                    tempUrl[1] = leagueid;
-                    tempUrl[2] = "53&seasonid=";
-                    tempUrl[3] = currentSeason;
-                    standingsUrl = string.Join("", tempUrl);
+                    foreach (var info in leagueInfo)
+                    {
+                        tempUrl[0] = standingsUrlTemp;
+                        tempUrl[1] = leagueid;
+                        tempUrl[2] = "53&seasonid=";
+                        tempUrl[3] = info.Season;
+                        currentSeason = info.Season;
+                        standingsUrl = string.Join("", tempUrl);
+                    }
+                 
 
                     teamDoc = web.Load(standingsUrl);
-                    var tempDoc =
-                        teamDoc.DocumentNode.SelectSingleNode(
-                            "//*[@id='content']/div/div/div[3]/div/div/div/div[2]/table/tbody");
 
+                    if (teamDoc.DocumentNode
+                        .SelectSingleNode("//*[@id='content']/div/div/div[3]/div/div/div/div/table/thead/tr/th")
+                        .InnerText.Contains("Season has not started yet"))
+                    {
+                        return (null, null, null, null, null);
+                    }
                     var standings = teamDoc.DocumentNode
                         .SelectSingleNode("//*[@id='content']/div/div/div[3]/div/div/div/div[2]/table")
                         .Descendants("tr")
