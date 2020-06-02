@@ -52,7 +52,7 @@ namespace LGFA.Database
                             Web.XboxPlayerStatsURL = settings.XboxPlayerStatsUrl;
                             if (lgInfo.Games == null || lgInfo.Games == "/0")
                                 seasonNumber = (int.Parse(lgInfo.Season) - 1).ToString();
-
+                            else seasonNumber = seasonId.ToString();
                             return Web.XboxPlayerStatsURL + seasonNumber + seasonTypeID;
                         }
                         else if (trigger == "draftlist")
@@ -70,9 +70,8 @@ namespace LGFA.Database
                         {
                             Web.PSNPlayerStatsURL = settings.PsnPlayerStatsUrl;
                             if (lgInfo.Games == null || lgInfo.Games == "/0")
-                            {
                                 seasonNumber = (int.Parse(lgInfo.Season) - 1).ToString();
-                            }
+                            else seasonNumber = seasonId.ToString();
                             return Web.PSNPlayerStatsURL + seasonNumber + seasonTypeID;
                         }
                         else if (trigger == "draftlist")
