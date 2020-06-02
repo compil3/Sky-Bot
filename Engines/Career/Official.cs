@@ -14,8 +14,13 @@ namespace LGFA.Engines.Career
         {
             try
             {
+                var num = 5;
+                if (playerDoc.DocumentNode.SelectSingleNode($"//*[@id='lg_team_user_leagues-{system}']/div[{num}]/table") == null)
+                {
+                    num = 4;
+                } 
                 var table = playerDoc.DocumentNode
-                    .SelectSingleNode($"//*[@id='lg_team_user_leagues-{system}']/div[5]/table")
+                    .SelectSingleNode($"//*[@id='lg_team_user_leagues-{system}']/div[{num}]/table")
                     .Descendants("tr")
                     .Skip(1)
                     // Up to here is your code. Here you select all rows from the table.
