@@ -8,6 +8,7 @@ using Discord;
 using FluentScheduler;
 using LGFA.Database;
 using LGFA.Essentials;
+using LGFA.Extensions;
 using Serilog;
 using ShellProgressBar;
 
@@ -55,17 +56,22 @@ namespace LGFA.Schedule
                 {
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
-                        var appDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
                         foreach (var t in seasonCount)
                         {
+                            var currentSeason = LeagueInfo.GetSeason(t.System);
+
                             await chnl.SendMessageAsync($"Starting update for {t.System.ToUpper()}.").ConfigureAwait(false);
-                            for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
+                            foreach (var leagueProp in currentSeason)
                             {
-                                Get.GetPlayerIds(t.System, "player", j);
-                                //await chnl.SendMessageAsync(
-                                //    $"Ran Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
+                                for (var j = int.Parse(leagueProp.Season); j >= 1; j--)
+                                {
+                                    Get.GetPlayerIds(t.System, "player", j);
+                                    //await chnl.SendMessageAsync(
+                                    //    $"Ran Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
+                                }
+                                await chnl.SendMessageAsync($"Update for {t.System.ToUpper()} completed.");
+                                break;
                             }
-                            await chnl.SendMessageAsync($"Update for {t.System.ToUpper()} completed.");
                         }
                     }
                     else
@@ -74,26 +80,31 @@ namespace LGFA.Schedule
                         foreach (var t in seasonCount)
                         {
                             await chnl.SendMessageAsync($"Starting update for {t.System.ToUpper()}.").ConfigureAwait(false);
-                            using var pbar = new ProgressBar(t.NumberOfSeasons,
-                                $"Running Database Update {t.System}", options);
 
+                            using var pbar = new ProgressBar(t.NumberOfSeasons, $"Running Database Update {t.System}", options);
+                            var currentSeason = LeagueInfo.GetSeason(t.System);
 
-                            for (var j = t.PreviousSeason; j < t.NumberOfSeasons; j++)
+                            foreach (var leagueProp in currentSeason)
                             {
-                                pbar.EstimatedDuration = TimeSpan.FromMilliseconds(t.NumberOfSeasons * 5000);
+                                for (var j = int.Parse(leagueProp.Season); j >= 1; j--)
+                                {
+                                    pbar.EstimatedDuration = TimeSpan.FromMilliseconds(t.NumberOfSeasons * 5000);
 
-                                pbar.Tick(
-                                    $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
-                                Get.GetPlayerIds(t.System, "player", j, pbar);
-                                //await chnl.SendMessageAsync(
-                                //    $"Ran Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
-                                Thread.Sleep(250);
+                                    pbar.Tick(
+                                        $"Running Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{leagueProp.Season}");
+                                    Get.GetPlayerIds(t.System, "player", j, pbar);
+                                    //await chnl.SendMessageAsync(
+                                    //    $"Ran Season {j} Update for {t.System.ToUpper()}.  Remaining: {j}/{t.NumberOfSeasons}");
+                                    Thread.Sleep(250);
+                                }
+                                await chnl.SendMessageAsync($"Update for {t.System.ToUpper()} completed.");
+
+                                var estimatedDuration = TimeSpan.FromSeconds(60 * seasonCount.Count) +
+                                                        TimeSpan.FromSeconds(30 * t.NumberOfSeasons);
+                                pbar.Tick(estimatedDuration, $"Completed {t.System} updated");
+                                break;
                             }
-                            await chnl.SendMessageAsync($"Update for {t.System.ToUpper()} completed.");
-
-                            var estimatedDuration = TimeSpan.FromSeconds(60 * seasonCount.Count) +
-                                                    TimeSpan.FromSeconds(30 * t.NumberOfSeasons);
-                            pbar.Tick(estimatedDuration, $"Completed {t.System} updated");
+                            
                         }
                     }
                 }
