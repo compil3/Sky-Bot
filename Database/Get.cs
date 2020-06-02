@@ -21,6 +21,7 @@ namespace LGFA.Database
             {
                 doc = web.Load(Fetch.GetUrl(system, trigger, seasonId, 0));
                 findPlayerCount = doc.DocumentNode.SelectNodes("//*[@id='lgtable_memberstats51']/tbody/tr");
+                
             }
 
             var childOptions = new ProgressBarOptions
