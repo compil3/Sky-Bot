@@ -22,6 +22,7 @@ namespace LGFA.Schedule
                 Directory.CreateDirectory(dbDir);
             }
             JobManager.Initialize(new WeekUpdate(chnl));
+            JobManager.Initialize(new WeeklyTable(news));
             JobManager.Initialize(new Trades(news));
             JobManager.Initialize(new WaiverNews(news));
             Log.Logger.Information("Schedule Initialized.");
