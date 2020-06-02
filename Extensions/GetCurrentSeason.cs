@@ -36,8 +36,7 @@ namespace LGFA.Essentials
             }
 
             var seasonID = JsonConvert.DeserializeObject<Season>(JSON);
-            if (seasonID.currentSeason != null) return seasonID.currentSeason;
-            return null;
+            return seasonID.currentSeason ?? null;
         }
     }
 }
