@@ -26,7 +26,7 @@ namespace LGFA.Modules
             const string botPrefix = ".";
             var helpEmbed = _service.GetDefaultHelpEmbed(command, botPrefix);
             await Context.User.SendMessageAsync(embed: helpEmbed);
-            await ReplyAsync($"Check your DM's {Context.User.Mention}").AutoRemove(10);
+            await ReplyAsync($"Check your DMs {Context.User.Mention}").AutoRemove(10);
         }
     }
 }

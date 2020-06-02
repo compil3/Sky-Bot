@@ -31,7 +31,7 @@ namespace LGFA.Modules
                 var (teamStandings, teamPoints, currentSeason, leagueUrl, system) = TeamStanding.GetStandings(league);
 
                 await Context.Channel
-                    .SendMessageAsync("``[Stats Provided By LGFA``", embed: TeamHelper.StandingEmbed(league))
+                    .SendMessageAsync($"{Context.User.Mention}\n``[Stats Provided By Leaguegaming.com]``", embed: TeamHelper.StandingEmbed(league))
                     .ConfigureAwait(false);
             }
             else

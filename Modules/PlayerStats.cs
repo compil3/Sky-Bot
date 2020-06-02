@@ -25,7 +25,7 @@ namespace LGFA.Modules
                 Log.Logger.Warning($"Guild: {Context.Guild.Name} ID:{Context.Guild.Id}");
                 var player = CurrentSeason.SeasonStats(playerLookup);
                 var embed = SeasonEmbed(player);
-                await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed)
+                await Context.Channel.SendMessageAsync($"{Context.User.Mention}\n``[Stats Provided by Leaguegaming.com]``", embed: embed)
                     .ConfigureAwait(false);
             }
             else

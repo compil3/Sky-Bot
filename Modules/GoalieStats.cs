@@ -35,7 +35,7 @@ namespace LGFA.Modules
                             "**Command not yet implemented.**\n You can use *.ps* or *.cs* to check stats instead.");
 
                     embed = builder.Build();
-                    await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed)
+                    await Context.Channel.SendMessageAsync("``[Stats Provided by Leaguegaming.com]``", embed: embed)
                         .ConfigureAwait(false);
                 }
                 else 

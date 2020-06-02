@@ -33,7 +33,7 @@ namespace LGFA.Modules
                     .WithDescription(
                         "**Command not yet implemented.**\n You can check the standings using the *.table* command.");
                 embed = builder.Build();
-                await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed)
+                await Context.Channel.SendMessageAsync($"{Context.User.Mention}\n``[Stats Provided by Leaguegaming.com]``", embed: embed)
                     .ConfigureAwait(false);
             }
             else

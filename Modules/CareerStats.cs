@@ -43,7 +43,7 @@ namespace LGFA.Modules
                     if (career.Count <= 1) embed = CareerEmbed.VirtualSeasonEmbed(career);
                 }
 
-                await Context.Channel.SendMessageAsync("``[Stats Provided by LGFA]``", embed: embed)
+                await Context.Channel.SendMessageAsync($"{Context.User.Mention}\n``[Stats Provided by Leaguegaming.com]``", embed: embed)
                     .ConfigureAwait(false);
             }
             else
