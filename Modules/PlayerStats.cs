@@ -15,29 +15,38 @@ namespace LGFA.Modules
     {
         [Command("ps")]
         [Summary("Get the players current season statistics.")]
-        public async Task GetPlayerStatsLg(string playerLookup, string seasonType = null, string seasonId = null)
+        public async Task Player([Remainder] string playerLookup)
         {
             var options = new RequestOptions { Timeout = 2 };
             await Context.Message.DeleteAsync(options);
 
-            if (Context.Channel.Id == Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")) || Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208)
+            try
             {
-                Log.Logger.Warning($"Guild: {Context.Guild.Name} ID:{Context.Guild.Id}");
-                var player = CurrentSeason.SeasonStats(playerLookup);
-                var embed = SeasonEmbed(player);
-                await Context.Channel.SendMessageAsync($"{Context.User.Mention}\n``[Stats Provided by Leaguegaming.com]``", embed: embed)
-                    .ConfigureAwait(false);
-            }
-            else
-            {
+                if (Context.Channel.Id == Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")) || Context.Channel.Id == 711778374720421918 || Context.Channel.Id == 713176040716894208)
+                {
+                    Log.Logger.Warning($"Guild: {Context.Guild.Name} ID:{Context.Guild.Id}");
+                    var player = CurrentSeason.SeasonStats(playerLookup);
+                    var embed = SeasonEmbed(player);
+                    await Context.Channel.SendMessageAsync($"{Context.User.Mention}\n``[Stats Provided by Leaguegaming.com]``", embed: embed)
+                        .ConfigureAwait(false);
+                }
+                else
+                {
 
-                await ReplyAsync(
-                    $"{Context.User.Mention} you are using the command in the wrong channel, try again in " +
-                    $"{MentionUtils.MentionChannel(Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))}");
+                    await ReplyAsync(
+                        $"{Context.User.Mention} you are using the command in the wrong channel, try again in " +
+                        $"{MentionUtils.MentionChannel(Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))}");
+                }
             }
+            catch (NullReferenceException e)
+            {
+                await ReplyAsync(
+                    $"{Context.User.Mention} there was an error finding {playerLookup}.  Please try again using quotes around the gamer tag.");
+            }
+           
         }
 
-        private Embed SeasonEmbed(List<CareerProperties> player)
+        private static Embed SeasonEmbed(List<CareerProperties> player)
         {
             Embed embed = null;
 

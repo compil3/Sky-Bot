@@ -158,7 +158,7 @@ namespace LGFA.Engines.Current.Player
                         }).ToList();
                     return table;
                 }
-                catch (Exception e)
+                catch (NullReferenceException e)
                 {
                     Log.Logger.Error($"Error processing stats. {e}");
                     return null;

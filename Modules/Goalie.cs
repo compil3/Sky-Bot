@@ -9,7 +9,7 @@ namespace LGFA.Modules
 {
     [RequireContext(ContextType.Guild)]
     [RequireUserPermission(ChannelPermission.SendMessages)]
-    public class GoalieStats : ModuleBase
+    public class Goalie : ModuleBase
     {
            [Command("gs")]
             [Summary("Get a goalies current statistics. [Command not yet implemented]")]

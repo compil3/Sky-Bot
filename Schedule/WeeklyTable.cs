@@ -14,14 +14,14 @@ namespace LGFA.Schedule
             var leagueTable = new Action(async () =>
             {
                 var system = new string[] {"xbox", "psn"};
-                await chnl.SendMessageAsync("``[Tables provided by Leaguegaming.com``").ConfigureAwait(false);
+                await chnl.SendMessageAsync("``[League Tables provided by Leaguegaming.com``").ConfigureAwait(false);
 
                 foreach (var table in system)
                 {
                     await chnl.SendMessageAsync(embed: TeamHelper.StandingEmbed(table)).ConfigureAwait(false);
                 }
             });
-            Schedule(leagueTable).ToRunNow().AndEvery(1).Weeks().On(DayOfWeek.Wednesday).At(12, 0);
+            Schedule(leagueTable).ToRunEvery(1).Weeks().On(DayOfWeek.Wednesday).At(12, 0);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace LGFA.Modules.News
     {
         public WaiverNews(IMessageChannel channel, IMessageChannel log)
         {
-            Action waivers = async () =>
+            async void Waivers()
             {
                 var web = new HtmlWeb();
                 var leagueList = new List<string> {"53", "73"};
@@ -19,9 +19,7 @@ namespace LGFA.Modules.News
                 {
                     try
                     {
-                        var feed = web.Load(
-                            "https://www.leaguegaming.com/forums/index.php?leaguegaming/league&action=league&page=team_news&leagueid=" +
-                            id + "&typeid=9");
+                        var feed = web.Load("https://www.leaguegaming.com/forums/index.php?leaguegaming/league&action=league&page=team_news&leagueid=" + id + "&typeid=9");
 
                         await Feed.RunWaivers(feed, id, channel);
                     }
@@ -31,11 +29,12 @@ namespace LGFA.Modules.News
                         await log.SendMessageAsync($"WaiverNews schedule failed {ex}").ConfigureAwait(false);
                         throw;
                     }
-                    
+
                     //Log.Logger.Information("Waivers ran.");
                 }
-            };
-            Schedule(waivers).ToRunEvery(5).Minutes();
+            }
+
+            Schedule((Action) Waivers).ToRunEvery(5).Minutes();
         }
     }
 }

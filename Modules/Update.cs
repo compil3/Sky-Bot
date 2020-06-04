@@ -18,12 +18,13 @@ using ShellProgressBar;
 
 namespace LGFA.Modules
 {
-    [RequireUserPermission(GuildPermission.ViewAuditLog)]
+    [RequireUserPermission(GuildPermission.BanMembers)]
+    
     public class Update :ModuleBase
     {
         [Command("update")]
         [Summary("Forces a database update.")]
-        public async Task Renew()
+        public async Task UpdateDb()
         {
             var delOptions = new RequestOptions { Timeout = 2 };
             await Context.Message.DeleteAsync(delOptions);

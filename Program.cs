@@ -56,7 +56,6 @@ namespace LGFA
         {
             var newsChn = client.GetChannel(Convert.ToUInt64(Environment.GetEnvironmentVariable("news_channel"))) as IMessageChannel;
             var chnl = client.GetChannel(Convert.ToUInt64(Environment.GetEnvironmentVariable("update_log_channel"))) as IMessageChannel;
-            Console.WriteLine($"Channel IDs\nnewsChn: {newsChn}\nlog:{chnl}");
             Manager.Manage(chnl, newsChn);
             client.ReactionAdded += RoleHandler.OnRulesReaction;
             client.ReactionAdded += RoleHandler.OnSystemReaction;

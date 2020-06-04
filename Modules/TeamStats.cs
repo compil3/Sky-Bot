@@ -12,7 +12,7 @@ namespace LGFA.Modules
     {
         [Command("ts")]
         [Summary(".ts TeamName xbox/psn [eg: .ts Liverpool Xbox]")]
-        private async Task GetTeams(string teamName, string league)
+        private async Task ClubStats(string teamName, string league)
         {
             var options = new RequestOptions { Timeout = 2 };
             await Context.Message.DeleteAsync(options);

@@ -1,7 +1,15 @@
 {
   "profiles": {
     "Sky Bot": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "environmentVariables": {
+        "update_log_channel": "705197391984197683",
+        "rules_message": "712883043823779871",
+        "news_channel": "715065247852920884",
+        "role_message": "715267433170206855",
+        "stats_channel": "711778374720421918",
+        "token": "NzEwOTI2NTEzNTExNDY0OTYx.XtHEXA.Gdh3YEav9zTnzy5jCXSPj7OHCz4"
+      }
     }
   }
 }

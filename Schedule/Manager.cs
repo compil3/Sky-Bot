@@ -23,8 +23,8 @@ namespace LGFA.Schedule
             }
             JobManager.Initialize(new WeekUpdate(chnl));
             JobManager.Initialize(new WeeklyTable(news));
-            JobManager.Initialize(new Trades(news));
-            JobManager.Initialize(new WaiverNews(news));
+            JobManager.Initialize(new Trades(news, chnl));
+            JobManager.Initialize(new WaiverNews(news, chnl));
             Log.Logger.Information("Schedule Initialized.");
             return Task.CompletedTask;
         }
