@@ -13,7 +13,7 @@ namespace LGFA.Engines.Current.Player
 {
     internal class CurrentSeason
     {
-        public static List<CareerProperties> SeasonStats(string playerLookup)
+        public static (List<CareerProperties>, string playerName) SeasonStats(string playerLookup)
         {
             var web = new HtmlWeb();
             var season = "";
@@ -106,10 +106,7 @@ namespace LGFA.Engines.Current.Player
                             PlayerUrl = found.playerUrl,
                             System = found.System,
                             SystemIcon = systemIcon,
-                            TeamIcon = playerDoc.DocumentNode
-                                .SelectSingleNode(
-                                    "//*[@id='content']/div/div/div[3]/div[1]/div/table/thead/tr/th/div/a/img")
-                                .Attributes["src"].Value,
+                            TeamIcon = GetTeamIcon(found.playerUrl),
                             Position = position,
                             SeasonId = season,
 
@@ -156,16 +153,29 @@ namespace LGFA.Engines.Current.Player
                             YellowCards = tr[18],
                             Discipline = "0"
                         }).ToList();
-                    return table;
+                    return (table, found.playerName);
                 }
                 catch (NullReferenceException e)
                 {
                     Log.Logger.Error($"Error processing stats. {e}");
-                    return null;
+                    return (null, found.playerName);
                 }
             }
 
-            return null;
+            return (null, null);
+        }
+
+        private static string GetTeamIcon(string foundPlayerUrl)
+        {
+            var playerPage = new HtmlWeb();
+            var tempPage = playerPage.Load(foundPlayerUrl);
+
+            var iconTemp = tempPage.DocumentNode.SelectSingleNode(
+                "//*[@id='content']/div/div/div[3]/div[1]/div/table/thead/tr/th/div/a/img")
+                    .Attributes["src"].Value;
+            var icon = "http://www.leaguegaming.com" + iconTemp.Replace("p16", "p100");
+            return icon;
+
         }
     }
 }

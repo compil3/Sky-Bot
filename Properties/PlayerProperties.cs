@@ -52,21 +52,20 @@
             public int Id { get; set; }
             public string SeasonTypeId { get; set; }
 
-            public string userSystem { get; set; }
-            public string playerName { get; set; }
-            public string lgRank { get; set; }
-            public string gamesPlayed { get; set; }
-            public string record { get; set; }
-            public string goalsAgainst { get; set; }
-            public string shotsAgainst { get; set; }
-            public string saves { get; set; }
-            public string savePercentage { get; set; }
-            public string goalsAgainstAvg { get; set; }
-            public string cleanSheets { get; set; }
-            public string manOfTheMatch { get; set; }
-            public string avgMatchRating { get; set; }
-            public string playerURL { get; set; }
-            public string teamIcon { get; set; }
+            public string UserSystem { get; set; }
+            public string PlayerName { get; set; }
+            public string LgRank { get; set; }
+            public string GamesPlayed { get; set; }
+            public string Record { get; set; }
+            public string GoalsAgainst { get; set; }
+            public string ShotsAgainst { get; set; }
+            public string Saves { get; set; }
+            public string SavePercentage { get; set; }
+            public string GoalsAgainstAvg { get; set; }
+            public string CleanSheets { get; set; }
+            public string ManOfTheMatch { get; set; }
+            public string AvgMatchRating { get; set; }
+            public string TeamIcon { get; set; }
         }
 
         public class PlayerInfo

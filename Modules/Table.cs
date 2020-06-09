@@ -8,7 +8,7 @@ using Serilog;
 
 namespace LGFA.Modules
 {
-    public class LeagueTable : ModuleBase
+    public class Table : ModuleBase
     {
         [Command("table")]
         [Alias("standings")]
@@ -24,7 +24,7 @@ namespace LGFA.Modules
                var guildId = Context.Guild.Id;
                 var channelId = Context.Channel.Id;
 
-                Log.Logger.Warning($"{Context.User.Username} Triggered: LeagueTable.Standings ");
+                Log.Logger.Warning($"{Context.User.Username} Triggered: Table.Standings ");
 
                 var commandId = Context.Message.Id;
 

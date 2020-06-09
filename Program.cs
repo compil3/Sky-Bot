@@ -46,7 +46,7 @@ namespace LGFA
             await services.GetRequiredService<CommandHandler>().InitializeAsync();
             client.Ready += Client_Ready;
 
-            await client.SetGameAsync("Watching LGFA");
+            await client.SetGameAsync("LFGA | .help for info");
 
 
             await Task.Delay(Timeout.Infinite);

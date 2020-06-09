@@ -15,7 +15,7 @@ namespace LGFA.Engines
     public class CareerBuilder
     {
         public static (List<CareerProperties>, string playerUrl, string playerFound) GetCareerNoSeason(
-            string lookUpPlayer, string seasonId)
+            string lookUpPlayer)
         {
             var leagueId = 0;
             var web = new HtmlWeb();

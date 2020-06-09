@@ -6,7 +6,7 @@ namespace LGFA.Engines.Current.Player
 {
     internal class PlayerEmbed
     {
-        public static Embed VirtualSeason(List<SeasonProperties> table)
+        public static Embed VirtualSeason(List<PlayerSeasonProperties> table)
         {
             Embed embed = null;
             EmbedBuilder builder = null;

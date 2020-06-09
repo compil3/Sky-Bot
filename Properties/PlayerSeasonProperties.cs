@@ -2,7 +2,7 @@
 
 namespace LGFA.Properties
 {
-    public class SeasonProperties
+    public class PlayerSeasonProperties
     {
         #region Record
 
@@ -296,5 +296,28 @@ namespace LGFA.Properties
         }
 
         #endregion
+    }
+
+    public class GoalieProperties
+    {
+        public int SeasonId { get; set; }
+        public int Id { get; set; }
+        public string SeasonTypeId { get; set; }
+
+        public string userSystem { get; set; }
+        public string playerName { get; set; }
+        public string lgRank { get; set; }
+        public string gamesPlayed { get; set; }
+        public string record { get; set; }
+        public string goalsAgainst { get; set; }
+        public string shotsAgainst { get; set; }
+        public string saves { get; set; }
+        public string savePercentage { get; set; }
+        public string goalsAgainstAvg { get; set; }
+        public string cleanSheets { get; set; }
+        public string manOfTheMatch { get; set; }
+        public string avgMatchRating { get; set; }
+        public string playerURL { get; set; }
+        public string teamIcon { get; set; }
     }
 }

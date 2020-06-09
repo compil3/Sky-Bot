@@ -9,7 +9,7 @@ using Serilog;
 
 namespace LGFA.Schedule
 {
-    public class Manager : ModuleBase
+    public class Manager
     {
         public static Task Manage(IMessageChannel chnl, IMessageChannel news)
         {

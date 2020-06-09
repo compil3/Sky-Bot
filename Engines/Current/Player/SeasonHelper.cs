@@ -15,7 +15,7 @@ namespace LGFA.Modules.Helpers
 
             #region stat compression
 
-            var sStat = new SeasonProperties
+            var sStat = new PlayerSeasonProperties
             {
                 //Record
                 GamesPlayed = record,
