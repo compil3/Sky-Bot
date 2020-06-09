@@ -34,7 +34,6 @@ namespace LGFA.Engines.Current.Goalie
                 .Where(x => x.playerName.Contains(playerLookup))
                 .ToList();
             var systemIcon = "";
-            var name = "";
             var statsPage = "";
             List<GoalieProperties> gStat = null;
             foreach (var found in result)

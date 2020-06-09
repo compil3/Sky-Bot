@@ -100,7 +100,6 @@ namespace LGFA.Modules
 
         private static void HelpBuilder(ModuleInfo module, ref EmbedBuilder builder)
         {
-            const string prefix = "";
             foreach (var sub in module.Submodules) HelpBuilder(sub, ref builder);
             builder.AddField(f =>
             {
