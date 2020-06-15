@@ -44,6 +44,7 @@ namespace LGFA.Modules
                             .WithName($"LGFA {system.ToUpper()} Info")
                             .WithIconUrl(systemIcon);
                     })
+                    .WithTitle("[Information provided by Leaguegaming.com]")
                     .AddField("Season", info.Season, true)
                     .AddField("Season Type", info.SeasonType, true)
                     .AddField("Week", info.Week, true)
@@ -52,7 +53,7 @@ namespace LGFA.Modules
                 embed = builder.Build();
             }
 
-            await Context.Channel.SendMessageAsync("``[Information provided by LGFA]``", embed: embed)
+            await Context.Channel.SendMessageAsync("", embed: embed)
                 .ConfigureAwait(false);
         }
     }

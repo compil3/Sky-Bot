@@ -42,13 +42,13 @@ namespace LGFA.Modules
                 foreach (var md in _commands.Modules.Where(m => m.Parent == null))
                 {
                     if (!user.GuildPermissions.BanMembers && md.Name == "Update") continue;
-
+                    if (!user.Roles.Any(r=>r.Name.Contains("Manager") || r.Name.Contains("Owner")) && md.Name == "Manager") continue;
                     HelpBuilder(md, ref output);
                 }
 
                 output.Footer = new EmbedFooterBuilder
                 {
-                    Text = "Use .help <command> to get help with a command. Eg: .help table"
+                    Text = "Use .help <command> to get help with a command. Eg: .help table or .help manager"
                 };
             }
             else
@@ -63,9 +63,29 @@ namespace LGFA.Modules
                 {
                     foreach (var match in result.Commands)
                     {
-                        if (!user.GuildPermissions.BanMembers && match.Command.Module.Name == "Update") continue;
-                        var mod = match.Command.Module;
-                        AddCommands(mod, ref output);
+                        if (!user.GuildPermissions.BanMembers && match.Command.Module.Name == "Update")
+                        {
+                            if (path == "update")
+                            {
+                                await Context.User.SendMessageAsync(
+                                    $"`{Context.User.Username}` you do not have permission to use this command.");
+                                return;
+                            }
+                            continue;
+                        }
+
+                        if (!user.Roles.Any(r => r.Name.Contains("Manager") || r.Name.Contains("Owner")) &&
+                            match.Command.Module.Name == "Manager")
+                        {
+                            if (path == "ab" || path == "rb") 
+                            {
+                                await Context.User.SendMessageAsync($"`{Context.User.Username}`you do not have permission to use this command.");
+                                return;
+                            }
+                            continue;
+                        }
+                        //var mod = match.Command.Module;
+                        FindCommand(match.Command, ref output);
                     }
                 }
             }
@@ -73,6 +93,18 @@ namespace LGFA.Modules
             await Context.User.SendMessageAsync(embed: output.Build());
             await ReplyAsync($"Check your DMs {Context.User.Mention}").AutoRemove(5);
 
+        }
+
+        private void FindCommand(CommandInfo command, ref EmbedBuilder output)
+        {
+            output.Title = $"Command: *{command.Name}*";
+            output.Description = $"**Module:** {command.Module.Name}\n" +
+                                 $"**Command Summary:** {command.Summary}\n" +
+                                 (!string.IsNullOrEmpty(command.Remarks) ? $"**Remarks:** *{command.Remarks}*\n" : "") +
+                                 (command.Aliases.Any()
+                                     ? $"**Tag(s)**: `{string.Join(", ", command.Aliases.Select(x => $"{x}"))}`\n"
+                                     : "") +
+                                 $"**Usage:**`{GetPrefix(command)} {GetAliases(command)}`";
         }
 
         private void AddCommands(ModuleInfo match, ref EmbedBuilder output)
@@ -104,7 +136,7 @@ namespace LGFA.Modules
             builder.AddField(f =>
             {
                 f.Name = $"**{module.Name}**";
-                f.Value = $"Command: {string.Join(". ", module.Commands.Select(x => $"`.{x.Name}`"))}";
+                f.Value = $"Command: {string.Join(" ", module.Commands.Select(x => $"`.{x.Name}`"))}";
             });
         }
 
