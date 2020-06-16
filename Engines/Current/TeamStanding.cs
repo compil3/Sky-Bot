@@ -84,16 +84,21 @@ namespace LGFA.Engines
 
                 if (system == "psn" || system == "PSN")
                 {
-                    tempUrl[0] = standingsUrlTemp;
-                    tempUrl[1] = leagueid;
-                    tempUrl[2] = "73&seasonid=";
-                    tempUrl[3] = currentSeason;
-                    standingsUrl = string.Join("", tempUrl);
+                    foreach (var info in leagueInfo)
+                    {
+                        tempUrl[0] = standingsUrlTemp;
+                        tempUrl[1] = leagueid;
+                        tempUrl[2] = "73&seasonid=";
+                        tempUrl[3] = info.Season;
+                        currentSeason = info.Season;
+                        standingsUrl = string.Join("", tempUrl);
+                    }
+                   
 
                     teamDoc = web.Load(standingsUrl);
-
+                    //*[@id="content"]/div/div/div[3]/div/div/div/div/div/div/table
                     var standings = teamDoc.DocumentNode
-                        .SelectSingleNode("//*[@id='content']/div/div/div[3]/div/div/div/div/table")
+                        .SelectSingleNode("//*[@id='content']/div/div/div[3]/div/div/div/div/div/div/table")
                         .Descendants("tr")
                         .Skip(2)
                         .Select(tr => tr.Elements("td").Select(td => td.InnerText.Trim()).ToList())

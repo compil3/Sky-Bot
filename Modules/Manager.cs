@@ -8,9 +8,11 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
-using Discord.Addons.Interactive;
+using HtmlAgilityPack;
+using LGFA.Extensions;
 using LGFA.Properties;
 using LiteDB;
 using Serilog;
@@ -18,7 +20,7 @@ using Serilog;
 namespace Sky_Bot.Modules
 {
     [RequireContext(ContextType.Guild)]
-    public class Manager : ModuleBase
+    public class Manager : InteractiveBase
     {
         [Command("ab")]
         [Alias("addblock")]
@@ -27,17 +29,20 @@ namespace Sky_Bot.Modules
         {
             DateTime now = DateTime.Now;
             EmbedBuilder embed = new EmbedBuilder();
+            var team = "";
             if (Context.User is SocketGuildUser gUser)
             {
                 if (gUser.Roles.Any(r => r.Name.Contains("Manager") || r.Name.Contains("Owner")))
                 {
-                    var team = gUser.Guild.Roles.FirstOrDefault(a =>
-                        a.Name.StartsWith("Xbox ") || a.Name.StartsWith("PSN "));
-                    if (team != null)
+                    var roleList = gUser.Roles.ToList();
+                    foreach (var uRole in roleList)
                     {
-                        var tempTeam = team.Name;
+                        var currentSeason = "";
+                        if (uRole.Name.Contains("PSN ") && !uRole.Name.Contains("LGFA PSN"))
+                        {
+                            team = uRole.Name;
+                        }
                     }
-
                     embed.Author = new EmbedAuthorBuilder
                     {
                         Name = $"Trade Block"
@@ -107,7 +112,41 @@ namespace Sky_Bot.Modules
             {
                 if (gUser.Roles.Any(r => r.Name.Contains("Manager") || r.Name.Contains("Owner")))
                 {
-                    GetBlock(league);
+                    //GetBlock(league);
+                    //await PagedReplyAsync(GetBlock(league));
+                    var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                    var dbFolder = "Database/";
+                    var dbDir = Path.Combine(path, dbFolder);
+
+                    using var database = new LiteDatabase($"Filename={dbDir}LGFA.db;connection=shared");
+                    var col = database.GetCollection<TradeBlock.BlockProperties>("TradeBlock");
+
+                    var listing = "";
+                    var author = new EmbedAuthorBuilder()
+                        .WithName("Trade Block");
+            
+                    var result = col.Query()
+                        .Where(x => x.Team.Contains(league))
+                        .OrderBy(x => x.Name)
+                        .ToList();
+                    
+                    var list = new List<string>();
+                    foreach (var tBloc in result)
+                    {
+                        listing += $"**{tBloc.Team}**\nPlayer:`{tBloc.Id}`\nRequested Value:`{tBloc.Value}`";
+                        list.Add(listing);
+                        listing = null;
+                    }
+
+                    var paginatedMessage = new PaginatedMessage
+                    {
+                        Title = "Trade Block",
+                        Pages = list,
+                        //Author = author,
+                        Options = _Options
+                    };
+
+                    await PagedReplyAsync(paginatedMessage);
                 }
             }
         }
@@ -122,40 +161,37 @@ namespace Sky_Bot.Modules
             using var database = new LiteDatabase($"Filename={dbDir}LGFA.db;connection=shared");
             var col = database.GetCollection<TradeBlock.BlockProperties>("TradeBlock");
 
-            var builders = new List<EmbedBuilder>();
-
-           
-            var paginatedBlock = new PaginatedMessage()
-            {
-            }; 
+            var listing = "";
+            var author = new EmbedAuthorBuilder()
+                .WithName("Trade Block");
+            
             var result = col.Query()
                 .Where(x => x.Team.Contains(league))
                 .OrderBy(x => x.Name)
                 .ToList();
-
-            foreach (var tBlock in result)
+            var paginatedMessage = new PaginatedMessage
             {
-                var pages = new[]
-                {
-                    new PaginatedMessage()
-                    {
-                        
-                        Author = new EmbedAuthorBuilder()
-                        {
-                            Name = "Trade Block"
-                        }
-
-
-
-
-
-
-
-                    }
-                };
+                Author = author,
+                Options = _Options
+            };
+            var list = new List<string>();
+            foreach (var tBloc in result)
+            {
+                listing += $"**{tBloc.Team}**\n`{tBloc.Id}`\n`{tBloc.Value}`";
+                list.Add(listing);
+                listing = null;
             }
+
+            paginatedMessage.Pages = list;
+
         }
 
+        private PaginatedAppearanceOptions _Options => new PaginatedAppearanceOptions()
+        {
+            JumpDisplayOptions = JumpDisplayOptions.Never,
+            DisplayInformationIcon = false,
+            FooterFormat = $"Leaguegaming.com"
+        };
         private static bool RemoveFromBlock(string name, ref EmbedBuilder embed)
         {
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -179,7 +215,7 @@ namespace Sky_Bot.Modules
             }
         }
 
-        private static bool AddToBlock(string _name, string _value, SocketRole _role, DateTime date,
+        private static bool AddToBlock(string _name, string _value, string _team, DateTime date,
             ref EmbedBuilder embed)
         {
             var path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
@@ -190,7 +226,6 @@ namespace Sky_Bot.Modules
             var block = tradeDb.GetCollection<TradeBlock.BlockProperties>("TradeBlock");
 
 
-            var _team = _role.ToString();
             var blockInfo = new TradeBlock.BlockProperties
             {
                 Id = _name,

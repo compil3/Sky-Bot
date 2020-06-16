@@ -11,6 +11,7 @@ namespace LGFA.Properties
             public string Name { get; set; }
             public string Team { get; set; }
             public string Value { get; set; }
+            public string TeamIcon { get; set; }
         }
     }
 }

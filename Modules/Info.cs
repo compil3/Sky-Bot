@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using LGFA.Extensions;
 using LGFA.Properties;
 
@@ -55,6 +57,31 @@ namespace LGFA.Modules
 
             await Context.Channel.SendMessageAsync("", embed: embed)
                 .ConfigureAwait(false);
+        }
+
+        [Command("uinfo")]
+        [RequireUserPermission(GuildPermission.BanMembers)]
+        public async Task GetUserInfo(IGuildUser _name)
+        {
+            EmbedBuilder embed = new EmbedBuilder();
+
+            if (Context.User is SocketGuildUser gUser)
+            {
+                var uList = gUser.Roles.ToList();
+                var join = gUser.JoinedAt.ToString();
+                var some = gUser.AvatarId;
+                var yup = gUser.GetAvatarUrl(ImageFormat.Auto);
+
+                embed.Author = new EmbedAuthorBuilder()
+                {
+                    Name = $"{_name.Nickname}",
+                    IconUrl = _name.GetAvatarUrl(ImageFormat.Auto)
+                };
+                embed.Footer = new EmbedFooterBuilder()
+                {
+                    Text = "Joined At:"
+                };
+            }
         }
     }
 }

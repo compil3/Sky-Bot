@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Addons.Interactive;
 using Discord.Commands;
 using Discord.WebSocket;
 using LGFA.Handlers;
@@ -19,37 +20,50 @@ namespace LGFA
     {
         private static DiscordSocketClient client;
 
-        private static void Main(string[] args)
-        {
-            MainAsync(args).GetAwaiter().GetResult();
-            Thread.Sleep(-1);
-        }
+        static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
+       
 
-        public static async Task MainAsync(string[] args)
+        public async Task MainAsync()
         {
+
             //CreateHostBuilder(args).Build().Run();
-            await using var services = ConfigureServices();
-            client = services.GetRequiredService<DiscordSocketClient>();
+            using (var services = ConfigureServices())
+            {
+                var _client = services.GetRequiredService<DiscordSocketClient>();
+                _client.Log += LogAsync;
+                services.GetRequiredService<CommandService>().Log += LogAsync;
+               
+                await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("token"));
+                await _client.StartAsync();
 
-            client.Log += LogAsync;
+                await services.GetRequiredService<CommandHandler>().InitializeAsync();
+                _client.Ready += Client_Ready;
+                await _client.SetGameAsync("LGFA | .help for info");
+                client = _client;
+                await Task.Delay(Timeout.Infinite);
 
-            services.GetRequiredService<CommandService>().Log += LogAsync;
+            }
+            //client = services.GetRequiredService<DiscordSocketClient>();
 
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Sky Sports Bot v2.0");
-            Console.ResetColor();
+            //client.Log += LogAsync;
 
-            await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("token"));
+            //services.GetRequiredService<CommandService>().Log += LogAsync;
 
-            await client.StartAsync();
+            //Console.ForegroundColor = ConsoleColor.Cyan;
+            //Console.WriteLine("Sky Sports Bot v2.0");
+            //Console.ResetColor();
 
-            await services.GetRequiredService<CommandHandler>().InitializeAsync();
-            client.Ready += Client_Ready;
+            //await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("token"));
 
-            await client.SetGameAsync("LFGA | .help for info");
+            //await client.StartAsync();
+
+            //await services.GetRequiredService<CommandHandler>().InitializeAsync();
+            //client.Ready += Client_Ready;
+
+            //await client.SetGameAsync("LFGA | .help for info");
 
 
-            await Task.Delay(Timeout.Infinite);
+            //await Task.Delay(Timeout.Infinite);
         }
 
         public static Task Client_Ready()
@@ -72,15 +86,15 @@ namespace LGFA
             return Task.CompletedTask;
         }
 
-        private static ServiceProvider ConfigureServices()
+        private ServiceProvider ConfigureServices()
         {
-            Log.Warning("Modules loaded.");
             return new ServiceCollection()
                 .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<RoleHandler>()
                 .AddSingleton<HttpClient>()
+                .AddSingleton<InteractiveService>()
                 .BuildServiceProvider();
         }
 

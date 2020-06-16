@@ -24,6 +24,7 @@ namespace LGFA.Services
             _commands = CommandConfig();
 
 
+
             _commands.CommandExecuted += CommandExecutedAsync;
             _discord.MessageReceived += HandleCommand;
         }
@@ -69,26 +70,7 @@ namespace LGFA.Services
                   message.HasMentionPrefix(_discord.CurrentUser, ref argPos)) || message.Author.IsBot) return;
 
             var context = new SocketCommandContext(_discord, message);
-            var result = await _commands.ExecuteAsync(context, argPos, null);
-
-            //var message = rawMessage as SocketUserMessage;
-            //if (message == null) return;
-
-            //if (message.Source != MessageSource.User) return;
-            //var context = new CommandContext(_discord,message);
-            //var argPos = 0;
-            //char prefix = '.';
-
-            //if (!(message.HasCharPrefix(prefix, ref argPos) || message.HasMentionPrefix(_discord.CurrentUser,ref argPos))) return;
-
-            //var result = await _commands.ExecuteAsync(context, argPos, _services);
-            //if (!result.IsSuccess)
-            //{
-            //    if (result.ErrorReason != "Unknown command.")
-            //    {
-            //        await message.Channel.SendMessageAsync($"**Error:** {result.ErrorReason}");
-            //    }
-            //}
+            var result = await _commands.ExecuteAsync(context, argPos, _services);
         }
 
 
