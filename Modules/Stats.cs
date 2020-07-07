@@ -47,19 +47,11 @@ namespace LGFA.Modules
                             embed.Color= new Color(0x26A20B);
                             embed.WithCurrentTimestamp();
                         }
-
                         await ReplyAsync("", embed: embed.Build());
-                        ////var embed = SeasonEmbed(player);
-
-                        //await Context.Channel
-                        //    .SendMessageAsync($"{Context.User.Mention}\n``[Stats Provided by Leaguegaming.com]``",
-                        //        embed: embed)
-                        //    .ConfigureAwait(false);
                     }
                 }
                 else
                 {
-
                     await ReplyAsync(
                         $"{Context.User.Mention} you are using the command in the wrong channel, try again in " +
                         $"{MentionUtils.MentionChannel(Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))}");
@@ -104,60 +96,6 @@ namespace LGFA.Modules
                 builder.AddField("\u200B", "```Discipline```");
                 builder.AddField("YC-RC", pStat.Discipline, true);
             }
-        }
-
-        private static Embed SeasonEmbed(List<CareerProperties> player)
-        {
-            Embed embed = null;
-
-            foreach (var pStat in player)
-            {
-                var builder = new EmbedBuilder()
-                    .WithTitle($"{pStat.PlayerName} (Recent POS: {pStat.Position.Trim()})")
-                    .WithUrl(pStat.PlayerUrl)
-                    .WithColor(new Color(0x26A20B))
-                    .WithCurrentTimestamp()
-                    .WithFooter(footer =>
-                    {
-                        footer
-                            .WithText("leaguegaming.com")
-                            .WithIconUrl("https://www.leaguegaming.com/images/logo/logonew.png");
-                    })
-                    .WithAuthor(author =>
-                    {
-                        author
-                            .WithName($"{pStat.System.ToUpper()} {pStat.SeasonId} Stats")
-                            .WithIconUrl(pStat.TeamIcon);
-                    })
-                    .AddField("\u200B", "```Record```")
-                    .AddField("GP", pStat.GamesPlayed, true)
-                    .AddField("Record (W-D-L)", pStat.Record, true)
-                    .AddField("AMR", pStat.MatchRating, true)
-                    .AddField("\u200B", "```Offensive Stats```")
-                    .AddField("Goals", pStat.Goals, true)
-                    .AddField("G/Game", pStat.GoalsPerGame, true)
-                    .AddField("Shots - SOT", pStat.ShotSot, true)
-                    .AddField("S/Game", pStat.ShotPerGame, true)
-                    .AddField("Shots/Goal - SH%", pStat.ShotPerGoal, true)
-                    .AddField("\u200B", "```Passing Stats```")
-                    .AddField("Assists", pStat.Assists, true)
-                    .AddField("Pass - Pass Attempts", pStat.PassRecord, true)
-                    .AddField("Key Passes", pStat.KeyPasses, true)
-                    .AddField("AST/Game", pStat.AssistPerGame, true)
-                    .AddField("P/Game - Pass %", pStat.PassPerGame, true)
-                    .AddField("Key Pass/Game", pStat.KeyPassPerGame, true)
-                    .AddField("\u200B", "```Defensive Stats```")
-                    .AddField("Tac - Tac Att", pStat.Tackling, true)
-                    .AddField("Tac/Game", pStat.TacklesPerGame, true)
-                    .AddField("Tac %", pStat.TacklePercent, true)
-                    .AddField("PossW-PossL", pStat.Poss, true)
-                    .AddField("Int-Blk", pStat.Wall, true)
-                    .AddField("\u200B", "```Discipline```")
-                    .AddField("YC-RC", pStat.Discipline, true);
-                embed = builder.Build();
-            }
-
-            return embed;
         }
     }
 }

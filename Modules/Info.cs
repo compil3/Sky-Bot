@@ -74,13 +74,26 @@ namespace LGFA.Modules
 
                 embed.Author = new EmbedAuthorBuilder()
                 {
-                    Name = $"{_name.Nickname}",
+                    Name = $"User Information",
                     IconUrl = _name.GetAvatarUrl(ImageFormat.Auto)
                 };
-                embed.Footer = new EmbedFooterBuilder()
+     
+                embed.Title = _name.Username;
+                embed.AddField("User", $"{_name.Mention}", true);
+                embed.AddField("User ID", $"{_name.Username}#{_name.Discriminator}", true);
+                embed.AddField("Join Date", _name.JoinedAt.ToString(), true);
+                //embed.AddField("Avatar", false);
+                embed.ImageUrl = _name.GetAvatarUrl(ImageFormat.Auto);
+                var roles = gUser.Roles.ToList();
+                var rolesList = "";
+                foreach (var pRole in roles)
                 {
-                    Text = "Joined At:"
-                };
+                    rolesList += string.Concat($"**{pRole.Name}**", " ");
+                }
+                embed.AddField("Roles", rolesList, true);
+                
+
+                await ReplyAsync("", embed:embed.Build());
             }
         }
     }
