@@ -2,7 +2,7 @@
 using Discord;
 using LGFA.Properties;
 
-namespace LGFA.Modules.Helpers
+namespace LGFA.Engines.Current.Player
 {
     public class SeasonHelper
     {
