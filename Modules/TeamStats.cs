@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Serilog;
+using LGFA.Engines;
+using LGFA.Engines.Current;
+using LGFA.Modules.Helpers;
 
 namespace LGFA.Modules
 {
@@ -11,30 +14,17 @@ namespace LGFA.Modules
     internal class TeamStats : ModuleBase
     {
         [Command("ts")]
-        [Summary(".ts TeamName xbox/psn [eg: .ts Liverpool Xbox]")]
-        private async Task ClubStats(string teamName, string league)
+        [Summary("Retrieves the current season statistics for the team entered.")]
+        public async Task ClubStats(string teamName, string league)
         {
-            var options = new RequestOptions { Timeout = 2 };
-            await Context.Message.DeleteAsync(options);
-
+            //var options = new RequestOptions { Timeout = 2 };
+            //await Context.Message.DeleteAsync(options);
+            
+            EmbedBuilder embed = new EmbedBuilder();
             if (Context.Channel.Id == Convert.ToUInt64(Environment.GetEnvironmentVariable("stats_channel")))
             {
-                Embed embed;
-                var builder = new EmbedBuilder()
-                    .WithTitle("LGFA Team Stats")
-                    .WithColor(new Color(0xFF0019))
-                    .WithCurrentTimestamp()
-                    .WithFooter(footer =>
-                    {
-                        footer
-                            .WithText("leaguegaming.com/fifa")
-                            .WithIconUrl("https://www.leaguegaming.com/images/league/icon/l53.png");
-                    })
-                    .WithDescription(
-                        "**Command not yet implemented.**\n You can check the standings using the *.table* command.");
-                embed = builder.Build();
-                await Context.Channel.SendMessageAsync($"{Context.User.Mention}\n``[Stats Provided by Leaguegaming.com]``", embed: embed)
-                    .ConfigureAwait(false);
+              TeamInfo.ClubInfo(league, teamName, ref embed);
+              await ReplyAsync("", embed: embed.Build());
             }
             else
                 await ReplyAsync(
