@@ -49,9 +49,9 @@ namespace LGFA.Database
                     {
                         child.EstimatedDuration = TimeSpan.FromMilliseconds(findPlayerCount.Count * 25);
                         var playerName = player
-                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a").InnerText;
+                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a[2]").InnerText;
                         var playerShortUrl = player
-                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a")
+                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a[2]")
                             .Attributes["href"].Value;
 
                         var playerUrl = string.Join(string.Empty,
@@ -105,9 +105,9 @@ namespace LGFA.Database
                     foreach (var player in findPlayerNodes)
                     {
                         var playerName = player
-                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a").InnerText;
+                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a[2]").InnerText;
                         var playerShortUrl = player
-                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a")
+                            .SelectSingleNode($"//*[@id='lgtable_memberstats51']/tbody/tr[{i}]/td[2]/a[2]")
                             .Attributes["href"].Value;
 
                         var playerUrl = string.Join(string.Empty,
