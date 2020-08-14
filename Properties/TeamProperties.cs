@@ -8,8 +8,15 @@
         public string SeasonTypeId { get; set; }
         public string System { get; set; }
 
-
-        public string Rank { get; set; }
+        private string _rank;
+        public string Rank
+        {
+            get => _rank;
+            set
+            {
+                _rank = value;
+            }
+        }
 
         public string TeamName
         {
@@ -32,6 +39,20 @@
             }
         }
 
+        private string _record;
+        public string Record
+        {
+            get => _record;
+            set
+            {
+                _record = value;
+                string[] record = new string[3];
+                record[0] = GamesWon;
+                record[1] = GamesDrawn;
+                record[2] = GamesLost;
+                _record = string.Join("-", record);
+            }
+        }
 
         public string GamesPlayed { get; set; }
         public string GamesWon { get; set; }
