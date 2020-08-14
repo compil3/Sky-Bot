@@ -34,7 +34,7 @@ namespace LGFA.Modules.News
                 }
             }
 
-            Schedule((Action) Waivers).ToRunEvery(5).Minutes();
+            Schedule((Action) Waivers).ToRunEvery(10).Seconds();
         }
     }
 }

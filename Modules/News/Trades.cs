@@ -34,8 +34,7 @@ namespace LGFA.Modules.News
                     //Log.Logger.Information("Trades ran.");
                 }
             }
-
-            Schedule((Action) Action).ToRunEvery(5).Minutes();
+            Schedule((Action) Action).ToRunEvery(10).Seconds();
         }
     }
 }
